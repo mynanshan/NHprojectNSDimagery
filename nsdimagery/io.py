@@ -14,6 +14,7 @@ import h5py
 import nibabel as nib
 import numpy as np
 import pandas as pd
+from scipy.io import loadmat
 
 
 @dataclass(frozen=True)
@@ -137,6 +138,180 @@ def load_behavior(data_root: str | Path, subject: int | str) -> pd.DataFrame:
     if len(frames) != 12:
         raise FileNotFoundError(f"Expected 12 TSVs for {subj}; found {len(frames)}")
     return pd.concat(frames, ignore_index=True)
+
+
+def load_target_table(data_root: str | Path) -> pd.DataFrame:
+    """Return the six cue-to-target mappings for stimulus sets A, B, and C."""
+    experiment_dir = (
+        Path(data_root) / "nsddata" / "experiments" / "nsdimagery"
+    )
+    rows: list[dict[str, object]] = []
+    for stimulus_set in ("A", "B", "C"):
+        path = experiment_dir / f"{stimulus_set}_pair_list.mat"
+        if not path.is_file():
+            raise FileNotFoundError(f"Missing target-pair file: {path}")
+        pair_list = np.asarray(
+            loadmat(path, squeeze_me=True, struct_as_record=False)["pair_list"]
+        )
+        if pair_list.shape != (6, 3):
+            raise ValueError(
+                f"Expected a 6 x 3 pair list in {path}; found {pair_list.shape}"
+            )
+        for target_number, target_name, target_code in pair_list:
+            image_path = (
+                experiment_dir
+                / "rawtargetimages"
+                / f"set{stimulus_set}"
+                / str(target_name)
+            )
+            rows.append(
+                {
+                    "stimulus_set": stimulus_set,
+                    "target_number": int(target_number),
+                    "target_code": str(target_code),
+                    "target_name": str(target_name),
+                    "image_path": image_path if stimulus_set in {"A", "B"} else None,
+                }
+            )
+    return pd.DataFrame(rows).sort_values(
+        ["stimulus_set", "target_number"], ignore_index=True
+    )
+
+
+def summarize_glmsingle_design(data_root: str | Path) -> pd.DataFrame:
+    """Count modeled events in each released GLMsingle run design."""
+    path = (
+        Path(data_root)
+        / "nsddata"
+        / "experiments"
+        / "nsdimagery"
+        / "designmatrixGLMsingle.mat"
+    )
+    if not path.is_file():
+        raise FileNotFoundError(f"Missing GLMsingle design: {path}")
+    stimulus = np.atleast_1d(
+        loadmat(path, squeeze_me=True, struct_as_record=False)["stimulus"]
+    )
+    if len(stimulus) != len(RUN_SPECS):
+        raise ValueError(
+            f"Expected {len(RUN_SPECS)} run designs in {path}; found {len(stimulus)}"
+        )
+
+    rows = []
+    for spec, design in zip(RUN_SPECS, stimulus):
+        design = np.asarray(design)
+        n_modeled_events = int(np.count_nonzero(design))
+        rows.append(
+            {
+                "run_name": spec.name,
+                "task": spec.task,
+                "design_shape": design.shape,
+                "n_modeled_events": n_modeled_events,
+                "expected_betas": spec.n_betas,
+                "ok": n_modeled_events == spec.n_betas,
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def build_event_table(data_root: str | Path, subject: int | str) -> pd.DataFrame:
+    """Align vision and imagery behavioral trials to their beta indices.
+
+    Vision trials are labeled by ``CONDITION``, the image actually presented.
+    Imagery trials are labeled by ``CUE``, the target participants imagined.
+    Attention is deliberately excluded because it has two beta epochs per trial.
+    """
+    subject_name = _subject(subject)
+    design_summary = summarize_glmsingle_design(data_root)
+    if not design_summary["ok"].all():
+        raise ValueError(
+            "Released GLMsingle design counts do not match the expected beta blocks:\n"
+            f"{design_summary.to_string(index=False)}"
+        )
+    behavior = load_behavior(data_root, subject)
+    run_table = build_run_table().set_index("run_name")
+    target_table = load_target_table(data_root)
+    frames = []
+
+    for spec in RUN_SPECS:
+        if spec.task == "attention":
+            continue
+        frame = behavior.loc[behavior["RUN_NAME"] == spec.name].copy()
+        if len(frame) != spec.n_behavior_trials:
+            raise ValueError(
+                f"{subject_name} {spec.name}: expected {spec.n_behavior_trials} "
+                f"behavioral rows; found {len(frame)}"
+            )
+        frame["TRIAL"] = pd.to_numeric(frame["TRIAL"], errors="raise").astype(int)
+        frame = frame.sort_values("TRIAL", ignore_index=True)
+        expected_trials = np.arange(1, spec.n_behavior_trials + 1)
+        if not np.array_equal(frame["TRIAL"].to_numpy(), expected_trials):
+            raise ValueError(
+                f"{subject_name} {spec.name}: TRIAL must contain each integer 1-48"
+            )
+
+        run = run_table.loc[spec.name]
+        frame["subject"] = subject_name
+        frame["run_name"] = spec.name
+        frame["task"] = spec.task
+        frame["stimulus_set"] = spec.stimulus_set
+        frame["beta_index"] = (
+            int(run["beta_start_python"]) + np.arange(spec.n_behavior_trials)
+        )
+        frame["beta_number"] = frame["beta_index"] + 1
+        label_column = "CONDITION" if spec.task == "vision" else "CUE"
+        frame["target_code"] = frame[label_column].astype(str)
+        frames.append(frame)
+
+    events = pd.concat(frames, ignore_index=True)
+    events = events.merge(
+        target_table,
+        how="left",
+        on=["stimulus_set", "target_code"],
+        validate="many_to_one",
+    )
+    if events["target_number"].isna().any():
+        missing = events.loc[
+            events["target_number"].isna(), ["run_name", "TRIAL", "target_code"]
+        ]
+        raise ValueError(f"Unmapped target codes:\n{missing.to_string(index=False)}")
+    events["target_number"] = events["target_number"].astype(int)
+    events["repeat"] = (
+        events.groupby(["task", "stimulus_set", "target_code"]).cumcount() + 1
+    )
+
+    expected_total = sum(
+        spec.n_behavior_trials for spec in RUN_SPECS if spec.task != "attention"
+    )
+    if len(events) != expected_total or not events["beta_index"].is_unique:
+        raise AssertionError("Vision/imagery event table failed size or uniqueness checks")
+    counts = events.groupby(["task", "stimulus_set", "target_code"]).size()
+    expected_counts = counts.index.get_level_values("task").map(
+        {"vision": 8, "imagery": 16}
+    )
+    if not np.array_equal(counts.to_numpy(), expected_counts.to_numpy()):
+        raise AssertionError(
+            "Expected 8 vision and 16 imagery repetitions for every target"
+        )
+
+    leading_columns = [
+        "subject",
+        "run_name",
+        "task",
+        "stimulus_set",
+        "TRIAL",
+        "beta_index",
+        "beta_number",
+        "target_number",
+        "target_code",
+        "target_name",
+        "repeat",
+        "image_path",
+    ]
+    remaining_columns = [
+        column for column in events.columns if column not in leading_columns
+    ]
+    return events[leading_columns + remaining_columns]
 
 
 def build_run_table() -> pd.DataFrame:

@@ -3,6 +3,7 @@
 - [Project plan](docs/nsd_imagery_project_notes.md)
 - [Minimal NSD-Imagery download guide](docs/data_download.md)
 - [Interactive data-orientation notebook](notebooks/01_data_orientation.ipynb)
+- [Event alignment and first neural RDM notebook](notebooks/02_event_alignment_neural_rdm.ipynb)
 
 Start with one subject and no downloads:
 
