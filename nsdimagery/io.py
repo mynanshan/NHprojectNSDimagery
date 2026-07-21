@@ -191,15 +191,22 @@ def infer_beta_layout(
     """Identify how Python exposes the MATLAB-written NSD HDF5 dimensions.
 
     The NSD manual uses MATLAB order ``X × Y × Z × events``. In the released
-    files, h5py commonly exposes the reversed HDF5 dimension convention as
-    ``events × X × Y × Z``. Supporting both prevents a silent axis mistake.
+    files, h5py commonly exposes the fully reversed HDF5 dimension convention
+    as ``events × Z × Y × X``. Supporting all plausible layouts prevents a
+    silent spatial-axis mistake.
     """
     dataset_shape = tuple(dataset_shape)
     spatial_shape = tuple(spatial_shape)
-    if dataset_shape[0] == 720 and dataset_shape[1:] == spatial_shape:
-        return "events_first"
-    if dataset_shape[-1] == 720 and dataset_shape[:-1] == spatial_shape:
-        return "events_last"
+    if dataset_shape[0] == 720:
+        if dataset_shape[1:] == spatial_shape:
+            return "events_first_xyz"
+        if dataset_shape[1:] == spatial_shape[::-1]:
+            return "events_first_zyx"
+    if dataset_shape[-1] == 720:
+        if dataset_shape[:-1] == spatial_shape:
+            return "events_last_xyz"
+        if dataset_shape[:-1] == spatial_shape[::-1]:
+            return "events_last_zyx"
     raise ValueError(
         f"Cannot reconcile beta shape {dataset_shape} with ROI shape {spatial_shape} "
         "and 720 expected events"
@@ -257,12 +264,18 @@ def extract_masked_betas(
         dataset = handle["betas"]
         layout = infer_beta_layout(dataset.shape, mask.shape)
         values = np.empty((720, len(coordinates)), dtype=np.float32)
-        if layout == "events_first":
+        if layout == "events_first_xyz":
             for column, (x, y, z) in enumerate(coordinates):
                 values[:, column] = dataset[:, x, y, z]
-        else:
+        elif layout == "events_first_zyx":
+            for column, (x, y, z) in enumerate(coordinates):
+                values[:, column] = dataset[:, z, y, x]
+        elif layout == "events_last_xyz":
             for column, (x, y, z) in enumerate(coordinates):
                 values[:, column] = dataset[x, y, z, :]
+        else:  # events_last_zyx
+            for column, (x, y, z) in enumerate(coordinates):
+                values[:, column] = dataset[z, y, x, :]
 
     # NSD stores these int16 values after multiplying percent signal change by 300.
     values /= 300.0
