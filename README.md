@@ -4,6 +4,7 @@
 - [Minimal NSD-Imagery download guide](docs/data_download.md)
 - [Interactive data-orientation notebook](notebooks/01_data_orientation.ipynb)
 - [Event alignment and first neural RDM notebook](notebooks/02_event_alignment_neural_rdm.ipynb)
+- [Held-out transfer and feature RSA notebook](notebooks/03_group_transfer_feature_rsa.ipynb)
 
 Start with one subject and no downloads:
 
@@ -24,4 +25,10 @@ conda env create -f environment.yml
 conda activate nsdimagery
 python -m ipykernel install --user --name nsdimagery --display-name "Python (NSD-Imagery)"
 jupyter lab
+```
+
+To update an existing `nsdimagery` environment before notebook 03:
+
+```bash
+conda env update -n nsdimagery -f environment.yml
 ```

@@ -1,5 +1,19 @@
 """Small, dependency-light helpers for exploring the NSD-Imagery release."""
 
+from .analysis import (
+    average_by_target,
+    balanced_split_reliability,
+    correlation_rdm,
+    cosine_rdm,
+    exact_label_permutation_test,
+    exact_sign_flip_test,
+    independent_group_reliability,
+    rdm_spearman,
+    target_rdm,
+    upper_triangle,
+    zscore_within_groups,
+)
+
 from .io import (
     RUN_SPECS,
     build_event_table,
@@ -18,16 +32,27 @@ from .io import (
 
 __all__ = [
     "RUN_SPECS",
+    "average_by_target",
+    "balanced_split_reliability",
     "build_event_table",
     "build_run_table",
+    "correlation_rdm",
+    "cosine_rdm",
     "describe_hdf5",
     "extract_masked_betas",
+    "exact_label_permutation_test",
+    "exact_sign_flip_test",
     "find_data_root",
     "infer_beta_layout",
+    "independent_group_reliability",
     "load_behavior",
     "load_roi",
     "load_target_table",
     "read_ctab",
+    "rdm_spearman",
     "summarize_glmsingle_design",
+    "target_rdm",
+    "upper_triangle",
     "validate_download",
+    "zscore_within_groups",
 ]
