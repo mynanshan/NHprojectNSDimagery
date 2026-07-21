@@ -1,0 +1,16 @@
+name: nsdimagery
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - jupyterlab
+  - ipykernel
+  - numpy
+  - pandas
+  - scipy
+  - h5py
+  - nibabel
+  - matplotlib
+  - seaborn
+  - pillow
+  - openpyxl

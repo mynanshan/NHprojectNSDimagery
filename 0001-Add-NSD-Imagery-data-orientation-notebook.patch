@@ -1,0 +1,852 @@
+From af32a8a38f7a51a353a2a55e41d4b0f638c99652 Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Tue, 21 Jul 2026 07:07:52 +0800
+Subject: [PATCH] Add NSD-Imagery data orientation notebook
+
+---
+ README.md                           |  18 +-
+ environment.yml                     |  16 ++
+ notebooks/01_data_orientation.ipynb | 399 ++++++++++++++++++++++++++++
+ nsdimagery/__init__.py              |  27 ++
+ nsdimagery/io.py                    | 269 +++++++++++++++++++
+ scripts/check_nsdimagery_data.py    |  57 ++++
+ 6 files changed, 785 insertions(+), 1 deletion(-)
+ create mode 100644 environment.yml
+ create mode 100644 notebooks/01_data_orientation.ipynb
+ create mode 100644 nsdimagery/__init__.py
+ create mode 100644 nsdimagery/io.py
+ create mode 100644 scripts/check_nsdimagery_data.py
+
+diff --git a/README.md b/README.md
+index cbcf36a..fc38278 100644
+--- a/README.md
++++ b/README.md
+@@ -1,10 +1,26 @@
+ # NHprojectNSDimagery
+ 
+-- [Project plan](nsd_imagery_project_notes.md)
++- [Project plan](docs/nsd_imagery_project_notes.md)
+ - [Minimal NSD-Imagery download guide](docs/data_download.md)
++- [Interactive data-orientation notebook](notebooks/01_data_orientation.ipynb)
+ 
+ Start with one subject and no downloads:
+ 
+ ```bash
+ bash scripts/download_nsdimagery_mvp.sh --subjects 01 --estimate
+ ```
++
++After downloading, validate the files without loading the full beta arrays:
++
++```bash
++python scripts/check_nsdimagery_data.py data/nsd
++```
++
++For an isolated Python environment and Jupyter kernel:
++
++```bash
++conda env create -f environment.yml
++conda activate nsdimagery
++python -m ipykernel install --user --name nsdimagery --display-name "Python (NSD-Imagery)"
++jupyter lab
++```
+diff --git a/environment.yml b/environment.yml
+new file mode 100644
+index 0000000..b147a18
+--- /dev/null
++++ b/environment.yml
+@@ -0,0 +1,16 @@
++name: nsdimagery
++channels:
++  - conda-forge
++dependencies:
++  - python>=3.10
++  - jupyterlab
++  - ipykernel
++  - numpy
++  - pandas
++  - scipy
++  - h5py
++  - nibabel
++  - matplotlib
++  - seaborn
++  - pillow
++  - openpyxl
+diff --git a/notebooks/01_data_orientation.ipynb b/notebooks/01_data_orientation.ipynb
+new file mode 100644
+index 0000000..cd79629
+--- /dev/null
++++ b/notebooks/01_data_orientation.ipynb
+@@ -0,0 +1,399 @@
++{
++ "cells": [
++  {
++   "cell_type": "markdown",
++   "metadata": {},
++   "source": [
++    "# NSD-Imagery data orientation\n",
++    "\n",
++    "This notebook is a guided tour of the **minimal project download**. It is deliberately descriptive: the goal is to understand the files, dimensions, units, trial structure, and ROI labels before implementing RSA.\n",
++    "\n",
++    "The central data relationship is:\n",
++    "\n",
++    "`behavior/design → beta index → 3-D voxel response → ROI mask → trial × voxel matrix`\n",
++    "\n",
++    "Memory rule: the HDF5 beta array stays on disk. We read selected voxels across events; we do **not** execute `h5['betas'][:]`."
++   ]
++  },
++  {
++   "cell_type": "markdown",
++   "metadata": {},
++   "source": [
++    "## 0. Environment\n",
++    "\n",
++    "No GPU, CUDA, PyTorch, FreeSurfer, or fMRI preprocessing package is needed for this notebook. The only less-standard dependencies are `h5py` (lazy HDF5 access) and `nibabel` (NIfTI/MGH files)."
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": [
++    "from pathlib import Path\n",
++    "import sys\n",
++    "\n",
++    "REPO_ROOT = Path.cwd().resolve()\n",
++    "if not (REPO_ROOT / 'nsdimagery').is_dir():\n",
++    "    REPO_ROOT = REPO_ROOT.parent\n",
++    "if not (REPO_ROOT / 'nsdimagery').is_dir():\n",
++    "    raise RuntimeError('Start Jupyter from the repository root or its notebooks/ directory.')\n",
++    "sys.path.insert(0, str(REPO_ROOT))\n",
++    "\n",
++    "import h5py\n",
++    "import matplotlib.pyplot as plt\n",
++    "import nibabel as nib\n",
++    "import numpy as np\n",
++    "import pandas as pd\n",
++    "import seaborn as sns\n",
++    "from IPython.display import display\n",
++    "from PIL import Image\n",
++    "from scipy.io import loadmat\n",
++    "\n",
++    "from nsdimagery.io import (\n",
++    "    build_run_table, describe_hdf5, extract_masked_betas, find_data_root,\n",
++    "    infer_beta_layout, load_behavior, load_roi, paths_for_subject, read_ctab, validate_download,\n",
++    ")\n",
++    "\n",
++    "sns.set_theme(style='whitegrid', context='notebook')\n",
++    "print('Python:', sys.version.split()[0])\n",
++    "print('Repository:', REPO_ROOT)"
++   ]
++  },
++  {
++   "cell_type": "markdown",
++   "metadata": {},
++   "source": [
++    "## 1. Locate and validate the download\n",
++    "\n",
++    "Your expected root is `REPO/data/nsd`. The manifest checks all eight subjects, all three volumetric masks, all beta files, and the 12 behavioral TSVs per subject."
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": [
++    "DATA_ROOT = find_data_root(REPO_ROOT)\n",
++    "print('Data root:', DATA_ROOT)\n",
++    "\n",
++    "manifest = validate_download(DATA_ROOT)\n",
++    "display(manifest)\n",
++    "assert manifest['ok'].all(), 'At least one expected file is absent.'\n",
++    "\n",
++    "print(f\"Total size covered by manifest: {manifest['size_MiB'].sum()/1024:.2f} GiB\")"
++   ]
++  },
++  {
++   "cell_type": "markdown",
++   "metadata": {},
++   "source": [
++    "### What each top-level folder means\n",
++    "\n",
++    "- `nsddata/experiments/nsdimagery`: task definitions, design matrices, cue pairs, and target images.\n",
++    "- `nsddata/bdata/nsdimagery`: what happened on each presented behavioral trial.\n",
++    "- `nsddata/ppdata/.../roi`: 3-D integer masks already aligned to each subject's 1.8-mm beta volume.\n",
++    "- `nsddata/freesurfer/.../label`: surface masks and color tables; in this project the color tables mainly tell us what the volumetric integer codes mean.\n",
++    "- `nsddata_betas`: the large estimated BOLD response amplitudes."
++   ]
++  },
++  {
++   "cell_type": "markdown",
++   "metadata": {},
++   "source": [
++    "## 2. Experimental and beta-block structure\n",
++    "\n",
++    "There are 12 acquired runs. Every run has 48 behavioral trials. Vision and imagery produce one beta per trial; attention produces two betas per trial (cue and detection epochs). Thus `9 × 48 + 3 × 96 = 720` beta volumes.\n",
++    "\n",
++    "The table below gives safe **run-level** slices. We will not infer the within-attention event mapping until inspecting the GLMsingle design."
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": [
++    "run_table = build_run_table()\n",
++    "display(run_table)\n",
++    "print('Behavioral trials:', run_table['n_behavior_trials'].sum())\n",
++    "print('Modeled beta events:', run_table['n_betas'].sum())"
++   ]
++  },
++  {
++   "cell_type": "markdown",
++   "metadata": {},
++   "source": [
++    "## 3. See the target stimuli\n",
++    "\n",
++    "Set A contains six geometric patterns. Set B contains five NSD natural scenes and one artwork. Set C is conceptual (`stripes → zebra → mammal`, `yellow → banana → fruit`) and therefore has no single fixed raw target image per concept."
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": [
++    "stim_root = DATA_ROOT / 'nsddata' / 'experiments' / 'nsdimagery' / 'rawtargetimages'\n",
++    "image_paths = sorted(stim_root.glob('set*/*.png'))\n",
++    "\n",
++    "fig, axes = plt.subplots(2, 6, figsize=(16, 6))\n",
++    "for ax, path in zip(axes.flat, image_paths):\n",
++    "    ax.imshow(Image.open(path))\n",
++    "    ax.set_title(f'{path.parent.name}: {path.stem}', fontsize=8)\n",
++    "    ax.axis('off')\n",
++    "plt.tight_layout()"
++   ]
++  },
++  {
++   "cell_type": "markdown",
++   "metadata": {},
++   "source": [
++    "## 4. Behavioral TSVs: one row per presented trial\n",
++    "\n",
++    "Important columns include `CONDITION` (what was seen/attended/imagined), `CUE`, `FRAMEFILE`, `GROUNDTRUTH`, `BUTTON`, and timing/RT fields. In imagery, button 1 means vivid and button 2 means not vivid."
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": [
++    "SUBJECT = 1\n",
++    "behavior = load_behavior(DATA_ROOT, SUBJECT)\n",
++    "print('Shape:', behavior.shape)\n",
++    "print('Columns:')\n",
++    "print(list(behavior.columns))\n",
++    "display(behavior.head())\n",
++    "\n",
++    "run_order = run_table['run_name'].tolist()\n",
++    "trial_counts = behavior.groupby('RUN_NAME').size().reindex(run_order)\n",
++    "display(trial_counts.rename('behavioral rows').to_frame())\n",
++    "assert (trial_counts == 48).all()"
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": [
++    "imagery = behavior[behavior['RUN_NAME'].str.startswith('img')].copy()\n",
++    "imagery['BUTTON_NUMERIC'] = pd.to_numeric(imagery['BUTTON'], errors='coerce')\n",
++    "vividness = (\n",
++    "    imagery.groupby('RUN_NAME')['BUTTON_NUMERIC']\n",
++    "    .value_counts(dropna=False)\n",
++    "    .rename('n_trials')\n",
++    "    .reset_index()\n",
++    ")\n",
++    "display(vividness)\n",
++    "\n",
++    "fig, ax = plt.subplots(figsize=(10, 4))\n",
++    "sns.countplot(data=imagery, x='RUN_NAME', hue='BUTTON_NUMERIC', order=[r for r in run_order if r.startswith('img')], ax=ax)\n",
++    "ax.set_title('Imagery responses: button 1 = vivid, button 2 = not vivid')\n",
++    "ax.tick_params(axis='x', rotation=45)\n",
++    "plt.tight_layout()"
++   ]
++  },
++  {
++   "cell_type": "markdown",
++   "metadata": {},
++   "source": [
++    "## 5. MATLAB design files\n",
++    "\n",
++    "The run-level `*_dm.mat` files describe conditions over time. `designmatrixGLMsingle.mat` is the design actually used to obtain the 720 single-event betas. This cell inventories keys and shapes without presuming their internal organization."
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": [
++    "experiment_dir = DATA_ROOT / 'nsddata' / 'experiments' / 'nsdimagery'\n",
++    "\n",
++    "def mat_inventory(path):\n",
++    "    try:\n",
++    "        contents = loadmat(path, squeeze_me=True, struct_as_record=False)\n",
++    "        return pd.DataFrame([\n",
++    "            {'key': key, 'type': type(value).__name__, 'shape': getattr(value, 'shape', None)}\n",
++    "            for key, value in contents.items() if not key.startswith('__')\n",
++    "        ])\n",
++    "    except NotImplementedError:\n",
++    "        return describe_hdf5(path).rename(columns={'name': 'key'})\n",
++    "\n",
++    "for filename in ['visA_dm.mat', 'imgA_1_dm.mat', 'designmatrixGLMsingle.mat']:\n",
++    "    print('\\n', filename)\n",
++    "    display(mat_inventory(experiment_dir / filename))"
++   ]
++  },
++  {
++   "cell_type": "markdown",
++   "metadata": {},
++   "source": [
++    "## 6. HDF5 beta file: shape, chunks, and units\n",
++    "\n",
++    "The manual describes `/betas` in MATLAB order as `X × Y × Z × 720`. Because these files were written from MATLAB, **h5py normally exposes the same data as `720 × X × Y × Z`**. The code detects the layout rather than assuming an axis. Values are stored as `int16` after multiplying percent signal change by 300. Correct loading casts to floating point and divides by 300. The chunking is optimized for reading all events from a small number of voxels."
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": [
++    "subject_paths = paths_for_subject(DATA_ROOT, SUBJECT)\n",
++    "display(describe_hdf5(subject_paths['beta']))\n",
++    "\n",
++    "with h5py.File(subject_paths['beta'], 'r') as handle:\n",
++    "    beta_dataset = handle['betas']\n",
++    "    beta_shape = beta_dataset.shape\n",
++    "    print('Shape:', beta_shape)\n",
++    "    print('dtype:', beta_dataset.dtype)\n",
++    "    print('chunks:', beta_dataset.chunks)\n",
++    "    print('The event axis is the dimension of length 720; ROI shape verification comes next.')\n",
++    "    assert 720 in beta_shape"
++   ]
++  },
++  {
++   "cell_type": "markdown",
++   "metadata": {},
++   "source": [
++    "## 7. Volumetric ROI masks and label tables\n",
++    "\n",
++    "All three masks live in the same subject-native `func1pt8mm` grid as the beta data. `nsdgeneral` is binary. The other masks contain integer codes; the `.ctab` files translate codes into anatomical names. Values 0 (and sometimes −1) are not selected cortical ROIs."
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": [
++    "roi_arrays = {}\n",
++    "for roi_name in ['nsdgeneral', 'prf-visualrois', 'streams']:\n",
++    "    array, image = load_roi(DATA_ROOT, SUBJECT, roi_name)\n",
++    "    roi_arrays[roi_name] = array\n",
++    "    values, counts = np.unique(array, return_counts=True)\n",
++    "    summary = pd.DataFrame({'label': values, 'n_voxels': counts})\n",
++    "    print(f'\\n{roi_name}: shape={array.shape}, voxel sizes={image.header.get_zooms()[:3]}')\n",
++    "    display(summary[summary['label'] > 0])\n",
++    "    layout = infer_beta_layout(beta_shape, array.shape)\n",
++    "    print('h5py layout:', layout)\n",
++    "\n",
++    "prf_ctab = read_ctab(subject_paths['labels'] / 'prf-visualrois.mgz.ctab')\n",
++    "streams_ctab = read_ctab(subject_paths['labels'] / 'streams.mgz.ctab')\n",
++    "print('pRF visual ROI labels')\n",
++    "display(prf_ctab)\n",
++    "print('Streams labels')\n",
++    "display(streams_ctab)"
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": [
++    "fig, axes = plt.subplots(1, 3, figsize=(15, 5))\n",
++    "for ax, (name, array) in zip(axes, roi_arrays.items()):\n",
++    "    z = array.shape[2] // 2\n",
++    "    shown = np.where(array[:, :, z] > 0, array[:, :, z], np.nan)\n",
++    "    ax.imshow(np.rot90(shown), interpolation='nearest')\n",
++    "    ax.set_title(f'{name}: axial index {z}')\n",
++    "    ax.axis('off')\n",
++    "plt.tight_layout()"
++   ]
++  },
++  {
++   "cell_type": "markdown",
++   "metadata": {},
++   "source": [
++    "## 8. Safely read a small voxel sample\n",
++    "\n",
++    "For orientation, sample 300 `nsdgeneral` voxels and read all 720 events. The resulting matrix is `events × voxels`. This is tiny compared with the full four-dimensional array and already supports diagnostic plots and a toy RDM."
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": [
++    "sample_betas, voxel_coordinates = extract_masked_betas(\n",
++    "    subject_paths['beta'], roi_arrays['nsdgeneral'], max_voxels=300, seed=2026\n",
++    ")\n",
++    "print('events × sampled voxels:', sample_betas.shape)\n",
++    "print('Units: percent signal change')\n",
++    "print(pd.Series(sample_betas.ravel()).describe(percentiles=[.01, .1, .5, .9, .99]))\n",
++    "\n",
++    "fig, axes = plt.subplots(1, 2, figsize=(14, 4))\n",
++    "axes[0].hist(sample_betas.ravel(), bins=100)\n",
++    "axes[0].set(xlabel='percent signal change', ylabel='count', title='Sampled beta values')\n",
++    "axes[1].plot(sample_betas[:, 0], linewidth=0.8)\n",
++    "axes[1].set(xlabel='beta event index (Python)', ylabel='percent signal change', title='One sampled voxel across 720 events')\n",
++    "plt.tight_layout()"
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": [
++    "run_summaries = []\n",
++    "for row in run_table.itertuples(index=False):\n",
++    "    block = sample_betas[row.beta_start_python:row.beta_stop_python_exclusive]\n",
++    "    run_summaries.append({\n",
++    "        'run_name': row.run_name,\n",
++    "        'task': row.task,\n",
++    "        'stimulus_set': row.stimulus_set,\n",
++    "        'mean_beta': float(block.mean()),\n",
++    "        'mean_absolute_beta': float(np.abs(block).mean()),\n",
++    "        'spatial_sd': float(block.std(axis=1).mean()),\n",
++    "    })\n",
++    "run_summaries = pd.DataFrame(run_summaries)\n",
++    "display(run_summaries)\n",
++    "\n",
++    "fig, ax = plt.subplots(figsize=(11, 4))\n",
++    "sns.barplot(data=run_summaries, x='run_name', y='mean_absolute_beta', hue='task', dodge=False, ax=ax)\n",
++    "ax.set_ylabel('mean |beta| in sampled nsdgeneral voxels')\n",
++    "ax.tick_params(axis='x', rotation=45)\n",
++    "plt.tight_layout()"
++   ]
++  },
++  {
++   "cell_type": "markdown",
++   "metadata": {},
++   "source": [
++    "## 9. What you should now understand\n",
++    "\n",
++    "1. A behavioral row describes a presented trial; a beta volume describes a modeled event. They are not globally one-to-one because attention has two modeled epochs.\n",
++    "2. Every beta is a three-dimensional response-amplitude map in subject-native 1.8-mm space.\n",
++    "3. The raw stored integer must be divided by 300 to recover percent signal change.\n",
++    "4. ROI masks select interpretable voxel subsets without registration because their spatial shapes match the beta grid.\n",
++    "5. Set A and set B give the cleanest first vision-versus-imagery comparison. Set C requires special care because concepts are paired with varying concrete images in vision.\n",
++    "\n",
++    "### Next notebook\n",
++    "\n",
++    "The next step should construct a verified event table for vision and imagery, average repeated beta patterns by subject × condition × target × ROI, and compute the first neural RDM. Do not begin CLIP/HOG feature extraction until that table passes alignment checks."
++   ]
++  }
++ ],
++ "metadata": {
++  "kernelspec": {
++   "display_name": "Python (NSD-Imagery)",
++   "language": "python",
++   "name": "nsdimagery"
++  },
++  "language_info": {
++   "name": "python",
++   "version": "3.10"
++  }
++ },
++ "nbformat": 4,
++ "nbformat_minor": 5
++}
+diff --git a/nsdimagery/__init__.py b/nsdimagery/__init__.py
+new file mode 100644
+index 0000000..480d249
+--- /dev/null
++++ b/nsdimagery/__init__.py
+@@ -0,0 +1,27 @@
++"""Small, dependency-light helpers for exploring the NSD-Imagery release."""
++
++from .io import (
++    RUN_SPECS,
++    build_run_table,
++    describe_hdf5,
++    extract_masked_betas,
++    find_data_root,
++    infer_beta_layout,
++    load_behavior,
++    load_roi,
++    read_ctab,
++    validate_download,
++)
++
++__all__ = [
++    "RUN_SPECS",
++    "build_run_table",
++    "describe_hdf5",
++    "extract_masked_betas",
++    "find_data_root",
++    "infer_beta_layout",
++    "load_behavior",
++    "load_roi",
++    "read_ctab",
++    "validate_download",
++]
+diff --git a/nsdimagery/io.py b/nsdimagery/io.py
+new file mode 100644
+index 0000000..c2a09c9
+--- /dev/null
++++ b/nsdimagery/io.py
+@@ -0,0 +1,269 @@
++"""I/O helpers for the minimal NSD-Imagery download.
++
++The important performance rule is that the HDF5 beta array should stay on disk.
++Read selected voxels across all 720 events; never load ``/betas[:]`` casually.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Iterable
++
++import h5py
++import nibabel as nib
++import numpy as np
++import pandas as pd
++
++
++@dataclass(frozen=True)
++class RunSpec:
++    name: str
++    task: str
++    stimulus_set: str
++    n_behavior_trials: int
++    n_betas: int
++
++
++# Acquisition/GLM order documented by NSD. Attention has two modeled epochs
++# per behavioral trial; vision and imagery have one.
++RUN_SPECS = (
++    RunSpec("visA", "vision", "A", 48, 48),
++    RunSpec("attA", "attention", "A", 48, 96),
++    RunSpec("imgA_1", "imagery", "A", 48, 48),
++    RunSpec("visB", "vision", "B", 48, 48),
++    RunSpec("attB", "attention", "B", 48, 96),
++    RunSpec("imgB_1", "imagery", "B", 48, 48),
++    RunSpec("visC", "vision", "C", 48, 48),
++    RunSpec("attC", "attention", "C", 48, 96),
++    RunSpec("imgC_1", "imagery", "C", 48, 48),
++    RunSpec("imgA_2", "imagery", "A", 48, 48),
++    RunSpec("imgB_2", "imagery", "B", 48, 48),
++    RunSpec("imgC_2", "imagery", "C", 48, 48),
++)
++
++
++def find_data_root(start: str | Path = ".") -> Path:
++    """Find ``data/nsd`` from the repo root or the notebooks directory."""
++    start = Path(start).expanduser().resolve()
++    candidates = [
++        start,
++        start / "data" / "nsd",
++        start.parent / "data" / "nsd",
++    ]
++    for candidate in candidates:
++        if (
++            (candidate / "nsddata").is_dir()
++            and (candidate / "nsddata_betas").is_dir()
++        ):
++            return candidate
++    tried = "\n".join(f"  - {path}" for path in candidates)
++    raise FileNotFoundError(
++        "Could not locate the NSD data root. Tried:\n"
++        f"{tried}\nSet DATA_ROOT explicitly in the notebook."
++    )
++
++
++def _subject(subject: int | str) -> str:
++    if isinstance(subject, int):
++        subject = f"{subject:02d}"
++    subject = str(subject).removeprefix("subj")
++    if subject not in {f"{i:02d}" for i in range(1, 9)}:
++        raise ValueError("subject must be 01 through 08")
++    return f"subj{subject}"
++
++
++def paths_for_subject(data_root: str | Path, subject: int | str) -> dict[str, Path]:
++    root = Path(data_root)
++    subj = _subject(subject)
++    roi_dir = root / "nsddata" / "ppdata" / subj / "func1pt8mm" / "roi"
++    return {
++        "beta": root
++        / "nsddata_betas"
++        / "ppdata"
++        / subj
++        / "func1pt8mm"
++        / "nsdimagerybetas_fithrf_GLMdenoise_RR"
++        / "betas_nsdimagery.hdf5",
++        "behavior": root / "nsddata" / "bdata" / "nsdimagery",
++        "nsdgeneral": roi_dir / "nsdgeneral.nii.gz",
++        "prf-visualrois": roi_dir / "prf-visualrois.nii.gz",
++        "streams": roi_dir / "streams.nii.gz",
++        "labels": root / "nsddata" / "freesurfer" / subj / "label",
++    }
++
++
++def validate_download(data_root: str | Path) -> pd.DataFrame:
++    """Return a manifest table; ``ok`` must be true in every row."""
++    root = Path(data_root)
++    rows: list[dict[str, object]] = []
++    for subject_number in range(1, 9):
++        subj = f"subj{subject_number:02d}"
++        paths = paths_for_subject(root, subject_number)
++        for kind in ("beta", "nsdgeneral", "prf-visualrois", "streams"):
++            path = paths[kind]
++            rows.append(
++                {
++                    "subject": subj,
++                    "kind": kind,
++                    "path": path,
++                    "ok": path.is_file(),
++                    "size_MiB": path.stat().st_size / 2**20 if path.is_file() else np.nan,
++                }
++            )
++        behavior_files = sorted(paths["behavior"].glob(f"nsdimagery_{subj}_*.tsv"))
++        rows.append(
++            {
++                "subject": subj,
++                "kind": "behavior TSVs (expected 12)",
++                "path": paths["behavior"],
++                "ok": len(behavior_files) == 12,
++                "size_MiB": sum(p.stat().st_size for p in behavior_files) / 2**20,
++            }
++        )
++    return pd.DataFrame(rows)
++
++
++def load_behavior(data_root: str | Path, subject: int | str) -> pd.DataFrame:
++    """Read and concatenate the 12 behavioral TSVs for one subject."""
++    subj = _subject(subject)
++    behavior_dir = paths_for_subject(data_root, subject)["behavior"]
++    frames = []
++    for path in sorted(behavior_dir.glob(f"nsdimagery_{subj}_*.tsv")):
++        frame = pd.read_csv(path, sep="\t")
++        frame.insert(0, "RUN_NAME", path.stem.replace(f"nsdimagery_{subj}_", ""))
++        frame.insert(0, "SOURCE_FILE", path.name)
++        frames.append(frame)
++    if len(frames) != 12:
++        raise FileNotFoundError(f"Expected 12 TSVs for {subj}; found {len(frames)}")
++    return pd.concat(frames, ignore_index=True)
++
++
++def build_run_table() -> pd.DataFrame:
++    """Coarse beta blocks. Attention's within-run epoch order needs the GLM design."""
++    rows = []
++    start = 0
++    for run_number, spec in enumerate(RUN_SPECS, start=1):
++        stop = start + spec.n_betas
++        rows.append(
++            {
++                "run_number": run_number,
++                "run_name": spec.name,
++                "task": spec.task,
++                "stimulus_set": spec.stimulus_set,
++                "n_behavior_trials": spec.n_behavior_trials,
++                "n_betas": spec.n_betas,
++                "beta_start_python": start,
++                "beta_stop_python_exclusive": stop,
++                "beta_first_human": start + 1,
++                "beta_last_human": stop,
++            }
++        )
++        start = stop
++    table = pd.DataFrame(rows)
++    if start != 720:
++        raise AssertionError(f"Run specification produced {start}, not 720, betas")
++    return table
++
++
++def describe_hdf5(path: str | Path) -> pd.DataFrame:
++    """List HDF5 groups/datasets without loading dataset contents."""
++    rows = []
++    with h5py.File(path, "r") as handle:
++        def visitor(name: str, obj: h5py.Dataset | h5py.Group) -> None:
++            if isinstance(obj, h5py.Dataset):
++                rows.append(
++                    {
++                        "name": f"/{name}",
++                        "shape": obj.shape,
++                        "dtype": str(obj.dtype),
++                        "chunks": obj.chunks,
++                        "compression": obj.compression,
++                    }
++                )
++        handle.visititems(visitor)
++    return pd.DataFrame(rows)
++
++
++def infer_beta_layout(
++    dataset_shape: tuple[int, ...], spatial_shape: tuple[int, ...]
++) -> str:
++    """Identify how Python exposes the MATLAB-written NSD HDF5 dimensions.
++
++    The NSD manual uses MATLAB order ``X × Y × Z × events``. In the released
++    files, h5py commonly exposes the reversed HDF5 dimension convention as
++    ``events × X × Y × Z``. Supporting both prevents a silent axis mistake.
++    """
++    dataset_shape = tuple(dataset_shape)
++    spatial_shape = tuple(spatial_shape)
++    if dataset_shape[0] == 720 and dataset_shape[1:] == spatial_shape:
++        return "events_first"
++    if dataset_shape[-1] == 720 and dataset_shape[:-1] == spatial_shape:
++        return "events_last"
++    raise ValueError(
++        f"Cannot reconcile beta shape {dataset_shape} with ROI shape {spatial_shape} "
++        "and 720 expected events"
++    )
++
++
++def load_roi(data_root: str | Path, subject: int | str, roi: str):
++    """Return ``(integer array, nibabel image)`` for a volumetric ROI."""
++    if roi not in {"nsdgeneral", "prf-visualrois", "streams"}:
++        raise ValueError("roi must be nsdgeneral, prf-visualrois, or streams")
++    image = nib.load(paths_for_subject(data_root, subject)[roi])
++    return np.asanyarray(image.dataobj).astype(np.int16, copy=False), image
++
++
++def read_ctab(path: str | Path) -> pd.DataFrame:
++    """Read the useful label/name columns of a FreeSurfer color table."""
++    rows = []
++    for line in Path(path).read_text().splitlines():
++        stripped = line.strip()
++        if not stripped or stripped.startswith("#"):
++            continue
++        fields = stripped.split()
++        if fields[0].lstrip("-").isdigit() and len(fields) >= 2:
++            rows.append({"label": int(fields[0]), "name": fields[1]})
++    return pd.DataFrame(rows).drop_duplicates("label").sort_values("label")
++
++
++def extract_masked_betas(
++    beta_path: str | Path,
++    mask: np.ndarray,
++    *,
++    labels: Iterable[int] | None = None,
++    max_voxels: int | None = None,
++    seed: int = 0,
++) -> tuple[np.ndarray, np.ndarray]:
++    """Read selected voxel time courses and return percent-signal-change betas.
++
++    Returns
++    -------
++    betas : ndarray, shape (720 events, selected voxels)
++    coordinates : ndarray, shape (selected voxels, 3)
++    """
++    if labels is None:
++        selected = mask > 0
++    else:
++        selected = np.isin(mask, list(labels))
++    coordinates = np.argwhere(selected)
++    if coordinates.size == 0:
++        raise ValueError("The selected ROI contains no voxels")
++    if max_voxels is not None and len(coordinates) > max_voxels:
++        rng = np.random.default_rng(seed)
++        coordinates = coordinates[rng.choice(len(coordinates), max_voxels, replace=False)]
++
++    with h5py.File(beta_path, "r") as handle:
++        dataset = handle["betas"]
++        layout = infer_beta_layout(dataset.shape, mask.shape)
++        values = np.empty((720, len(coordinates)), dtype=np.float32)
++        if layout == "events_first":
++            for column, (x, y, z) in enumerate(coordinates):
++                values[:, column] = dataset[:, x, y, z]
++        else:
++            for column, (x, y, z) in enumerate(coordinates):
++                values[:, column] = dataset[x, y, z, :]
++
++    # NSD stores these int16 values after multiplying percent signal change by 300.
++    values /= 300.0
++    return values, coordinates
+diff --git a/scripts/check_nsdimagery_data.py b/scripts/check_nsdimagery_data.py
+new file mode 100644
+index 0000000..fbcf943
+--- /dev/null
++++ b/scripts/check_nsdimagery_data.py
+@@ -0,0 +1,57 @@
++#!/usr/bin/env python
++"""Validate the minimal NSD-Imagery download without loading beta arrays."""
++
++from __future__ import annotations
++
++import argparse
++from pathlib import Path
++import sys
++
++import h5py
++import nibabel as nib
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO_ROOT))
++
++from nsdimagery.io import infer_beta_layout, paths_for_subject, validate_download
++
++
++def main() -> int:
++    parser = argparse.ArgumentParser()
++    parser.add_argument("data_root", nargs="?", default="data/nsd", type=Path)
++    args = parser.parse_args()
++
++    manifest = validate_download(args.data_root)
++    print(manifest.to_string(index=False))
++    if not manifest["ok"].all():
++        print("\nERROR: at least one expected item is missing.")
++        return 1
++
++    print("\nShape checks:")
++    for subject in range(1, 9):
++        paths = paths_for_subject(args.data_root, subject)
++        with h5py.File(paths["beta"], "r") as handle:
++            beta_shape = handle["betas"].shape
++            beta_dtype = handle["betas"].dtype
++        roi_shapes = {
++            roi: nib.load(paths[roi]).shape
++            for roi in ("nsdgeneral", "prf-visualrois", "streams")
++        }
++        layouts = {
++            roi: infer_beta_layout(beta_shape, shape)
++            for roi, shape in roi_shapes.items()
++        }
++        shapes_match = len(set(layouts.values())) == 1
++        print(
++            f"subj{subject:02d}: beta={beta_shape} {beta_dtype}; "
++            f"ROI shapes={roi_shapes}; layout={layouts}; match={shapes_match}"
++        )
++        if not shapes_match:
++            return 1
++
++    print("\nAll expected files and array shapes look good.")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+-- 
+2.51.1
+
