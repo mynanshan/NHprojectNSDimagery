@@ -119,4 +119,11 @@ The most defensible current conclusion is:
 6. **Many secondary tests.** Only the primary held-out Set B higher-visual test should be given confirmatory emphasis. Feature/ROI tables are exploratory unless multiplicity is addressed.
 7. **RDM magnitude is not discriminability.** Large heatmap off-diagonals do not prove that targets or tasks can be decoded.
 
-Before changing the main scientific claim, the best next analysis is a robustness notebook: repeat ROI voxel sampling across seeds, quantify cue-match versus cue-mismatch effects, perform leave-one-target-out sensitivity analyses, and place the observed RDM correlations relative to reliability ceilings.
+The next analysis is now implemented in
+[Notebook 04](../notebooks/04_measurement_first_validation.ipynb). It first
+asks whether targets can be identified within each condition and whether
+vision-derived centroids identify imagery trials. It then adds cue-match versus
+cue-mismatch controls, crossvalidated distances, exact RDM label permutations,
+leave-one-target-out sensitivity, and group noise ceilings. The conceptual
+reason for this revised order is documented in
+[RSA scope and revised analysis](rsa_scope_and_revised_analysis.md).

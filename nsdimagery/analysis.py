@@ -6,7 +6,7 @@ from functools import lru_cache
 from itertools import combinations, permutations, product
 
 import numpy as np
-from scipy.spatial.distance import pdist, squareform
+from scipy.spatial.distance import cdist, pdist, squareform
 from scipy.stats import rankdata, spearmanr
 
 
@@ -92,6 +92,175 @@ def rdm_spearman(first: np.ndarray, second: np.ndarray) -> float:
     if first.shape != second.shape:
         raise ValueError("RDMs must have the same shape")
     return float(spearmanr(upper_triangle(first), upper_triangle(second)).statistic)
+
+
+def nearest_centroid_predict(
+    train_patterns: np.ndarray,
+    train_targets: np.ndarray,
+    test_patterns: np.ndarray,
+) -> np.ndarray:
+    """Predict targets by nearest correlation-distance training centroid."""
+    train_patterns = np.asarray(train_patterns)
+    train_targets = np.asarray(train_targets)
+    test_patterns = np.asarray(test_patterns)
+    if train_patterns.ndim != 2 or test_patterns.ndim != 2:
+        raise ValueError("train_patterns and test_patterns must be 2D")
+    if len(train_patterns) != len(train_targets):
+        raise ValueError("train_patterns and train_targets must have equal length")
+    if train_patterns.shape[1] != test_patterns.shape[1]:
+        raise ValueError("train and test patterns must have the same voxel count")
+    centroids, targets = average_by_target(train_patterns, train_targets)
+    distances = cdist(test_patterns, centroids, metric="correlation")
+    if not np.isfinite(distances).all():
+        raise ValueError("Non-finite centroid distances; check constant patterns")
+    return targets[np.argmin(distances, axis=1)]
+
+
+def exact_class_label_permutation_test(
+    predicted: np.ndarray, observed: np.ndarray
+) -> dict[str, float | int]:
+    """Test classification accuracy by enumerating predicted-label mappings."""
+    predicted = np.asarray(predicted)
+    observed = np.asarray(observed)
+    if predicted.ndim != 1 or observed.ndim != 1 or len(predicted) != len(observed):
+        raise ValueError("predicted and observed must be equal-length vectors")
+    classes = np.unique(np.concatenate([predicted, observed]))
+    if len(classes) > 8:
+        raise ValueError("Exact label enumeration is limited to at most 8 classes")
+    class_to_index = {value: index for index, value in enumerate(classes)}
+    predicted_indices = np.asarray([class_to_index[value] for value in predicted])
+    null = []
+    for order in permutations(classes.tolist()):
+        remapped = np.asarray(order)[predicted_indices]
+        null.append(np.mean(remapped == observed))
+    null = np.asarray(null)
+    accuracy = float(np.mean(predicted == observed))
+    return {
+        "accuracy": accuracy,
+        "chance": float(1 / len(classes)),
+        "p_greater": float(np.mean(null >= accuracy - 1e-12)),
+        "n_permutations": len(null),
+    }
+
+
+def balanced_split_identification(
+    patterns: np.ndarray,
+    target_numbers: np.ndarray,
+    *,
+    n_splits: int = 100,
+    seed: int = 0,
+) -> np.ndarray:
+    """Return symmetric nearest-centroid accuracies from balanced trial halves."""
+    patterns = np.asarray(patterns)
+    target_numbers = np.asarray(target_numbers)
+    if patterns.ndim != 2 or len(patterns) != len(target_numbers):
+        raise ValueError("patterns must be trials x voxels and match targets")
+    if n_splits < 1:
+        raise ValueError("n_splits must be positive")
+    targets = np.unique(target_numbers)
+    indices = {target: np.flatnonzero(target_numbers == target) for target in targets}
+    if any(len(index) < 2 or len(index) % 2 for index in indices.values()):
+        raise ValueError("Every target needs an even number of at least two trials")
+
+    rng = np.random.default_rng(seed)
+    accuracies = []
+    for _ in range(n_splits):
+        first_indices = []
+        second_indices = []
+        for target in targets:
+            shuffled = rng.permutation(indices[target])
+            middle = len(shuffled) // 2
+            first_indices.extend(shuffled[:middle])
+            second_indices.extend(shuffled[middle:])
+        first_indices = np.asarray(first_indices)
+        second_indices = np.asarray(second_indices)
+        first_to_second = nearest_centroid_predict(
+            patterns[first_indices], target_numbers[first_indices], patterns[second_indices]
+        )
+        second_to_first = nearest_centroid_predict(
+            patterns[second_indices], target_numbers[second_indices], patterns[first_indices]
+        )
+        accuracies.append(
+            np.mean(
+                np.concatenate([
+                    first_to_second == target_numbers[second_indices],
+                    second_to_first == target_numbers[first_indices],
+                ])
+            )
+        )
+    return np.asarray(accuracies)
+
+
+def crossvalidated_dot_rdm(
+    first_patterns: np.ndarray,
+    first_targets: np.ndarray,
+    second_patterns: np.ndarray,
+    second_targets: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Crossvalidated dot-product dissimilarity from two data partitions.
+
+    A positive pairwise value means the target contrast points in a consistent
+    voxel-space direction in the two partitions. Under independent noise and
+    no true target difference, its expectation is zero. This is an unwhitened
+    relative of the crossnobis distance, scaled by the number of voxels.
+    """
+    first_means, first_order = average_by_target(first_patterns, first_targets)
+    second_means, second_order = average_by_target(second_patterns, second_targets)
+    if not np.array_equal(first_order, second_order):
+        raise ValueError("The two partitions must contain identical targets")
+    if first_means.shape[1] != second_means.shape[1]:
+        raise ValueError("The two partitions must have the same voxel count")
+    n_targets, n_voxels = first_means.shape
+    rdm = np.zeros((n_targets, n_targets), dtype=float)
+    for first_index, second_index in combinations(range(n_targets), 2):
+        first_delta = first_means[first_index] - first_means[second_index]
+        second_delta = second_means[first_index] - second_means[second_index]
+        value = float(first_delta @ second_delta / n_voxels)
+        rdm[first_index, second_index] = value
+        rdm[second_index, first_index] = value
+    return rdm, first_order
+
+
+def leave_one_target_out_rdm_spearman(
+    first: np.ndarray, second: np.ndarray
+) -> np.ndarray:
+    """Return one RDM correlation after omitting each target in turn."""
+    first = np.asarray(first)
+    second = np.asarray(second)
+    if (
+        first.shape != second.shape
+        or first.ndim != 2
+        or first.shape[0] != first.shape[1]
+        or first.shape[0] < 4
+    ):
+        raise ValueError("RDMs must be matching square matrices with >=4 targets")
+    correlations = []
+    for omitted in range(first.shape[0]):
+        keep = np.arange(first.shape[0]) != omitted
+        correlations.append(rdm_spearman(first[np.ix_(keep, keep)], second[np.ix_(keep, keep)]))
+    return np.asarray(correlations)
+
+
+def rdm_noise_ceiling(rdms: np.ndarray) -> dict[str, np.ndarray | float]:
+    """Estimate leave-one-subject-out lower and inclusive upper RSA ceilings."""
+    rdms = np.asarray(rdms, dtype=float)
+    if rdms.ndim != 3 or rdms.shape[1] != rdms.shape[2] or len(rdms) < 3:
+        raise ValueError("rdms must be subjects x targets x targets with >=3 subjects")
+    vectors = np.stack([rankdata(upper_triangle(rdm)) for rdm in rdms])
+    lower = []
+    upper = []
+    for subject in range(len(vectors)):
+        others = np.arange(len(vectors)) != subject
+        lower.append(np.corrcoef(vectors[subject], vectors[others].mean(axis=0))[0, 1])
+        upper.append(np.corrcoef(vectors[subject], vectors.mean(axis=0))[0, 1])
+    lower = np.asarray(lower, dtype=float)
+    upper = np.asarray(upper, dtype=float)
+    return {
+        "lower_by_subject": lower,
+        "upper_by_subject": upper,
+        "lower_mean": float(lower.mean()),
+        "upper_mean": float(upper.mean()),
+    }
 
 
 @lru_cache(maxsize=None)

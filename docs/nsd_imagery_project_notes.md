@@ -44,6 +44,7 @@ Three shorter notes now complement this project plan:
 - [Experiment recap](experiment_recap.md): what a participant did, and how runs, trials, design matrices, raw fMRI, and beta volumes relate.
 - [Original paper methodology](original_paper_methodology.md): the benchmark's cross-decoding workflow in compact notation.
 - [Notebook 02/03 results review](notebook_02_03_results_review.md): what the current RDM, reliability, held-out transfer, HOG, and CLIP results do and do not support.
+- [RSA scope and revised analysis](rsa_scope_and_revised_analysis.md): why RDM correlation is a standard but narrow statistic, and why direct identification is now primary.
 
 The essential counting identity for one participant is
 
@@ -59,6 +60,23 @@ $$
 $$
 
 The difference occurs because every attention trial has two modeled epochs. Our current notebooks use the 432 vision and imagery beta volumes and leave the 288 attention betas out.
+
+### Revised priority after the Notebook 03 checkpoint
+
+The original plan below proposed RSA as the must-have MVP. That was a sensible
+starting point, but the weak and heterogeneous RDM reliability observed in
+Notebook 03 makes an RSA-only conclusion too indirect. We now use this fixed
+evidence order:
+
+1. establish target information independently within vision and imagery;
+2. test direct vision-to-imagery target identification, including cue controls;
+3. use RDM correlation as a secondary statement about pairwise organization;
+4. ask HOG, CLIP, or other feature models to explain the effect only if the
+   neural measurement is reliable enough.
+
+Notebook 04 applies this plan to all eight participants. It does not select a
+hypothesis using `subj01`; the pilot/held-out distinction remains relevant only
+when describing how the earlier exploratory result was obtained.
 
 ---
 
@@ -285,15 +303,20 @@ These represent meaning, object category, scene category, and semantic gist.
 
 Important principle:
 
-> Do not rely on only one feature model. Use at least two low-level and two high-level feature families if possible.
+> Do not add feature models until the neural target signal and direct transfer
+> are measurable. If that gate passes, predeclare a small feature hierarchy
+> rather than selecting whichever model correlates best after the fact.
 
-This makes the conclusion less dependent on one arbitrary latent space.
+This makes the conclusion less dependent on one arbitrary latent space without
+turning the analysis into an unconstrained model search.
 
 ---
 
-## 8. Most Feasible Plan: RSA / Representational Geometry
+## 8. RSA component of the analysis
 
-This is the recommended **must-have MVP**.
+This was the original proposed MVP. After Notebook 03, it remains useful as the
+secondary relational analysis described in the revised priority above; direct
+identification and crossvalidated target differences now come first.
 
 ### Data object
 
@@ -739,12 +762,12 @@ Deliverable:
 2. **Avoid training a new deep reconstruction model**.
 3. **Use prepared fMRI betas**, not raw fMRI preprocessing.
 4. **Use representation-level analysis** rather than image generation as the main scientific evidence.
-5. **Primary MVP = RSA / representational geometry.**
-6. **Stretch = ridge decoding and retrieval.**
+5. **Primary measurement = within-condition and vision-to-imagery target identification.**
+6. **RSA = secondary description of pairwise target organization.**
 7. **Use both `nsdgeneral` and ROI-specific masks.**
-8. **Compare perception vs imagery through feature-level transfer/drop**, not raw performance only.
-9. **Treat latent similarities carefully** using RDMs, retrieval, transfer ratios, and uncertainty tests.
-10. **Frame conclusions modestly:** imagery may preserve semantic geometry more robustly than low-level visual geometry, especially in higher visual cortex.
+8. **Test the cue confound** using cue-matched, cue-mismatched, and cue-labeled vision data.
+9. **Treat similarities carefully** using exact permutations, target-omission sensitivity, crossvalidation, and noise ceilings.
+10. **Treat HOG/CLIP findings as unresolved:** the current results do not support stronger CLIP than HOG alignment.
 
 
 ---
@@ -964,11 +987,20 @@ How strong the meaningful neural signal is relative to noise. Mental imagery fMR
 
 ## 15. Minimal Final Claim We Could Defend
 
-A cautious final workshop claim might be:
+Notebook 03 does **not** support the original “semantics more than low-level
+detail” claim: the planned CLIP-minus-HOG contrast went in the opposite
+direction. The final claim must therefore depend on the measurement-first
+checks in Notebook 04.
 
-> We used NSD-Imagery to compare neural representational geometry during perception and mental imagery. Preliminary analyses suggest that imagery-related responses align more robustly with high-level semantic feature geometry than with low-level visual feature geometry, especially outside early visual cortex. This supports the view that the mind’s eye may preserve visual meaning more reliably than precise spatial detail.
+If those checks show reliable imagery identification and cue-controlled
+vision-to-imagery identification, a cautious claim is:
 
-If results are null or mixed, a still useful claim would be:
+> NSD-Imagery contains target-specific multivoxel information that generalizes
+> from perception to imagery under a simple, predeclared identification test.
+> The corresponding pairwise organization is preliminary, and HOG and CLIP do
+> not yet provide a convincing explanation of the transferable signal.
+
+If measurement validity or direct transfer fails, the useful claim is:
 
 > We built a reproducible pipeline for NSD-Imagery representation analysis and found that conclusions depend strongly on ROI choice, feature representation, and whether performance is normalized against perception. This provides a useful foundation for future perception-to-imagery transfer studies.
 
@@ -976,19 +1008,15 @@ If results are null or mixed, a still useful claim would be:
 
 ## 16. Immediate To-Do List
 
-1. Confirm exact NSD-Imagery access path after NSD data access approval.
-2. Locate prepared beta files and stimulus metadata.
-3. Identify available ROI masks:
-   - `nsdgeneral`;
-   - V1–V4;
-   - higher visual / category-selective ROIs.
-4. Write a minimal loader that returns:
+The download, alignment, ROI extraction, HOG/CLIP features, and initial RSA
+steps are complete. The current order is:
 
-$$
-(i, s, c, r) \mapsto x_{i,s,c,r}.
-$$
-
-5. Extract feature vectors for NSD-Imagery target stimuli.
-6. Implement RDM computation and RSA correlation.
+1. run Notebook 04 for all eight participants;
+2. interpret within-imagery identification before direct transfer;
+3. check the cue-mismatch transfer control;
+4. inspect crossvalidated target differences, target-omission sensitivity, and
+   group noise ceilings;
+5. decide whether the data justify a small predeclared feature hierarchy or
+   only a measurement-limitation result.
 7. Make a toy figure with fake data before the workshop.
 8. Prepare the Slack pitch and invite collaborators with fMRI/NSD expertise.
