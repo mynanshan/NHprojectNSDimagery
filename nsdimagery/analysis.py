@@ -45,6 +45,77 @@ def average_by_target(
     return averaged, targets
 
 
+def reconstruction_brain_correlations(
+    measured: np.ndarray,
+    predicted: np.ndarray,
+    *,
+    voxel_mask: np.ndarray | None = None,
+) -> np.ndarray:
+    """Correlate measured and image-predicted betas across ROI voxels.
+
+    This is the spatial-pattern Pearson correlation used for the
+    NSD-Imagery paper's Table 1 brain metric. ``measured`` contains one
+    repeat-averaged beta pattern per target. ``predicted`` may contain one
+    GNet prediction per target or multiple reconstruction samples per target.
+
+    Parameters
+    ----------
+    measured
+        Array shaped ``(targets, voxels)``.
+    predicted
+        Array shaped ``(targets, voxels)`` or
+        ``(targets, reconstruction_samples, voxels)``.
+    voxel_mask
+        Optional boolean mask over the last (voxel) dimension.
+
+    Returns
+    -------
+    ndarray
+        One correlation per target, or a ``targets x samples`` array when
+        multiple reconstruction samples are supplied. Averaging this output
+        gives the corresponding Table 1 summary statistic.
+    """
+    measured = np.asarray(measured, dtype=np.float64)
+    predicted = np.asarray(predicted, dtype=np.float64)
+    if measured.ndim != 2:
+        raise ValueError("measured must be targets x voxels")
+    if predicted.ndim not in {2, 3}:
+        raise ValueError(
+            "predicted must be targets x voxels or targets x samples x voxels"
+        )
+    if predicted.shape[0] != measured.shape[0]:
+        raise ValueError("measured and predicted must contain the same targets")
+    if predicted.shape[-1] != measured.shape[-1]:
+        raise ValueError("measured and predicted must contain the same voxels")
+
+    if voxel_mask is not None:
+        voxel_mask = np.asarray(voxel_mask)
+        if voxel_mask.ndim != 1 or len(voxel_mask) != measured.shape[1]:
+            raise ValueError("voxel_mask must match the voxel dimension")
+        if voxel_mask.dtype != bool:
+            raise ValueError("voxel_mask must be boolean")
+        if not voxel_mask.any():
+            raise ValueError("voxel_mask selects no voxels")
+        measured = measured[:, voxel_mask]
+        predicted = predicted[..., voxel_mask]
+
+    multiple_samples = predicted.ndim == 3
+    if not multiple_samples:
+        predicted = predicted[:, None, :]
+    measured = measured[:, None, :]
+
+    measured_centered = measured - measured.mean(axis=-1, keepdims=True)
+    predicted_centered = predicted - predicted.mean(axis=-1, keepdims=True)
+    numerator = np.sum(measured_centered * predicted_centered, axis=-1)
+    denominator = np.linalg.norm(measured_centered, axis=-1) * np.linalg.norm(
+        predicted_centered, axis=-1
+    )
+    if np.any(~np.isfinite(denominator) | (denominator == 0)):
+        raise ValueError("Brain correlation requires non-constant finite ROI patterns")
+    correlations = numerator / denominator
+    return correlations if multiple_samples else correlations[:, 0]
+
+
 def correlation_rdm(patterns: np.ndarray) -> np.ndarray:
     """Return a square correlation-distance RDM for rows of ``patterns``."""
     patterns = np.asarray(patterns)

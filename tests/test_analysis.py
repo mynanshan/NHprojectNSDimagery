@@ -9,8 +9,10 @@ from nsdimagery.analysis import (
     exact_class_label_permutation_test,
     leave_one_target_out_rdm_spearman,
     nearest_centroid_predict,
+    reconstruction_brain_correlations,
     rdm_noise_ceiling,
 )
+from nsdimagery.io import mask_at_coordinates, paper_visual_roi_masks
 
 
 class MeasurementHelperTests(unittest.TestCase):
@@ -72,6 +74,43 @@ class MeasurementHelperTests(unittest.TestCase):
         ceiling = rdm_noise_ceiling(varied)
         self.assertEqual(ceiling["lower_by_subject"].shape, (3,))
         self.assertGreater(ceiling["lower_mean"], .9)
+
+    def test_reconstruction_brain_correlation_across_voxels(self):
+        measured = np.asarray([[1, 2, 4, 8], [3, 1, 0, -2]], dtype=float)
+        predicted = np.stack([
+            np.stack([measured[0], -measured[0]]),
+            np.stack([measured[1] * 2 + 7, measured[1]]),
+        ])
+        correlations = reconstruction_brain_correlations(measured, predicted)
+        np.testing.assert_allclose(correlations, [[1, -1], [1, 1]])
+
+        selected = reconstruction_brain_correlations(
+            measured,
+            predicted[:, 0],
+            voxel_mask=np.asarray([True, True, True, False]),
+        )
+        np.testing.assert_allclose(selected, 1)
+
+    def test_paper_visual_rois_partition_nsdgeneral(self):
+        general = np.zeros((2, 2, 3), dtype=int)
+        general.flat[:10] = 1
+        prf = np.asarray([
+            [[1, 2, 3], [4, 5, 6]],
+            [[7, 0, 8], [7, 0, 7]],
+        ])
+        masks = paper_visual_roi_masks(general, prf)
+        np.testing.assert_array_equal(
+            masks["early_visual"] | masks["higher_visual"],
+            masks["visual_cortex"],
+        )
+        self.assertFalse(np.any(masks["early_visual"] & masks["higher_visual"]))
+        self.assertEqual(int(masks["V4"].sum()), 2)
+
+        coordinates = np.argwhere(masks["visual_cortex"])
+        projected = mask_at_coordinates(masks["early_visual"], coordinates)
+        np.testing.assert_array_equal(
+            projected, masks["early_visual"][masks["visual_cortex"]]
+        )
 
 
 if __name__ == "__main__":

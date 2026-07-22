@@ -396,6 +396,63 @@ def load_roi(data_root: str | Path, subject: int | str, roi: str):
     return np.asanyarray(image.dataobj).astype(np.int16, copy=False), image
 
 
+def paper_visual_roi_masks(
+    nsdgeneral: np.ndarray, prf_visualrois: np.ndarray
+) -> dict[str, np.ndarray]:
+    """Build the nested visual ROIs used for the paper's brain metric.
+
+    NSD's volumetric ``prf-visualrois`` labels are 1/2 for V1d/V1v,
+    3/4 for V2d/V2v, 5/6 for V3d/V3v, and 7 for hV4. The paper defines
+    higher visual cortex as the set complement of V1--V4 inside
+    ``nsdgeneral``; it is not the broad higher-level ``streams`` ROI used in
+    the project's earlier exploratory notebooks.
+    """
+    nsdgeneral = np.asarray(nsdgeneral)
+    prf_visualrois = np.asarray(prf_visualrois)
+    if nsdgeneral.shape != prf_visualrois.shape:
+        raise ValueError("nsdgeneral and prf_visualrois must have the same shape")
+    if nsdgeneral.ndim != 3:
+        raise ValueError("ROI volumes must be three-dimensional")
+
+    visual = nsdgeneral > 0
+    components = {
+        "V1": visual & np.isin(prf_visualrois, (1, 2)),
+        "V2": visual & np.isin(prf_visualrois, (3, 4)),
+        "V3": visual & np.isin(prf_visualrois, (5, 6)),
+        "V4": visual & (prf_visualrois == 7),
+    }
+    early = np.logical_or.reduce(tuple(components.values()))
+    higher = visual & ~early
+    if not visual.any() or not early.any() or not higher.any():
+        raise ValueError("Paper visual ROI construction produced an empty region")
+    return {
+        "visual_cortex": visual,
+        "early_visual": early,
+        "higher_visual": higher,
+        **components,
+    }
+
+
+def mask_at_coordinates(mask: np.ndarray, coordinates: np.ndarray) -> np.ndarray:
+    """Project a 3-D ROI mask into an extracted voxel-column ordering."""
+    mask = np.asarray(mask)
+    coordinates = np.asarray(coordinates)
+    if mask.ndim != 3:
+        raise ValueError("mask must be three-dimensional")
+    if coordinates.ndim != 2 or coordinates.shape[1] != 3:
+        raise ValueError("coordinates must be voxels x 3")
+    if not np.issubdtype(coordinates.dtype, np.integer):
+        raise ValueError("coordinates must contain integer indices")
+    if len(coordinates) == 0:
+        raise ValueError("coordinates must not be empty")
+    if np.any(coordinates < 0) or any(
+        np.any(coordinates[:, axis] >= size)
+        for axis, size in enumerate(mask.shape)
+    ):
+        raise ValueError("coordinates fall outside the mask volume")
+    return np.asarray(mask[tuple(coordinates.T)], dtype=bool)
+
+
 def read_ctab(path: str | Path) -> pd.DataFrame:
     """Read the useful label/name columns of a FreeSurfer color table."""
     rows = []

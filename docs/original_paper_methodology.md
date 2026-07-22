@@ -86,11 +86,18 @@ S_{brain}=\operatorname{corr}(\bar{\mathbf b}_{s,i},
                               \widehat{\mathbf b}'_{s,i}).
 $$
 
+More precisely, this is a spatial Pearson correlation **across voxels for each
+target and reconstruction sample**, followed by averaging targets, samples,
+and subjects. It is therefore not computable from measured betas alone. The
+paper defines early visual cortex as V1--V4 inside `nsdgeneral`, higher visual
+cortex as the set complement `nsdgeneral − early`, and visual cortex as all of
+`nsdgeneral`.
+
 ## 4. What the paper concludes
 
 Some perception-trained decoders produce recognizable mental-image reconstructions, but a method's ranking on ordinary vision reconstruction does not reliably predict its ranking on imagery. Simpler linear decoding backbones and multimodal feature decoding generalize relatively well; complex vision-optimized systems can overfit the perception domain.
 
-Low-level/structural metrics and early-visual brain correlations drop more from vision to imagery than higher-level metrics. This motivates our representation-level question, but it does not guarantee that CLIP geometry will explain our six-target neural RDMs.
+Low-level/structural metrics and early-visual brain correlations drop more from vision to imagery than higher-level metrics. The claim concerns the **size of the vision-to-imagery drop**; it does not require the imagery early-visual score itself to be below the imagery higher-visual score. This motivates our representation-level question, but it does not guarantee that CLIP geometry will explain our six-target neural RDMs.
 
 ## 5. How our notebooks differ
 
@@ -107,3 +114,4 @@ Low-level/structural metrics and early-visual brain correlations drop more from 
 - [CVPR 2025 paper](https://openaccess.thecvf.com/content/CVPR2025/html/Kneeland_NSD-Imagery_A_Benchmark_Dataset_for_Extending_fMRI_Vision_Decoding_Methods_CVPR_2025_paper.html)
 - [Paper PDF](https://openaccess.thecvf.com/content/CVPR2025/papers/Kneeland_NSD-Imagery_A_Benchmark_Dataset_for_Extending_fMRI_Vision_Decoding_Methods_CVPR_2025_paper.pdf)
 - [Supplement](https://openaccess.thecvf.com/content/CVPR2025/supplemental/Kneeland_NSD-Imagery_A_Benchmark_CVPR_2025_supplemental.pdf)
+- [Reproduction and ML next steps](paper_reproduction_and_ml_next_steps.md)
