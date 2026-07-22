@@ -205,4 +205,3 @@ claim.
   analysis](https://doi.org/10.1371/journal.pcbi.1003553).
 - Schütt et al. (2023), [Statistical inference on representational
   geometries](https://doi.org/10.7554/eLife.82566).
-
