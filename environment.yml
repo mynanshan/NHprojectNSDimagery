@@ -15,6 +15,7 @@ dependencies:
   - pillow
   - openpyxl
   - scikit-image
+  - scikit-learn
   - pytorch
   - torchvision
   - transformers
