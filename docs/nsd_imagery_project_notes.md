@@ -37,6 +37,29 @@ $$
 
 The goal is to produce an interpretable analysis of how brain-response geometry changes from seeing to imagining, using pretrained image/text representations as probes.
 
+### Orientation and current results
+
+Three shorter notes now complement this project plan:
+
+- [Experiment recap](experiment_recap.md): what a participant did, and how runs, trials, design matrices, raw fMRI, and beta volumes relate.
+- [Original paper methodology](original_paper_methodology.md): the benchmark's cross-decoding workflow in compact notation.
+- [Notebook 02/03 results review](notebook_02_03_results_review.md): what the current RDM, reliability, held-out transfer, HOG, and CLIP results do and do not support.
+
+The essential counting identity for one participant is
+
+$$
+12\text{ runs}\times48\text{ behavioral trials}=576\text{ trials},
+$$
+
+but the released GLM has
+
+$$
+(3\text{ vision}+6\text{ imagery})\times48
++3\text{ attention}\times(2\times48)=720\text{ beta volumes}.
+$$
+
+The difference occurs because every attention trial has two modeled epochs. Our current notebooks use the 432 vision and imagery beta volumes and leave the 288 attention betas out.
+
 ---
 
 ## 2. Why NSD-Imagery Is Interesting

@@ -1,6 +1,9 @@
 # NHprojectNSDimagery
 
 - [Project plan](docs/nsd_imagery_project_notes.md)
+- [Experiment recap: runs, trials, designs, and betas](docs/experiment_recap.md)
+- [Original paper methodology in formulas](docs/original_paper_methodology.md)
+- [Notebook 02/03 results review](docs/notebook_02_03_results_review.md)
 - [Minimal NSD-Imagery download guide](docs/data_download.md)
 - [Interactive data-orientation notebook](notebooks/01_data_orientation.ipynb)
 - [Event alignment and first neural RDM notebook](notebooks/02_event_alignment_neural_rdm.ipynb)
