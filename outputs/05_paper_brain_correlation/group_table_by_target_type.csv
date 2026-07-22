@@ -1,0 +1,13 @@
+method,task,target_type,region,brain_correlation,sd_across_subjects,n_subjects
+GroundTruth_GNet,imagery,simple,early_visual,0.08529045508844987,0.04603094080014145,4
+GroundTruth_GNet,imagery,real_scene,early_visual,0.08173386830325817,0.02965452020830938,4
+GroundTruth_GNet,imagery,simple,higher_visual,0.05089537985884321,0.04158594907010229,4
+GroundTruth_GNet,imagery,real_scene,higher_visual,0.14236033550479538,0.08013537523120237,4
+GroundTruth_GNet,imagery,simple,visual_cortex,0.054388314256633194,0.039078091698032724,4
+GroundTruth_GNet,imagery,real_scene,visual_cortex,0.11895966593608466,0.0525156455133899,4
+GroundTruth_GNet,vision,simple,early_visual,0.2946222303334264,0.08558368270874593,4
+GroundTruth_GNet,vision,real_scene,early_visual,0.45690415058597184,0.07354898842858004,4
+GroundTruth_GNet,vision,simple,higher_visual,0.10147457523794504,0.029348526525881036,4
+GroundTruth_GNet,vision,real_scene,higher_visual,0.3296426884557115,0.055552317935849596,4
+GroundTruth_GNet,vision,simple,visual_cortex,0.17041151806029273,0.05144781753097541,4
+GroundTruth_GNet,vision,real_scene,visual_cortex,0.39065453833083896,0.05671764479340147,4
