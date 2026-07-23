@@ -2,6 +2,8 @@ data/
 outputs/**/*.npy
 outputs/**/*.npz
 outputs/**/*.pt
+**/*.nii
+**/*.nii.gz
 **/.ipynb_checkpoints/
 **/__pycache__/
 *.py[cod]
