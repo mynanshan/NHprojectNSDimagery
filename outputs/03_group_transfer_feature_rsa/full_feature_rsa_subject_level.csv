@@ -1,0 +1,385 @@
+subject,phase,roi,task,feature_model,scope,rsa_rho,n_targets
+1,pilot,nsdgeneral,vision,HOG images A+B,all,0.05594697570376901,12
+1,pilot,nsdgeneral,vision,HOG images A+B,within_set,0.12776852284391205,12
+1,pilot,nsdgeneral,vision,HOG images A+B,between_set,0.15830115830115832,12
+1,pilot,nsdgeneral,vision,HOG images A+B,block_residual,0.3799716513723733,12
+1,pilot,nsdgeneral,vision,CLIP images A+B + text C,all,-0.4045005562033425,18
+1,pilot,nsdgeneral,vision,CLIP images A+B + text C,within_set,-0.008827404479578391,18
+1,pilot,nsdgeneral,vision,CLIP images A+B + text C,between_set,-0.04790076881305553,18
+1,pilot,nsdgeneral,vision,CLIP images A+B + text C,block_residual,-0.08139114197407173,18
+1,pilot,nsdgeneral,imagery,HOG images A+B,all,-0.18447888966201745,12
+1,pilot,nsdgeneral,imagery,HOG images A+B,within_set,-0.0992765874362104,12
+1,pilot,nsdgeneral,imagery,HOG images A+B,between_set,-0.05328185328185329,12
+1,pilot,nsdgeneral,imagery,HOG images A+B,block_residual,-0.10478220683194639,12
+1,pilot,nsdgeneral,imagery,CLIP images A+B + text C,all,-0.36334821009743606,18
+1,pilot,nsdgeneral,imagery,CLIP images A+B + text C,within_set,-0.015810276679841896,18
+1,pilot,nsdgeneral,imagery,CLIP images A+B + text C,between_set,0.037897624967847036,18
+1,pilot,nsdgeneral,imagery,CLIP images A+B + text C,block_residual,0.054861458227644225,18
+1,pilot,early_visual,vision,HOG images A+B,all,0.13627681246052392,12
+1,pilot,early_visual,vision,HOG images A+B,within_set,0.2388425522848739,12
+1,pilot,early_visual,vision,HOG images A+B,between_set,0.22882882882882882,12
+1,pilot,early_visual,vision,HOG images A+B,block_residual,0.5509852350645691,12
+1,pilot,early_visual,vision,CLIP images A+B + text C,all,-0.36264792998539125,18
+1,pilot,early_visual,vision,CLIP images A+B + text C,within_set,-0.10368906455862975,18
+1,pilot,early_visual,vision,CLIP images A+B + text C,between_set,-0.030571512951689576,18
+1,pilot,early_visual,vision,CLIP images A+B + text C,block_residual,-0.06709277916393629,18
+1,pilot,early_visual,imagery,HOG images A+B,all,-0.16523145996094465,12
+1,pilot,early_visual,imagery,HOG images A+B,within_set,-0.09081804411204897,12
+1,pilot,early_visual,imagery,HOG images A+B,between_set,0.02908622908622909,12
+1,pilot,early_visual,imagery,HOG images A+B,block_residual,-0.04730807535762402,12
+1,pilot,early_visual,imagery,CLIP images A+B + text C,all,-0.3547036039296101,18
+1,pilot,early_visual,imagery,CLIP images A+B + text C,within_set,-0.014492753623188404,18
+1,pilot,early_visual,imagery,CLIP images A+B + text C,between_set,0.0338106261968047,18
+1,pilot,early_visual,imagery,CLIP images A+B + text C,block_residual,0.04665967043354255,18
+1,pilot,higher_visual,vision,HOG images A+B,all,-0.08734408445692893,12
+1,pilot,higher_visual,vision,HOG images A+B,within_set,0.06989427904701807,12
+1,pilot,higher_visual,vision,HOG images A+B,between_set,-0.02059202059202059,12
+1,pilot,higher_visual,vision,HOG images A+B,block_residual,-0.019609951577466388,12
+1,pilot,higher_visual,vision,CLIP images A+B + text C,all,-0.43174111749963134,18
+1,pilot,higher_visual,vision,CLIP images A+B + text C,within_set,-0.03544137022397892,18
+1,pilot,higher_visual,vision,CLIP images A+B + text C,between_set,-0.03747844560671448,18
+1,pilot,higher_visual,vision,CLIP images A+B + text C,block_residual,-0.05754666791793692,18
+1,pilot,higher_visual,imagery,HOG images A+B,all,-0.2618861232103665,12
+1,pilot,higher_visual,imagery,HOG images A+B,within_set,-0.15626045825161367,12
+1,pilot,higher_visual,imagery,HOG images A+B,between_set,-0.06023166023166024,12
+1,pilot,higher_visual,imagery,HOG images A+B,block_residual,-0.21711419359922723,12
+1,pilot,higher_visual,imagery,CLIP images A+B + text C,all,-0.3651843512524627,18
+1,pilot,higher_visual,imagery,CLIP images A+B + text C,within_set,-0.007905138339920948,18
+1,pilot,higher_visual,imagery,CLIP images A+B + text C,between_set,0.02302628445130374,18
+1,pilot,higher_visual,imagery,CLIP images A+B + text C,block_residual,0.06912493769122252,18
+2,heldout,nsdgeneral,vision,HOG images A+B,all,0.05083242008905879,12
+2,heldout,nsdgeneral,vision,HOG images A+B,within_set,0.2537562997248427,12
+2,heldout,nsdgeneral,vision,HOG images A+B,between_set,-0.14105534105534107,12
+2,heldout,nsdgeneral,vision,HOG images A+B,block_residual,0.38539331509339925,12
+2,heldout,nsdgeneral,vision,CLIP images A+B + text C,all,-0.3001822738664844,18
+2,heldout,nsdgeneral,vision,CLIP images A+B + text C,within_set,-0.057575757575757565,18
+2,heldout,nsdgeneral,vision,CLIP images A+B + text C,between_set,0.03514437870949917,18
+2,heldout,nsdgeneral,vision,CLIP images A+B + text C,block_residual,0.04827972973629213,18
+2,heldout,nsdgeneral,imagery,HOG images A+B,all,-0.22399666018710504,12
+2,heldout,nsdgeneral,imagery,HOG images A+B,within_set,-0.0783528223711795,12
+2,heldout,nsdgeneral,imagery,HOG images A+B,between_set,-0.07876447876447876,12
+2,heldout,nsdgeneral,imagery,HOG images A+B,block_residual,-0.10327957463074601,12
+2,heldout,nsdgeneral,imagery,CLIP images A+B + text C,all,-0.40624958117218174,18
+2,heldout,nsdgeneral,imagery,CLIP images A+B + text C,within_set,-0.004347826086956521,18
+2,heldout,nsdgeneral,imagery,CLIP images A+B + text C,between_set,-0.029380662493926665,18
+2,heldout,nsdgeneral,imagery,CLIP images A+B + text C,block_residual,-0.057675116660982136,18
+2,heldout,early_visual,vision,HOG images A+B,all,0.074943896558407,12
+2,heldout,early_visual,vision,HOG images A+B,within_set,0.26221484304900416,12
+2,heldout,early_visual,vision,HOG images A+B,between_set,-0.06126126126126127,12
+2,heldout,early_visual,vision,HOG images A+B,block_residual,0.37469393921433586,12
+2,heldout,early_visual,vision,CLIP images A+B + text C,all,-0.27299532253092623,18
+2,heldout,early_visual,vision,CLIP images A+B + text C,within_set,-0.08274044795783925,18
+2,heldout,early_visual,vision,CLIP images A+B + text C,between_set,0.002619871007078415,18
+2,heldout,early_visual,vision,CLIP images A+B + text C,block_residual,-0.015249763432378794,18
+2,heldout,early_visual,imagery,HOG images A+B,all,-0.1850216588292928,12
+2,heldout,early_visual,imagery,HOG images A+B,within_set,-0.08169172105176954,12
+2,heldout,early_visual,imagery,HOG images A+B,between_set,0.09292149292149292,12
+2,heldout,early_visual,imagery,HOG images A+B,block_residual,-0.03740745968474841,12
+2,heldout,early_visual,imagery,CLIP images A+B + text C,all,-0.39831530698403755,18
+2,heldout,early_visual,imagery,CLIP images A+B + text C,within_set,-0.024637681159420284,18
+2,heldout,early_visual,imagery,CLIP images A+B + text C,between_set,-0.06991721207617632,18
+2,heldout,early_visual,imagery,CLIP images A+B + text C,block_residual,-0.10480509026260021,18
+2,heldout,higher_visual,vision,HOG images A+B,all,-0.11682062538742216,12
+2,heldout,higher_visual,vision,HOG images A+B,within_set,0.12109072548273196,12
+2,heldout,higher_visual,vision,HOG images A+B,between_set,-0.21441441441441444,12
+2,heldout,higher_visual,vision,HOG images A+B,block_residual,0.12923865212432675,12
+2,heldout,higher_visual,vision,CLIP images A+B + text C,all,-0.3545159690670526,18
+2,heldout,higher_visual,vision,CLIP images A+B + text C,within_set,-0.01805006587615283,18
+2,heldout,higher_visual,vision,CLIP images A+B + text C,between_set,0.03880267131574685,18
+2,heldout,higher_visual,vision,CLIP images A+B + text C,block_residual,0.037794280757638514,18
+2,heldout,higher_visual,imagery,HOG images A+B,all,-0.14604665747148057,12
+2,heldout,higher_visual,imagery,HOG images A+B,within_set,-0.011574848759378791,12
+2,heldout,higher_visual,imagery,HOG images A+B,between_set,-0.11737451737451739,12
+2,heldout,higher_visual,imagery,HOG images A+B,block_residual,-0.020111967255675066,12
+2,heldout,higher_visual,imagery,CLIP images A+B + text C,all,-0.4028989586265127,18
+2,heldout,higher_visual,imagery,CLIP images A+B + text C,within_set,0.0461133069828722,18
+2,heldout,higher_visual,imagery,CLIP images A+B + text C,between_set,-0.030371450074785405,18
+2,heldout,higher_visual,imagery,CLIP images A+B + text C,block_residual,-0.012169136525538972,18
+3,heldout,nsdgeneral,vision,HOG images A+B,all,-0.07546578998847947,12
+3,heldout,nsdgeneral,vision,HOG images A+B,within_set,0.15715083123310436,12
+3,heldout,nsdgeneral,vision,HOG images A+B,between_set,-0.08185328185328186,12
+3,heldout,nsdgeneral,vision,HOG images A+B,block_residual,0.16783866748617257,12
+3,heldout,nsdgeneral,vision,CLIP images A+B + text C,all,-0.3616494444667818,18
+3,heldout,nsdgeneral,vision,CLIP images A+B + text C,within_set,0.01949934123847167,18
+3,heldout,nsdgeneral,vision,CLIP images A+B + text C,between_set,0.05442662932159631,18
+3,heldout,nsdgeneral,vision,CLIP images A+B + text C,block_residual,0.11031139925441781,18
+3,heldout,nsdgeneral,imagery,HOG images A+B,all,-0.2840561561198451,12
+3,heldout,nsdgeneral,imagery,HOG images A+B,within_set,-0.1395659648486635,12
+3,heldout,nsdgeneral,imagery,HOG images A+B,between_set,-0.0797940797940798,12
+3,heldout,nsdgeneral,imagery,HOG images A+B,block_residual,-0.16707785541896752,12
+3,heldout,nsdgeneral,imagery,CLIP images A+B + text C,all,-0.3990490933215391,18
+3,heldout,nsdgeneral,imagery,CLIP images A+B + text C,within_set,-0.025691699604743077,18
+3,heldout,nsdgeneral,imagery,CLIP images A+B + text C,between_set,0.02127335257747673,18
+3,heldout,nsdgeneral,imagery,CLIP images A+B + text C,block_residual,0.0032636548929606273,18
+3,heldout,early_visual,vision,HOG images A+B,all,0.014759146202449511,12
+3,heldout,early_visual,vision,HOG images A+B,within_set,0.21168617634940828,12
+3,heldout,early_visual,vision,HOG images A+B,between_set,-0.025740025740025742,12
+3,heldout,early_visual,vision,HOG images A+B,block_residual,0.2836884588195234,12
+3,heldout,early_visual,vision,CLIP images A+B + text C,all,-0.3182421293876402,18
+3,heldout,early_visual,vision,CLIP images A+B + text C,within_set,-0.019104084321475624,18
+3,heldout,early_visual,vision,CLIP images A+B + text C,between_set,0.02394085760286566,18
+3,heldout,early_visual,vision,CLIP images A+B + text C,block_residual,0.015013408364471648,18
+3,heldout,early_visual,imagery,HOG images A+B,all,-0.22652262438865578,12
+3,heldout,early_visual,imagery,HOG images A+B,within_set,-0.15804120421459503,12
+3,heldout,early_visual,imagery,HOG images A+B,between_set,0.05070785070785071,12
+3,heldout,early_visual,imagery,HOG images A+B,block_residual,-0.035985410115300244,12
+3,heldout,early_visual,imagery,CLIP images A+B + text C,all,-0.3766267272459222,18
+3,heldout,early_visual,imagery,CLIP images A+B + text C,within_set,-0.007246376811594202,18
+3,heldout,early_visual,imagery,CLIP images A+B + text C,between_set,0.008335953204340411,18
+3,heldout,early_visual,imagery,CLIP images A+B + text C,block_residual,-0.01930334553996071,18
+3,heldout,higher_visual,vision,HOG images A+B,all,-0.06118678574169662,12
+3,heldout,higher_visual,vision,HOG images A+B,within_set,0.09304397656577566,12
+3,heldout,higher_visual,vision,HOG images A+B,between_set,-0.022136422136422137,12
+3,heldout,higher_visual,vision,HOG images A+B,block_residual,0.11321993517661363,12
+3,heldout,higher_visual,vision,CLIP images A+B + text C,all,-0.403595888116012,18
+3,heldout,higher_visual,vision,CLIP images A+B + text C,within_set,0.0150197628458498,18
+3,heldout,higher_visual,vision,CLIP images A+B + text C,between_set,0.05967589813941524,18
+3,heldout,higher_visual,vision,CLIP images A+B + text C,block_residual,0.09896950758690043,18
+3,heldout,higher_visual,imagery,HOG images A+B,all,-0.23430927436533708,12
+3,heldout,higher_visual,imagery,HOG images A+B,within_set,-0.021814138046521568,12
+3,heldout,higher_visual,imagery,HOG images A+B,between_set,-0.10296010296010297,12
+3,heldout,higher_visual,imagery,HOG images A+B,block_residual,-0.0603765993800619,12
+3,heldout,higher_visual,imagery,CLIP images A+B + text C,all,-0.4597657244716068,18
+3,heldout,higher_visual,imagery,CLIP images A+B + text C,within_set,-0.03649538866930171,18
+3,heldout,higher_visual,imagery,CLIP images A+B + text C,between_set,-0.041031943372679035,18
+3,heldout,higher_visual,imagery,CLIP images A+B + text C,block_residual,-0.08014354417403396,18
+4,heldout,nsdgeneral,vision,HOG images A+B,all,-0.08932727949120432,12
+4,heldout,nsdgeneral,vision,HOG images A+B,within_set,-0.019588205592794877,12
+4,heldout,nsdgeneral,vision,HOG images A+B,between_set,0.007464607464607464,12
+4,heldout,nsdgeneral,vision,HOG images A+B,block_residual,0.11332785049716233,12
+4,heldout,nsdgeneral,vision,CLIP images A+B + text C,all,-0.3895601302722045,18
+4,heldout,nsdgeneral,vision,CLIP images A+B + text C,within_set,-0.008827404479578391,18
+4,heldout,nsdgeneral,vision,CLIP images A+B + text C,between_set,0.037573713643335525,18
+4,heldout,nsdgeneral,vision,CLIP images A+B + text C,block_residual,0.055866711202464676,18
+4,heldout,nsdgeneral,imagery,HOG images A+B,all,-0.1499295445912198,12
+4,heldout,nsdgeneral,imagery,HOG images A+B,within_set,0.13934337160329083,12
+4,heldout,nsdgeneral,imagery,HOG images A+B,between_set,0.11119691119691119,12
+4,heldout,nsdgeneral,imagery,HOG images A+B,block_residual,0.12641845519252864,12
+4,heldout,nsdgeneral,imagery,CLIP images A+B + text C,all,-0.4845033707262809,18
+4,heldout,nsdgeneral,imagery,CLIP images A+B + text C,within_set,-0.10158102766798419,18
+4,heldout,nsdgeneral,imagery,CLIP images A+B + text C,between_set,0.010889136585784104,18
+4,heldout,nsdgeneral,imagery,CLIP images A+B + text C,block_residual,0.032792664279905,18
+4,heldout,early_visual,vision,HOG images A+B,all,0.15898961453727792,12
+4,heldout,early_visual,vision,HOG images A+B,within_set,0.22793548326161311,12
+4,heldout,early_visual,vision,HOG images A+B,between_set,0.23655083655083659,12
+4,heldout,early_visual,vision,HOG images A+B,block_residual,0.5337538140823774,12
+4,heldout,early_visual,vision,CLIP images A+B + text C,all,-0.32259793869700987,18
+4,heldout,early_visual,vision,CLIP images A+B + text C,within_set,-0.12239789196310934,18
+4,heldout,early_visual,vision,CLIP images A+B + text C,between_set,-0.0019625215543932852,18
+4,heldout,early_visual,vision,CLIP images A+B + text C,block_residual,-0.015934437898442396,18
+4,heldout,early_visual,imagery,HOG images A+B,all,-0.12032774923750916,12
+4,heldout,early_visual,imagery,HOG images A+B,within_set,0.10061214690844641,12
+4,heldout,early_visual,imagery,HOG images A+B,between_set,0.0036036036036036037,12
+4,heldout,early_visual,imagery,HOG images A+B,block_residual,0.11872221304477966,12
+4,heldout,early_visual,imagery,CLIP images A+B + text C,all,-0.4546024151287309,18
+4,heldout,early_visual,imagery,CLIP images A+B + text C,within_set,-0.0818181818181818,18
+4,heldout,early_visual,imagery,CLIP images A+B + text C,between_set,-0.045842979222041204,18
+4,heldout,early_visual,imagery,CLIP images A+B + text C,block_residual,-0.07583993256308379,18
+4,heldout,higher_visual,vision,HOG images A+B,all,-0.12823965363740783,12
+4,heldout,higher_visual,vision,HOG images A+B,within_set,-0.11797442004751457,12
+4,heldout,higher_visual,vision,HOG images A+B,between_set,-0.007207207207207207,12
+4,heldout,higher_visual,vision,HOG images A+B,block_residual,0.0179642140211054,12
+4,heldout,higher_visual,vision,CLIP images A+B + text C,all,-0.40275488185704894,18
+4,heldout,higher_visual,vision,CLIP images A+B + text C,within_set,-0.035309617918313566,18
+4,heldout,higher_visual,vision,CLIP images A+B + text C,between_set,0.07120333057056026,18
+4,heldout,higher_visual,vision,CLIP images A+B + text C,block_residual,0.03686119968387113,18
+4,heldout,higher_visual,imagery,HOG images A+B,all,-0.0840457179788709,12
+4,heldout,higher_visual,imagery,HOG images A+B,within_set,0.11886479302900527,12
+4,heldout,higher_visual,imagery,HOG images A+B,between_set,0.12097812097812098,12
+4,heldout,higher_visual,imagery,HOG images A+B,block_residual,0.18440884236094407,12
+4,heldout,higher_visual,imagery,CLIP images A+B + text C,all,-0.42743556752844675,18
+4,heldout,higher_visual,imagery,CLIP images A+B + text C,within_set,-0.0530961791831357,18
+4,heldout,higher_visual,imagery,CLIP images A+B + text C,between_set,0.025970066782893667,18
+4,heldout,higher_visual,imagery,CLIP images A+B + text C,block_residual,0.007425940284301118,18
+5,heldout,nsdgeneral,vision,HOG images A+B,all,-0.0934815511945812,12
+5,heldout,nsdgeneral,vision,HOG images A+B,within_set,0.10461882532515446,12
+5,heldout,nsdgeneral,vision,HOG images A+B,between_set,-0.08725868725868725,12
+5,heldout,nsdgeneral,vision,HOG images A+B,block_residual,0.04905965337877436,12
+5,heldout,nsdgeneral,vision,CLIP images A+B + text C,all,-0.3870605658531355,18
+5,heldout,nsdgeneral,vision,CLIP images A+B + text C,within_set,-0.034519104084321475,18
+5,heldout,nsdgeneral,vision,CLIP images A+B + text C,between_set,0.00956491087675174,18
+5,heldout,nsdgeneral,vision,CLIP images A+B + text C,block_residual,0.03657960363461993,18
+5,heldout,nsdgeneral,imagery,HOG images A+B,all,-0.15013830196324876,12
+5,heldout,nsdgeneral,imagery,HOG images A+B,within_set,0.003561491925962705,12
+5,heldout,nsdgeneral,imagery,HOG images A+B,between_set,0.15392535392535395,12
+5,heldout,nsdgeneral,imagery,HOG images A+B,block_residual,0.13522980832073733,12
+5,heldout,nsdgeneral,imagery,CLIP images A+B + text C,all,-0.3843197566107782,18
+5,heldout,nsdgeneral,imagery,CLIP images A+B + text C,within_set,0.03412384716732543,18
+5,heldout,nsdgeneral,imagery,CLIP images A+B + text C,between_set,0.027846847104328026,18
+5,heldout,nsdgeneral,imagery,CLIP images A+B + text C,block_residual,0.09114018006666884,18
+5,heldout,early_visual,vision,HOG images A+B,all,0.052231094481653015,12
+5,heldout,early_visual,vision,HOG images A+B,within_set,0.1337785404689741,12
+5,heldout,early_visual,vision,HOG images A+B,between_set,0.023423423423423427,12
+5,heldout,early_visual,vision,HOG images A+B,block_residual,0.3298242052878801,12
+5,heldout,early_visual,vision,CLIP images A+B + text C,all,-0.3599540294586734,18
+5,heldout,early_visual,vision,CLIP images A+B + text C,within_set,-0.05599472990777339,18
+5,heldout,early_visual,vision,CLIP images A+B + text C,between_set,-0.02478874312879286,18
+5,heldout,early_visual,vision,CLIP images A+B + text C,block_residual,-0.0729325367999326,18
+5,heldout,early_visual,imagery,HOG images A+B,all,-0.018621157584985806,12
+5,heldout,early_visual,imagery,HOG images A+B,within_set,0.14602116896447087,12
+5,heldout,early_visual,imagery,HOG images A+B,between_set,0.17734877734877738,12
+5,heldout,early_visual,imagery,HOG images A+B,block_residual,0.15588766011870442,12
+5,heldout,early_visual,imagery,CLIP images A+B + text C,all,-0.2822564432471553,18
+5,heldout,early_visual,imagery,CLIP images A+B + text C,within_set,-0.06166007905138339,18
+5,heldout,early_visual,imagery,CLIP images A+B + text C,between_set,0.00466813379443063,18
+5,heldout,early_visual,imagery,CLIP images A+B + text C,block_residual,0.019985385109342533,18
+5,heldout,higher_visual,vision,HOG images A+B,all,-0.18276707921137975,12
+5,heldout,higher_visual,vision,HOG images A+B,within_set,0.054535345116303924,12
+5,heldout,higher_visual,vision,HOG images A+B,between_set,-0.2141570141570142,12
+5,heldout,higher_visual,vision,HOG images A+B,block_residual,-0.09159014333930474,12
+5,heldout,higher_visual,vision,CLIP images A+B + text C,all,-0.420600297535282,18
+5,heldout,higher_visual,vision,CLIP images A+B + text C,within_set,-0.01040843214756258,18
+5,heldout,higher_visual,vision,CLIP images A+B + text C,between_set,0.0074118532491163885,18
+5,heldout,higher_visual,vision,CLIP images A+B + text C,block_residual,0.06643759468409521,18
+5,heldout,higher_visual,imagery,HOG images A+B,all,-0.18990658133477117,12
+5,heldout,higher_visual,imagery,HOG images A+B,within_set,-0.06343907493121068,12
+5,heldout,higher_visual,imagery,HOG images A+B,between_set,-0.0061776061776061784,12
+5,heldout,higher_visual,imagery,HOG images A+B,block_residual,-0.030841830647726276,12
+5,heldout,higher_visual,imagery,CLIP images A+B + text C,all,-0.47946738504014036,18
+5,heldout,higher_visual,imagery,CLIP images A+B + text C,within_set,-0.028590250329380756,18
+5,heldout,higher_visual,imagery,CLIP images A+B + text C,between_set,0.0031057379938456845,18
+5,heldout,higher_visual,imagery,CLIP images A+B + text C,block_residual,-0.005419795982275012,18
+6,heldout,nsdgeneral,vision,HOG images A+B,all,-0.08826261689385649,12
+6,heldout,nsdgeneral,vision,HOG images A+B,within_set,0.07212021150074477,12
+6,heldout,nsdgeneral,vision,HOG images A+B,between_set,-0.032175032175032175,12
+6,heldout,nsdgeneral,vision,HOG images A+B,block_residual,0.1074442192045848,12
+6,heldout,nsdgeneral,vision,CLIP images A+B + text C,all,-0.43029029793735674,18
+6,heldout,nsdgeneral,vision,CLIP images A+B + text C,within_set,-0.050329380764163364,18
+6,heldout,nsdgeneral,vision,CLIP images A+B + text C,between_set,0.008898034620404508,18
+6,heldout,nsdgeneral,vision,CLIP images A+B + text C,block_residual,-0.008161104662660179,18
+6,heldout,nsdgeneral,imagery,HOG images A+B,all,-0.06085277394645024,12
+6,heldout,nsdgeneral,imagery,HOG images A+B,within_set,0.11752923355676927,12
+6,heldout,nsdgeneral,imagery,HOG images A+B,between_set,-0.015701415701415703,12
+6,heldout,nsdgeneral,imagery,HOG images A+B,block_residual,0.2498188430859017,12
+6,heldout,nsdgeneral,imagery,CLIP images A+B + text C,all,-0.43844236259096936,18
+6,heldout,nsdgeneral,imagery,CLIP images A+B + text C,within_set,0.00592885375494071,18
+6,heldout,nsdgeneral,imagery,CLIP images A+B + text C,between_set,-0.01586212809740204,18
+6,heldout,nsdgeneral,imagery,CLIP images A+B + text C,block_residual,-0.00304491878658775,18
+6,heldout,early_visual,vision,HOG images A+B,all,0.06707374363291412,12
+6,heldout,early_visual,vision,HOG images A+B,within_set,0.2395103320209919,12
+6,heldout,early_visual,vision,HOG images A+B,between_set,0.10218790218790218,12
+6,heldout,early_visual,vision,HOG images A+B,block_residual,0.4647399742015021,12
+6,heldout,early_visual,vision,CLIP images A+B + text C,all,-0.35659000442282174,18
+6,heldout,early_visual,vision,CLIP images A+B + text C,within_set,-0.12621870882740446,18
+6,heldout,early_visual,vision,CLIP images A+B + text C,between_set,0.00592567187782827,18
+6,heldout,early_visual,vision,CLIP images A+B + text C,block_residual,-0.03796030999512402,18
+6,heldout,early_visual,imagery,HOG images A+B,all,0.07991232201269693,12
+6,heldout,early_visual,imagery,HOG images A+B,within_set,0.17718422331664457,12
+6,heldout,early_visual,imagery,HOG images A+B,between_set,0.18635778635778638,12
+6,heldout,early_visual,imagery,HOG images A+B,block_residual,0.4378349865994276,12
+6,heldout,early_visual,imagery,CLIP images A+B + text C,all,-0.3539597657244716,18
+6,heldout,early_visual,imagery,CLIP images A+B + text C,within_set,-0.07918313570487483,18
+6,heldout,early_visual,imagery,CLIP images A+B + text C,between_set,0.021559156687339827,18
+6,heldout,early_visual,imagery,CLIP images A+B + text C,block_residual,-0.003523900044387633,18
+6,heldout,higher_visual,vision,HOG images A+B,all,-0.1362350609861181,12
+6,heldout,higher_visual,vision,HOG images A+B,within_set,0.03027268137068299,12
+6,heldout,higher_visual,vision,HOG images A+B,between_set,-0.1745173745173745,12
+6,heldout,higher_visual,vision,HOG images A+B,block_residual,-0.02833757228559871,12
+6,heldout,higher_visual,vision,CLIP images A+B + text C,all,-0.3640920483025746,18
+6,heldout,higher_visual,vision,CLIP images A+B + text C,within_set,-0.04980237154150198,18
+6,heldout,higher_visual,vision,CLIP images A+B + text C,between_set,0.06069526613126029,18
+6,heldout,higher_visual,vision,CLIP images A+B + text C,block_residual,0.08726192787696448,18
+6,heldout,higher_visual,imagery,HOG images A+B,all,-0.12515004453137882,12
+6,heldout,higher_visual,imagery,HOG images A+B,within_set,0.2417362644747186,12
+6,heldout,higher_visual,imagery,HOG images A+B,between_set,-0.24684684684684685,12
+6,heldout,higher_visual,imagery,HOG images A+B,block_residual,0.07385104024646533,12
+6,heldout,higher_visual,imagery,CLIP images A+B + text C,all,-0.37617439320225693,18
+6,heldout,higher_visual,imagery,CLIP images A+B + text C,within_set,0.0,18
+6,heldout,higher_visual,imagery,CLIP images A+B + text C,between_set,-0.029818895462383414,18
+6,heldout,higher_visual,imagery,CLIP images A+B + text C,block_residual,-0.04677172651607858,18
+7,heldout,nsdgeneral,vision,HOG images A+B,all,-0.0672407495305373,12
+7,heldout,nsdgeneral,vision,HOG images A+B,within_set,0.1092932834779805,12
+7,heldout,nsdgeneral,vision,HOG images A+B,between_set,-0.019819819819819822,12
+7,heldout,nsdgeneral,vision,HOG images A+B,block_residual,0.18339586103998576,12
+7,heldout,nsdgeneral,vision,CLIP images A+B + text C,all,-0.3907764062562824,18
+7,heldout,nsdgeneral,vision,CLIP images A+B + text C,within_set,-0.045059288537549404,18
+7,heldout,nsdgeneral,vision,CLIP images A+B + text C,between_set,0.03793573218249545,18
+7,heldout,nsdgeneral,vision,CLIP images A+B + text C,block_residual,0.036894982135566794,18
+7,heldout,nsdgeneral,imagery,HOG images A+B,all,-0.12773863594453827,12
+7,heldout,nsdgeneral,imagery,HOG images A+B,within_set,-0.06789093983866407,12
+7,heldout,nsdgeneral,imagery,HOG images A+B,between_set,0.03655083655083655,12
+7,heldout,nsdgeneral,imagery,HOG images A+B,block_residual,-0.03501576355817229,12
+7,heldout,nsdgeneral,imagery,CLIP images A+B + text C,all,-0.4449124147266562,18
+7,heldout,nsdgeneral,imagery,CLIP images A+B + text C,within_set,-0.0461133069828722,18
+7,heldout,nsdgeneral,imagery,CLIP images A+B + text C,between_set,0.002657978221726828,18
+7,heldout,nsdgeneral,imagery,CLIP images A+B + text C,block_residual,0.02491203797803724,18
+7,heldout,early_visual,vision,HOG images A+B,all,0.06053963788840677,12
+7,heldout,early_visual,vision,HOG images A+B,within_set,0.18675573286766933,12
+7,heldout,early_visual,vision,HOG images A+B,between_set,0.05328185328185329,12
+7,heldout,early_visual,vision,HOG images A+B,block_residual,0.45552359698874906,12
+7,heldout,early_visual,vision,CLIP images A+B + text C,all,-0.3470105745647541,18
+7,heldout,early_visual,vision,CLIP images A+B + text C,within_set,-0.09973649538866929,18
+7,heldout,early_visual,vision,CLIP images A+B + text C,between_set,0.02391227719187935,18
+7,heldout,early_visual,vision,CLIP images A+B + text C,block_residual,-0.03971376530681306,18
+7,heldout,early_visual,imagery,HOG images A+B,all,-0.0466781483856819,12
+7,heldout,early_visual,imagery,HOG images A+B,within_set,0.03873122469484441,12
+7,heldout,early_visual,imagery,HOG images A+B,between_set,-0.1003861003861004,12
+7,heldout,early_visual,imagery,HOG images A+B,block_residual,0.11316392474684557,12
+7,heldout,early_visual,imagery,CLIP images A+B + text C,all,-0.3907898087464651,18
+7,heldout,early_visual,imagery,CLIP images A+B + text C,within_set,-0.04637681159420289,18
+7,heldout,early_visual,imagery,CLIP images A+B + text C,between_set,-0.010269894347747386,18
+7,heldout,early_visual,imagery,CLIP images A+B + text C,block_residual,0.01008036297870409,18
+7,heldout,higher_visual,vision,HOG images A+B,all,-0.07772036960639254,12
+7,heldout,higher_visual,vision,HOG images A+B,within_set,0.02537562997248427,12
+7,heldout,higher_visual,vision,HOG images A+B,between_set,-0.0030888030888030892,12
+7,heldout,higher_visual,vision,HOG images A+B,block_residual,-0.02896015448740738,12
+7,heldout,higher_visual,vision,CLIP images A+B + text C,all,-0.4019138755980861,18
+7,heldout,higher_visual,vision,CLIP images A+B + text C,within_set,-0.059025032938076406,18
+7,heldout,higher_visual,vision,CLIP images A+B + text C,between_set,0.02854230377166157,18
+7,heldout,higher_visual,vision,CLIP images A+B + text C,block_residual,0.0002441663885058145,18
+7,heldout,higher_visual,imagery,HOG images A+B,all,-0.14842649151261106,12
+7,heldout,higher_visual,imagery,HOG images A+B,within_set,-0.03650529224111772,12
+7,heldout,higher_visual,imagery,HOG images A+B,between_set,0.08262548262548262,12
+7,heldout,higher_visual,imagery,HOG images A+B,block_residual,0.08829729582976684,12
+7,heldout,higher_visual,imagery,CLIP images A+B + text C,all,-0.47548349483333996,18
+7,heldout,higher_visual,imagery,CLIP images A+B + text C,within_set,-0.03438735177865612,18
+7,heldout,higher_visual,imagery,CLIP images A+B + text C,between_set,-0.002972362742576238,18
+7,heldout,higher_visual,imagery,CLIP images A+B + text C,block_residual,0.03738560006933926,18
+8,heldout,nsdgeneral,vision,HOG images A+B,all,-0.0391628829926383,12
+8,heldout,nsdgeneral,vision,HOG images A+B,within_set,0.09482472252875702,12
+8,heldout,nsdgeneral,vision,HOG images A+B,between_set,-0.02265122265122265,12
+8,heldout,nsdgeneral,vision,HOG images A+B,block_residual,0.2859477264088798,12
+8,heldout,nsdgeneral,vision,CLIP images A+B + text C,all,-0.3697613016498465,18
+8,heldout,nsdgeneral,vision,CLIP images A+B + text C,within_set,-0.030830039525691695,18
+8,heldout,nsdgeneral,vision,CLIP images A+B + text C,between_set,0.019120294949841375,18
+8,heldout,nsdgeneral,vision,CLIP images A+B + text C,block_residual,-0.04515164843953233,18
+8,heldout,nsdgeneral,imagery,HOG images A+B,all,-0.04845258604792831,12
+8,heldout,nsdgeneral,imagery,HOG images A+B,within_set,0.06121314247748399,12
+8,heldout,nsdgeneral,imagery,HOG images A+B,between_set,0.07696267696267697,12
+8,heldout,nsdgeneral,imagery,HOG images A+B,block_residual,0.2648617717152803,12
+8,heldout,nsdgeneral,imagery,CLIP images A+B + text C,all,-0.35914652942516717,18
+8,heldout,nsdgeneral,imagery,CLIP images A+B + text C,within_set,0.07180500658761528,18
+8,heldout,nsdgeneral,imagery,CLIP images A+B + text C,between_set,-0.012413425171720635,18
+8,heldout,nsdgeneral,imagery,CLIP images A+B + text C,block_residual,-0.016883009018044407,18
+8,heldout,early_visual,vision,HOG images A+B,all,-0.004717916607855147,12
+8,heldout,early_visual,vision,HOG images A+B,within_set,0.05097385319034121,12
+8,heldout,early_visual,vision,HOG images A+B,between_set,0.10141570141570141,12
+8,heldout,early_visual,vision,HOG images A+B,block_residual,0.24880791165486885,12
+8,heldout,early_visual,vision,CLIP images A+B + text C,all,-0.3499122136893034,18
+8,heldout,early_visual,vision,CLIP images A+B + text C,within_set,-0.0828722002635046,18
+8,heldout,early_visual,vision,CLIP images A+B + text C,between_set,-0.044880772052168776,18
+8,heldout,early_visual,vision,CLIP images A+B + text C,block_residual,-0.07895324835056051,18
+8,heldout,early_visual,imagery,HOG images A+B,all,-0.10863733640388577,12
+8,heldout,early_visual,imagery,HOG images A+B,within_set,-0.02537562997248427,12
+8,heldout,early_visual,imagery,HOG images A+B,between_set,0.06537966537966539,12
+8,heldout,early_visual,imagery,HOG images A+B,block_residual,0.08299826947188794,12
+8,heldout,early_visual,imagery,CLIP images A+B + text C,all,-0.34672912227091784,18
+8,heldout,early_visual,imagery,CLIP images A+B + text C,within_set,0.028326745718050064,18
+8,heldout,early_visual,imagery,CLIP images A+B + text C,between_set,-0.008402640829975135,18
+8,heldout,early_visual,imagery,CLIP images A+B + text C,block_residual,-0.016186910152535865,18
+8,heldout,higher_visual,vision,HOG images A+B,all,-0.13483638659352387,12
+8,heldout,higher_visual,vision,HOG images A+B,within_set,0.07813022912580683,12
+8,heldout,higher_visual,vision,HOG images A+B,between_set,-0.25250965250965257,12
+8,heldout,higher_visual,vision,HOG images A+B,block_residual,0.09024578517550398,12
+8,heldout,higher_visual,vision,CLIP images A+B + text C,all,-0.39304477771970026,18
+8,heldout,higher_visual,vision,CLIP images A+B + text C,within_set,-0.023583662714097495,18
+8,heldout,higher_visual,vision,CLIP images A+B + text C,between_set,-0.04625263177951165,18
+8,heldout,higher_visual,vision,CLIP images A+B + text C,block_residual,-0.08886572113084874,18
+8,heldout,higher_visual,imagery,HOG images A+B,all,-0.04780543819463845,12
+8,heldout,higher_visual,imagery,HOG images A+B,within_set,0.12109072548273196,12
+8,heldout,higher_visual,imagery,HOG images A+B,between_set,0.16628056628056628,12
+8,heldout,higher_visual,imagery,HOG images A+B,block_residual,0.2841528687370736,12
+8,heldout,higher_visual,imagery,CLIP images A+B + text C,all,-0.39032742283516275,18
+8,heldout,higher_visual,imagery,CLIP images A+B + text C,within_set,0.029512516469038203,18
+8,heldout,higher_visual,imagery,CLIP images A+B + text C,between_set,-0.024064706050473006,18
+8,heldout,higher_visual,imagery,CLIP images A+B + text C,block_residual,-0.03127254620114025,18
