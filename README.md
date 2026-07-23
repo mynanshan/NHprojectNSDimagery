@@ -9,6 +9,7 @@
 - [What RDM correlation answers and the revised evidence hierarchy](docs/rsa_scope_and_revised_analysis.md)
 - [Minimal NSD-Imagery download guide](docs/data_download.md)
 - [Interactive data-orientation notebook](notebooks/01_data_orientation.ipynb)
+- [Full 18-target RDM preprocessing sensitivity](notebooks/01a_full18_rdm_preprocessing_sensitivity.ipynb)
 - [Event alignment and first neural RDM notebook](notebooks/02_event_alignment_neural_rdm.ipynb)
 - [Held-out transfer and feature RSA notebook](notebooks/03_group_transfer_feature_rsa.ipynb)
 - [Measurement-first validation notebook](notebooks/04_measurement_first_validation.ipynb)

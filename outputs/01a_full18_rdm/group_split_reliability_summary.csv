@@ -1,0 +1,25 @@
+task,roi,comparison,scope,n_subjects,mean,median
+imagery,early_visual,run 1/run 2,all,7,0.0853221671443697,-0.00135365150845027
+imagery,early_visual,run 1/run 2,between_set,7,0.1150892321260151,0.0693265502491259
+imagery,early_visual,run 1/run 2,block_residual,7,0.12891930766554655,0.12818434137974355
+imagery,early_visual,run 1/run 2,within_set,7,0.003952569169960473,-0.06982872200263503
+imagery,higher_visual,run 1/run 2,all,7,0.18690873478578032,0.138290244327396
+imagery,higher_visual,run 1/run 2,between_set,7,0.1450319760360059,0.13375632341593072
+imagery,higher_visual,run 1/run 2,block_residual,7,0.11067572890171905,0.0715277752051586
+imagery,higher_visual,run 1/run 2,within_set,7,0.0504987765857331,-0.030961791831357045
+imagery,nsdgeneral,run 1/run 2,all,7,0.21073979831166914,0.2549354670097704
+imagery,nsdgeneral,run 1/run 2,between_set,7,0.21997389655796584,0.18747796926653137
+imagery,nsdgeneral,run 1/run 2,block_residual,7,0.21170232914052825,0.1829247570438108
+imagery,nsdgeneral,run 1/run 2,within_set,7,0.1102955015998494,0.03227931488801054
+vision,early_visual,odd/even repetitions,all,7,0.3375757001365139,0.4183151729591358
+vision,early_visual,odd/even repetitions,between_set,7,0.28910718878994623,0.347871235721703
+vision,early_visual,odd/even repetitions,block_residual,7,0.25628832281268943,0.3636243334044461
+vision,early_visual,odd/even repetitions,within_set,7,0.4301712779973649,0.5474308300395256
+vision,higher_visual,odd/even repetitions,all,7,0.19903798840110204,0.13248361545575166
+vision,higher_visual,odd/even repetitions,between_set,7,0.14551512107886969,0.12462964550763574
+vision,higher_visual,odd/even repetitions,block_residual,7,0.04241835897167073,0.010109130602998334
+vision,higher_visual,odd/even repetitions,within_set,7,0.2824581215885563,0.18326745718050064
+vision,nsdgeneral,odd/even repetitions,all,7,0.36871351411377945,0.34660514923672814
+vision,nsdgeneral,odd/even repetitions,between_set,7,0.28160823333591917,0.29024360036964
+vision,nsdgeneral,odd/even repetitions,block_residual,7,0.16739208497374344,0.22024793641798335
+vision,nsdgeneral,odd/even repetitions,within_set,7,0.507622811970638,0.4739130434782608

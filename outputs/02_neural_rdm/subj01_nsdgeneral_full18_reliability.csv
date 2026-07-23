@@ -1,9 +1,0 @@
-comparison,scope,rho
-vision odd/even,all,0.26986249045072574
-vision odd/even,within_set,0.14097496706192358
-vision odd/even,between_set,0.19382282050549215
-vision odd/even,block_residual,0.14402214928254498
-imagery run 1/run 2,all,0.3715672872019621
-imagery run 1/run 2,within_set,-0.17957839262187084
-imagery run 1/run 2,between_set,0.0661350710223213
-imagery run 1/run 2,block_residual,0.013321331263207148

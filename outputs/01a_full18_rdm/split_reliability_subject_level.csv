@@ -1,0 +1,193 @@
+subject,phase,roi,task,comparison,scope,rho
+1,pilot,nsdgeneral,vision,odd/even repetitions,all,0.47938361947649866
+1,pilot,nsdgeneral,vision,odd/even repetitions,within_set,0.5919631093544137
+1,pilot,nsdgeneral,vision,odd/even repetitions,between_set,0.39687711375956247
+1,pilot,nsdgeneral,vision,odd/even repetitions,block_residual,0.2941535808816891
+1,pilot,nsdgeneral,imagery,run 1/run 2,all,0.1476820393229062
+1,pilot,nsdgeneral,imagery,run 1/run 2,within_set,0.008036890645586298
+1,pilot,nsdgeneral,imagery,run 1/run 2,between_set,0.14271151885830785
+1,pilot,nsdgeneral,imagery,run 1/run 2,block_residual,0.08408455894219023
+1,pilot,early_visual,vision,odd/even repetitions,all,0.43343653250773984
+1,pilot,early_visual,vision,odd/even repetitions,within_set,0.5880105401844532
+1,pilot,early_visual,vision,odd/even repetitions,between_set,0.3670772719045033
+1,pilot,early_visual,vision,odd/even repetitions,block_residual,0.35177957686091466
+1,pilot,early_visual,imagery,run 1/run 2,all,0.14030061785479742
+1,pilot,early_visual,imagery,run 1/run 2,within_set,-0.01686429512516469
+1,pilot,early_visual,imagery,run 1/run 2,between_set,0.20172054074137583
+1,pilot,early_visual,imagery,run 1/run 2,block_residual,0.15918418449353647
+1,pilot,higher_visual,vision,odd/even repetitions,all,0.27160481417447363
+1,pilot,higher_visual,vision,odd/even repetitions,within_set,0.42450592885375493
+1,pilot,higher_visual,vision,odd/even repetitions,between_set,0.1363190336010365
+1,pilot,higher_visual,vision,odd/even repetitions,block_residual,0.23141923566002112
+1,pilot,higher_visual,imagery,run 1/run 2,all,0.1403977859086218
+1,pilot,higher_visual,imagery,run 1/run 2,within_set,-0.186429512516469
+1,pilot,higher_visual,imagery,run 1/run 2,between_set,0.1863728600417274
+1,pilot,higher_visual,imagery,run 1/run 2,block_residual,0.0821655840051048
+2,heldout,nsdgeneral,vision,odd/even repetitions,all,0.4723975714687788
+2,heldout,nsdgeneral,vision,odd/even repetitions,within_set,0.6139657444005269
+2,heldout,nsdgeneral,vision,odd/even repetitions,between_set,0.42427620109177167
+2,heldout,nsdgeneral,vision,odd/even repetitions,block_residual,0.33491394367985267
+2,heldout,nsdgeneral,imagery,run 1/run 2,all,0.25765617251685363
+2,heldout,nsdgeneral,imagery,run 1/run 2,within_set,0.3065876152832674
+2,heldout,nsdgeneral,imagery,run 1/run 2,between_set,0.18747796926653137
+2,heldout,nsdgeneral,imagery,run 1/run 2,block_residual,0.2600544645846737
+2,heldout,early_visual,vision,odd/even repetitions,all,0.45241110798386336
+2,heldout,early_visual,vision,odd/even repetitions,within_set,0.5474308300395256
+2,heldout,early_visual,vision,odd/even repetitions,between_set,0.42573380205207345
+2,heldout,early_visual,vision,odd/even repetitions,block_residual,0.4223376600158549
+2,heldout,early_visual,imagery,run 1/run 2,all,-0.0505374398563253
+2,heldout,early_visual,imagery,run 1/run 2,within_set,-0.12911725955204215
+2,heldout,early_visual,imagery,run 1/run 2,between_set,-0.01640515590614193
+2,heldout,early_visual,imagery,run 1/run 2,block_residual,-0.08952931651441302
+2,heldout,higher_visual,vision,odd/even repetitions,all,0.3696339779931111
+2,heldout,higher_visual,vision,odd/even repetitions,within_set,0.47259552042160735
+2,heldout,higher_visual,vision,odd/even repetitions,between_set,0.3072775253174807
+2,heldout,higher_visual,vision,odd/even repetitions,block_residual,0.1978146628454535
+2,heldout,higher_visual,imagery,run 1/run 2,all,0.32824373768646214
+2,heldout,higher_visual,imagery,run 1/run 2,within_set,0.2134387351778656
+2,heldout,higher_visual,imagery,run 1/run 2,between_set,0.310345156096678
+2,heldout,higher_visual,imagery,run 1/run 2,block_residual,0.30845934561937355
+3,heldout,nsdgeneral,vision,odd/even repetitions,all,0.25600431560183884
+3,heldout,nsdgeneral,vision,odd/even repetitions,within_set,0.4739130434782608
+3,heldout,nsdgeneral,vision,odd/even repetitions,between_set,0.11302599864719387
+3,heldout,nsdgeneral,vision,odd/even repetitions,block_residual,0.07416931842264614
+3,heldout,nsdgeneral,imagery,run 1/run 2,all,0.3539128570088322
+3,heldout,nsdgeneral,imagery,run 1/run 2,within_set,0.2700922266139657
+3,heldout,nsdgeneral,imagery,run 1/run 2,between_set,0.39085617384511323
+3,heldout,nsdgeneral,imagery,run 1/run 2,block_residual,0.37673192628638624
+3,heldout,early_visual,vision,odd/even repetitions,all,0.2273095841207296
+3,heldout,early_visual,vision,odd/even repetitions,within_set,0.3885375494071146
+3,heldout,early_visual,vision,odd/even repetitions,between_set,0.1506378195051778
+3,heldout,early_visual,vision,odd/even repetitions,block_residual,0.09264192439284752
+3,heldout,early_visual,imagery,run 1/run 2,all,0.439367134413574
+3,heldout,early_visual,imagery,run 1/run 2,within_set,0.34176548089591563
+3,heldout,early_visual,imagery,run 1/run 2,between_set,0.4876389722484209
+3,heldout,early_visual,imagery,run 1/run 2,block_residual,0.44839570877648455
+3,heldout,higher_visual,vision,odd/even repetitions,all,0.004248589387908273
+3,heldout,higher_visual,vision,odd/even repetitions,within_set,0.16745718050065875
+3,heldout,higher_visual,vision,odd/even repetitions,between_set,-0.12326731258395494
+3,heldout,higher_visual,vision,odd/even repetitions,block_residual,-0.12595832518209335
+3,heldout,higher_visual,imagery,run 1/run 2,all,0.07859555305375739
+3,heldout,higher_visual,imagery,run 1/run 2,within_set,-0.06086956521739129
+3,heldout,higher_visual,imagery,run 1/run 2,between_set,0.017605533167566946
+3,heldout,higher_visual,imagery,run 1/run 2,block_residual,0.04950726256185921
+4,heldout,nsdgeneral,vision,odd/even repetitions,all,0.5480077198343452
+4,heldout,nsdgeneral,vision,odd/even repetitions,within_set,0.7516469038208168
+4,heldout,nsdgeneral,vision,odd/even repetitions,between_set,0.40513685253460613
+4,heldout,nsdgeneral,vision,odd/even repetitions,block_residual,0.30863283766013666
+4,heldout,nsdgeneral,imagery,run 1/run 2,all,0.2549354670097704
+4,heldout,nsdgeneral,imagery,run 1/run 2,within_set,0.2802371541501976
+4,heldout,nsdgeneral,imagery,run 1/run 2,between_set,0.20774148065582515
+4,heldout,nsdgeneral,imagery,run 1/run 2,block_residual,0.07663975872837545
+4,heldout,early_visual,vision,odd/even repetitions,all,0.5625293179472745
+4,heldout,early_visual,vision,odd/even repetitions,within_set,0.695125164690382
+4,heldout,early_visual,vision,odd/even repetitions,between_set,0.4688806958377395
+4,heldout,early_visual,vision,odd/even repetitions,block_residual,0.4533813525257582
+4,heldout,early_visual,imagery,run 1/run 2,all,-0.14866712235133286
+4,heldout,early_visual,imagery,run 1/run 2,within_set,-0.051778656126482206
+4,heldout,early_visual,imagery,run 1/run 2,between_set,-0.19991997484923832
+4,heldout,early_visual,imagery,run 1/run 2,block_residual,-0.23940607080783188
+4,heldout,higher_visual,vision,odd/even repetitions,all,0.13248361545575166
+4,heldout,higher_visual,vision,odd/even repetitions,within_set,0.3125164690382082
+4,heldout,higher_visual,vision,odd/even repetitions,between_set,0.03553497765964541
+4,heldout,higher_visual,vision,odd/even repetitions,block_residual,-0.11559502583597357
+4,heldout,higher_visual,imagery,run 1/run 2,all,0.42930856553147567
+4,heldout,higher_visual,imagery,run 1/run 2,within_set,0.4249011857707509
+4,heldout,higher_visual,imagery,run 1/run 2,between_set,0.42096087341735977
+4,heldout,higher_visual,imagery,run 1/run 2,block_residual,0.33633192405163
+5,heldout,nsdgeneral,vision,odd/even repetitions,all,0.4704408079021081
+5,heldout,nsdgeneral,vision,odd/even repetitions,within_set,0.5968379446640315
+5,heldout,nsdgeneral,vision,odd/even repetitions,between_set,0.4164356416778607
+5,heldout,nsdgeneral,vision,odd/even repetitions,block_residual,0.31145485393949973
+5,heldout,nsdgeneral,imagery,run 1/run 2,all,0.11985846970367094
+5,heldout,nsdgeneral,imagery,run 1/run 2,within_set,-0.01040843214756258
+5,heldout,nsdgeneral,imagery,run 1/run 2,between_set,0.1571827336210428
+5,heldout,nsdgeneral,imagery,run 1/run 2,block_residual,0.08933817364243443
+5,heldout,early_visual,vision,odd/even repetitions,all,0.4707557664214011
+5,heldout,early_visual,vision,odd/even repetitions,within_set,0.553623188405797
+5,heldout,early_visual,vision,odd/even repetitions,between_set,0.4352987129288252
+5,heldout,early_visual,vision,odd/even repetitions,block_residual,0.3636243334044461
+5,heldout,early_visual,imagery,run 1/run 2,all,-0.00135365150845027
+5,heldout,early_visual,imagery,run 1/run 2,within_set,-0.11251646903820817
+5,heldout,early_visual,imagery,run 1/run 2,between_set,0.0693265502491259
+5,heldout,early_visual,imagery,run 1/run 2,block_residual,0.12818434137974355
+5,heldout,higher_visual,vision,odd/even repetitions,all,0.39454585662015995
+5,heldout,higher_visual,vision,odd/even repetitions,within_set,0.6065876152832674
+5,heldout,higher_visual,vision,odd/even repetitions,between_set,0.308039669610449
+5,heldout,higher_visual,vision,odd/even repetitions,block_residual,0.27016190783479177
+5,heldout,higher_visual,imagery,run 1/run 2,all,0.21424550681516621
+5,heldout,higher_visual,imagery,run 1/run 2,within_set,0.08919631093544136
+5,heldout,higher_visual,imagery,run 1/run 2,between_set,0.14675088361103966
+5,heldout,higher_visual,imagery,run 1/run 2,block_residual,0.0715277752051586
+6,heldout,nsdgeneral,vision,odd/even repetitions,all,0.34660514923672814
+6,heldout,nsdgeneral,vision,odd/even repetitions,within_set,0.40922266139657437
+6,heldout,nsdgeneral,vision,odd/even repetitions,between_set,0.27066601884401764
+6,heldout,nsdgeneral,vision,odd/even repetitions,block_residual,0.05247374244883328
+6,heldout,nsdgeneral,imagery,run 1/run 2,all,0.09243027354482461
+6,heldout,nsdgeneral,imagery,run 1/run 2,within_set,-0.004347826086956521
+6,heldout,nsdgeneral,imagery,run 1/run 2,between_set,0.11420732230129468
+6,heldout,nsdgeneral,imagery,run 1/run 2,block_residual,0.1829247570438108
+6,heldout,early_visual,vision,odd/even repetitions,all,0.22491723962312196
+6,heldout,early_visual,vision,odd/even repetitions,within_set,0.18866930171277996
+6,heldout,early_visual,vision,odd/even repetitions,between_set,0.23108214962797832
+6,heldout,early_visual,vision,odd/even repetitions,block_residual,0.18974792865270682
+6,heldout,early_visual,imagery,run 1/run 2,all,0.08568211973784728
+6,heldout,early_visual,imagery,run 1/run 2,within_set,-0.06982872200263503
+6,heldout,early_visual,imagery,run 1/run 2,between_set,0.14213991063858164
+6,heldout,early_visual,imagery,run 1/run 2,block_residual,0.30742164937091454
+6,heldout,higher_visual,vision,odd/even repetitions,all,0.2824005200166191
+6,heldout,higher_visual,vision,odd/even repetitions,within_set,0.18326745718050064
+6,heldout,higher_visual,vision,odd/even repetitions,between_set,0.30320005335010053
+6,heldout,higher_visual,vision,odd/even repetitions,block_residual,0.09348165613561307
+6,heldout,higher_visual,imagery,run 1/run 2,all,-0.01642810234141503
+6,heldout,higher_visual,imagery,run 1/run 2,within_set,-0.030961791831357045
+6,heldout,higher_visual,imagery,run 1/run 2,between_set,-0.07779587870473577
+6,heldout,higher_visual,imagery,run 1/run 2,block_residual,-0.06545918371965288
+7,heldout,nsdgeneral,vision,odd/even repetitions,all,0.1611515419564955
+7,heldout,nsdgeneral,vision,odd/even repetitions,within_set,0.29565217391304344
+7,heldout,nsdgeneral,vision,odd/even repetitions,between_set,0.051473320186344276
+7,heldout,nsdgeneral,vision,odd/even repetitions,block_residual,-0.13014803775274753
+7,heldout,nsdgeneral,imagery,run 1/run 2,all,0.36262782625011725
+7,heldout,nsdgeneral,imagery,run 1/run 2,within_set,0.03227931488801054
+7,heldout,nsdgeneral,imagery,run 1/run 2,between_set,0.4645650537788067
+7,heldout,nsdgeneral,imagery,run 1/run 2,block_residual,0.3977193840511524
+7,heldout,early_visual,vision,odd/even repetitions,all,0.006791711900071033
+7,heldout,early_visual,vision,odd/even repetitions,within_set,0.08379446640316204
+7,heldout,early_visual,vision,odd/even repetitions,between_set,-0.03575409414387378
+7,heldout,early_visual,vision,odd/even repetitions,block_residual,-0.14986207253178804
+7,heldout,early_visual,imagery,run 1/run 2,all,0.29304209722166374
+7,heldout,early_visual,imagery,run 1/run 2,within_set,0.13135704874835308
+7,heldout,early_visual,imagery,run 1/run 2,between_set,0.3262358646050663
+7,heldout,early_visual,imagery,run 1/run 2,block_residual,0.26145873548784243
+7,heldout,higher_visual,vision,odd/even repetitions,all,0.1186924530577781
+7,heldout,higher_visual,vision,odd/even repetitions,within_set,0.09749670619235837
+7,heldout,higher_visual,vision,odd/even repetitions,between_set,0.12462964550763574
+7,heldout,higher_visual,vision,odd/even repetitions,block_residual,-0.03308549359909457
+7,heldout,higher_visual,imagery,run 1/run 2,all,0.13610563842761983
+7,heldout,higher_visual,imagery,run 1/run 2,within_set,-0.2213438735177865
+7,heldout,higher_visual,imagery,run 1/run 2,between_set,0.06360094124820181
+7,heldout,higher_visual,imagery,run 1/run 2,block_residual,-0.02502443611894914
+8,heldout,nsdgeneral,vision,odd/even repetitions,all,0.3263874927961615
+8,heldout,nsdgeneral,vision,odd/even repetitions,within_set,0.41212121212121205
+8,heldout,nsdgeneral,vision,odd/even repetitions,between_set,0.29024360036964
+8,heldout,nsdgeneral,vision,odd/even repetitions,block_residual,0.22024793641798335
+8,heldout,nsdgeneral,imagery,run 1/run 2,all,0.033757522147615016
+8,heldout,nsdgeneral,imagery,run 1/run 2,within_set,-0.10237154150197628
+8,heldout,nsdgeneral,imagery,run 1/run 2,between_set,0.01778654243714691
+8,heldout,nsdgeneral,imagery,run 1/run 2,block_residual,0.0985078396468646
+8,heldout,early_visual,vision,odd/even repetitions,all,0.4183151729591358
+8,heldout,early_visual,vision,odd/even repetitions,within_set,0.5540184453227931
+8,heldout,early_visual,vision,odd/even repetitions,between_set,0.347871235721703
+8,heldout,early_visual,vision,odd/even repetitions,block_residual,0.4221471332290006
+8,heldout,early_visual,imagery,run 1/run 2,all,-0.020277967646388693
+8,heldout,early_visual,imagery,run 1/run 2,within_set,-0.08221343873517785
+8,heldout,early_visual,imagery,run 1/run 2,between_set,-0.0033915421037087846
+8,heldout,early_visual,imagery,run 1/run 2,block_residual,0.08591010596608573
+8,heldout,higher_visual,vision,odd/even repetitions,all,0.09126090627638614
+8,heldout,higher_visual,vision,odd/even repetitions,within_set,0.13728590250329378
+8,heldout,higher_visual,vision,odd/even repetitions,between_set,0.06319128869073137
+8,heldout,higher_visual,vision,odd/even repetitions,block_residual,0.010109130602998334
+8,heldout,higher_visual,imagery,run 1/run 2,all,0.138290244327396
+8,heldout,higher_visual,imagery,run 1/run 2,within_set,-0.06086956521739129
+8,heldout,higher_visual,imagery,run 1/run 2,between_set,0.13375632341593072
+8,heldout,higher_visual,imagery,run 1/run 2,block_residual,0.09938741471261396
