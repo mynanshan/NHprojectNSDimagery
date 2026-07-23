@@ -1,4 +1,0 @@
-method,subject,task,region,brain_correlation,sd_across_target_samples,n_target_samples,n_voxels
-GroundTruth_GNet,subj01,vision,early_visual,0.44806337710371635,0.16368591275899036,12,4657
-GroundTruth_GNet,subj01,vision,higher_visual,0.21977491710649735,0.15548705829172693,12,11067
-GroundTruth_GNet,subj01,vision,visual_cortex,0.3154664401058995,0.15814655688805013,12,15724

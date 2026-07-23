@@ -1,3 +1,0 @@
-contrast,mean_effect,p_greater,p_two_sided
-Set B imagery: higher-visual CLIP minus HOG,-0.13214285714285715,0.9921875,0.03125
-Set B drop: early HOG minus higher CLIP,0.25051020408163266,0.0390625,0.078125
