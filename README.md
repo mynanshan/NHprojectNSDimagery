@@ -5,6 +5,7 @@
 - [Original paper methodology in formulas](docs/original_paper_methodology.md)
 - [Paper reproduction, released checkpoints, and ML next steps](docs/paper_reproduction_and_ml_next_steps.md)
 - [Train a core-NSD perception encoder and test imagery transfer](docs/brain_encoder_baseline.md)
+- [Current brain encoding results](docs/brain_encoding_results.md)
 - [Notebook 02/03 results review](docs/notebook_02_03_results_review.md)
 - [What RDM correlation answers and the revised evidence hierarchy](docs/rsa_scope_and_revised_analysis.md)
 - [Minimal NSD-Imagery download guide](docs/data_download.md)
