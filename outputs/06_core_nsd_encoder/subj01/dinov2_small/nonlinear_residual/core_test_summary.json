@@ -1,0 +1,72 @@
+{
+  "method": "DINOv2_PyramidResidualMLP",
+  "model_type": "ridge_plus_residual_mlp",
+  "ridge_reference": "/home/jovyan/NHprojectNSDimagery/outputs/06_core_nsd_encoder/subj01/dinov2_small/encoder_model.npz",
+  "selected_alpha": 1000.0,
+  "selected_residual_epochs": 0,
+  "nonlinear_accepted_on_validation": false,
+  "pca_components": 512,
+  "hidden_width": 256,
+  "dropout": 0.1,
+  "learning_rate": 0.0003,
+  "weight_decay": 0.0001,
+  "feature_metadata": {
+    "feature_dimension": 9216,
+    "grid_size": [
+      16,
+      16
+    ],
+    "hidden_state_layers": [
+      3,
+      6,
+      9,
+      12
+    ],
+    "include_cls": true,
+    "model_id": "facebook/dinov2-small",
+    "pyramid_levels": [
+      1,
+      2
+    ],
+    "resolved_hidden_state_layers": [
+      3,
+      6,
+      9,
+      12
+    ],
+    "transformers_version": "5.14.1"
+  },
+  "n_train_images": 8100,
+  "n_validation_images": 900,
+  "n_final_train_images": 9000,
+  "n_test_images": 1000,
+  "n_voxels": 15724,
+  "target_space": "per-voxel standardized core-NSD betas",
+  "ridge_test_mean_voxel_correlation": 0.3515808445154733,
+  "nonlinear_test_mean_voxel_correlation": 0.3515808445154733,
+  "ridge_test_mean_voxel_r2": 0.14444005837608764,
+  "nonlinear_test_mean_voxel_r2": 0.14444005837608764,
+  "test_by_region": {
+    "early_visual": {
+      "n_voxels": 4657,
+      "ridge_mean_voxel_correlation": 0.3876425407654594,
+      "nonlinear_mean_voxel_correlation": 0.3876425407654594,
+      "ridge_mean_voxel_r2": 0.1701952718829503,
+      "nonlinear_mean_voxel_r2": 0.1701952718829503
+    },
+    "higher_visual": {
+      "n_voxels": 11067,
+      "ridge_mean_voxel_correlation": 0.33640606187915045,
+      "nonlinear_mean_voxel_correlation": 0.33640606187915045,
+      "ridge_mean_voxel_r2": 0.13360224963826717,
+      "nonlinear_mean_voxel_r2": 0.13360224963826717
+    },
+    "visual_cortex": {
+      "n_voxels": 15724,
+      "ridge_mean_voxel_correlation": 0.3515808445154733,
+      "nonlinear_mean_voxel_correlation": 0.3515808445154733,
+      "ridge_mean_voxel_r2": 0.14444005837608764,
+      "nonlinear_mean_voxel_r2": 0.14444005837608764
+    }
+  }
+}

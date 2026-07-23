@@ -428,7 +428,7 @@ def main() -> None:
         device=args.device,
         voxel_chunk_size=args.voxel_chunk_size,
     )
-    _, _, history, best_epoch, device = train_with_validation(
+    _, _, _, history, best_epoch, device = train_with_validation(
         x_train,
         y_train,
         x_validation,
