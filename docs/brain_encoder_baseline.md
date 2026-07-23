@@ -22,7 +22,42 @@ The first implemented model is deliberately strong but auditable:
 Repeated fMRI presentations are averaged before splitting. No image identity
 can occur in more than one partition.
 
-## 1. Environment and storage
+## 1. Start every shell with explicit paths
+
+The examples below assume that the repository and its existing `data/nsd`
+directory are both under `$HOME/NHprojectNSDimagery`. Run this bootstrap block
+after opening a new terminal or receiving a new JupyterHub pod:
+
+```bash
+cd "$HOME/NHprojectNSDimagery"
+
+export REPO_ROOT="$PWD"
+export NSD_DATA_ROOT="$REPO_ROOT/data/nsd"
+export NSD_STIMULI="$NSD_DATA_ROOT/nsddata_stimuli/stimuli/nsd/nsd_stimuli.hdf5"
+export WORK="$REPO_ROOT/outputs/06_core_nsd_encoder/subj01/dinov2_small"
+
+mkdir -p "$WORK"
+printf 'Repository:  %s\nData root:   %s\nStimuli:     %s\nWork output: %s\n' \
+  "$REPO_ROOT" "$NSD_DATA_ROOT" "$NSD_STIMULI" "$WORK"
+```
+
+Shell variables do not survive a new terminal, server restart, or replacement
+pod. An unset variable quoted as `"$NSD_DATA_ROOT"` becomes an empty argument;
+older versions of the scripts interpreted that as the repository directory.
+The scripts now reject empty paths, but rerunning the bootstrap remains the
+safest practice.
+
+If the 36.84 GiB stimulus HDF5 is stored on a different persistent or shared
+mount, change only `NSD_STIMULI`:
+
+```bash
+export NSD_STIMULI="/actual/persistent/path/nsd_stimuli.hdf5"
+```
+
+Do not change `NSD_DATA_ROOT` in that case: the design, ROI masks, beta files,
+and NSD-Imagery data can remain in the repository's `data/nsd` directory.
+
+## 2. Environment, storage estimate, and download
 
 Update the existing environment because this patch adds scikit-learn:
 
@@ -31,13 +66,11 @@ conda env update -n nsdimagery -f environment.yml
 conda activate nsdimagery
 ```
 
-Use persistent home storage for core NSD. The shared `nsd_stimuli.hdf5` image
-bank is large, as are the 30--40 beta-session files for a subject. Estimate
-before downloading:
+The shared `nsd_stimuli.hdf5` image bank is 36.84 GiB. Subject 1's 40 beta
+sessions are about 18.25 GiB, for a large-file subtotal of about 55.09 GiB.
+Estimate before downloading:
 
 ```bash
-export NSD_DATA_ROOT="$HOME/data/nsd"
-
 bash scripts/download_core_nsd_encoder_mvp.sh \
   --subject 01 \
   --sessions all \
@@ -55,17 +88,58 @@ bash scripts/download_core_nsd_encoder_mvp.sh \
   --subject 01 --sessions all --dest "$NSD_DATA_ROOT"
 ```
 
+The downloader writes the stimulus bank to the default `NSD_STIMULI` path
+defined in the bootstrap. If an earlier run used `--skip-stimuli`, recover the
+missing image bank without downloading the beta sessions again:
+
+```bash
+bash scripts/download_core_nsd_encoder_mvp.sh \
+  --dest "$NSD_DATA_ROOT" \
+  --stimuli-only
+```
+
+If storage policy requires the HDF5 elsewhere, download it directly there and
+update `NSD_STIMULI`:
+
+```bash
+mkdir -p "$(dirname "$NSD_STIMULI")"
+aws s3 cp \
+  s3://natural-scenes-dataset/nsddata_stimuli/stimuli/nsd/nsd_stimuli.hdf5 \
+  "$NSD_STIMULI" \
+  --no-sign-request
+```
+
 For a code-path smoke test, `--sessions 5` downloads sessions 1--5. Use
 `--split-mode random` during preparation because a partial acquisition is not
 guaranteed to contain enough of the shared-1000 test set. Scientific results
 should use every completed session.
 
-## 2. Prepare unique-image beta targets
+### Verify the download before computing
+
+Run this block after any download. Every line should print `FOUND` and the
+stimulus file should be approximately 37 GiB:
 
 ```bash
-WORK="$PWD/outputs/06_core_nsd_encoder/subj01/dinov2_small"
-mkdir -p "$WORK"
+for path in \
+  "$NSD_DATA_ROOT/nsddata/experiments/nsd/nsd_expdesign.mat" \
+  "$NSD_DATA_ROOT/nsddata/ppdata/subj01/func1pt8mm/roi/nsdgeneral.nii.gz" \
+  "$NSD_DATA_ROOT/nsddata/ppdata/subj01/func1pt8mm/roi/prf-visualrois.nii.gz" \
+  "$NSD_DATA_ROOT/nsddata_betas/ppdata/subj01/func1pt8mm/betas_fithrf_GLMdenoise_RR/betas_session01.nii.gz" \
+  "$NSD_DATA_ROOT/nsddata_betas/ppdata/subj01/func1pt8mm/betas_fithrf_GLMdenoise_RR/betas_session40.nii.gz" \
+  "$NSD_STIMULI"
+do
+  if test -f "$path"; then
+    printf 'FOUND  %s\n' "$path"
+  else
+    printf 'MISSING %s\n' "$path"
+  fi
+done
+du -h "$NSD_STIMULI" 2>/dev/null || true
+```
 
+## 3. Prepare unique-image beta targets
+
+```bash
 python scripts/prepare_core_nsd_encoder_data.py \
   --data-root "$NSD_DATA_ROOT" \
   --subject 1 \
@@ -102,7 +176,20 @@ in a text file and rerun preparation with:
 Report which policy was used. Never decide the policy after looking at imagery
 scores.
 
-## 3. Extract frozen image features
+Verify preparation outputs before starting the GPU job:
+
+```bash
+for path in \
+  "$WORK/core_subj01_manifest.csv" \
+  "$WORK/core_subj01_betas.npy" \
+  "$WORK/core_subj01_coordinates.npy" \
+  "$WORK/core_subj01_voxel_regions.csv"
+do
+  test -f "$path" && printf 'FOUND  %s\n' "$path" || printf 'MISSING %s\n' "$path"
+done
+```
+
+## 4. Extract frozen image features
 
 The default is `facebook/dinov2-small`, with hidden states 3, 6, 9, and 12.
 Each state contributes CLS, 1x1 pooled, and 2x2 pooled patch features. The GPU
@@ -111,7 +198,7 @@ is used automatically when available.
 ```bash
 python scripts/extract_image_features.py \
   --manifest "$WORK/core_subj01_manifest.csv" \
-  --nsd-stimuli "$NSD_DATA_ROOT/nsddata_stimuli/stimuli/nsd/nsd_stimuli.hdf5" \
+  --nsd-stimuli "$NSD_STIMULI" \
   --model-id facebook/dinov2-small \
   --layers 3,6,9,12 \
   --pyramid-levels 1,2 \
@@ -121,8 +208,10 @@ python scripts/extract_image_features.py \
 ```
 
 The pretrained checkpoint is downloaded to the Hugging Face cache on first
-use. If GPU memory is tight, lower `--batch-size`; this does not change the
-features.
+use. An unauthenticated Hugging Face warning is harmless for this public
+checkpoint. If GPU memory is tight, lower `--batch-size`; this does not change
+the features. The script now checks the manifest and HDF5 paths before loading
+the model, so a missing 37 GiB input fails immediately.
 
 For the semantic comparison, repeat the full track in a separate work
 directory with:
@@ -134,7 +223,7 @@ directory with:
 Do not use NSD-Imagery results to choose layers. Layer and pyramid choices must
 be fixed in advance or selected only with core-NSD validation data.
 
-## 4. Fit and validate the encoder
+## 5. Fit and validate the encoder
 
 ```bash
 python scripts/fit_ridge_encoder.py \
@@ -161,7 +250,7 @@ Feature extraction benefits most from the GPU. PCA is CPU-based. Ridge uses a
 chunked PyTorch Cholesky solve and automatically uses the T4; a NumPy CPU
 fallback is also implemented.
 
-## 5. Build target features and evaluate NSD-Imagery
+## 6. Build target features and evaluate NSD-Imagery
 
 Make an image manifest from the released A/B targets:
 
@@ -204,7 +293,7 @@ The image manifest may also contain several reconstructions per target. Add a
 `sample` column and one `image_path` row per reconstruction; the evaluator will
 score every sample against the corresponding measured target pattern.
 
-## 6. Evidence hierarchy
+## 7. Evidence hierarchy
 
 Interpret results in this order:
 
@@ -224,7 +313,27 @@ group uncertainty. Match early/higher ROI voxel counts as a sensitivity check,
 and retain label-permutation and cue-mismatch controls from the earlier
 notebooks.
 
-## 7. Next model tier
+## 8. Troubleshooting paths
+
+Use the traceback to distinguish the two common failures:
+
+- `nsddata/...` with no absolute prefix means a shell path variable was empty
+  or relative. Rerun the bootstrap and confirm `printf '<%s>\n' "$NSD_DATA_ROOT"`.
+- An absolute `.../nsd_stimuli.hdf5` path that is missing means the beta-only
+  download succeeded but the shared image bank did not. Run `--stimuli-only`
+  or point `NSD_STIMULI` to its external location.
+
+For a complete path snapshot:
+
+```bash
+printf 'NSD_DATA_ROOT=<%s>\nNSD_STIMULI=<%s>\nWORK=<%s>\n' \
+  "$NSD_DATA_ROOT" "$NSD_STIMULI" "$WORK"
+readlink -f "$NSD_DATA_ROOT"
+readlink -f "$NSD_STIMULI"
+tree -L 4 "$NSD_DATA_ROOT/nsddata_stimuli" 2>/dev/null || true
+```
+
+## 9. Next model tier
 
 The spatial pyramid is a controlled ridge baseline, not the endpoint. After it
 passes core-NSD validation, replace fixed pooling with a learned factorized

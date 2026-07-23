@@ -24,6 +24,12 @@ from nsdimagery.encoding import (  # noqa: E402
 from nsdimagery.io import load_roi, paper_visual_roi_masks  # noqa: E402
 
 
+def resolved_path(value: str) -> Path:
+    if not value.strip():
+        raise argparse.ArgumentTypeError("path must not be empty")
+    return Path(value).expanduser().resolve()
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
@@ -31,14 +37,14 @@ def parse_args() -> argparse.Namespace:
             "presentations of each image, and make unique-image data splits."
         )
     )
-    parser.add_argument("--data-root", type=Path, required=True)
+    parser.add_argument("--data-root", type=resolved_path, required=True)
     parser.add_argument("--subject", type=int, choices=range(1, 9), required=True)
     parser.add_argument(
         "--sessions",
         type=int,
         help="Number of consecutive sessions to use (default: every completed session)",
     )
-    parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--output-dir", type=resolved_path, required=True)
     parser.add_argument(
         "--split-mode", choices=("shared1000", "random"), default="shared1000"
     )
@@ -64,7 +70,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--exclude-73k-ids",
-        type=Path,
+        type=resolved_path,
         help="Optional text/CSV file of one-based NSD 73K IDs to exclude",
     )
     return parser.parse_args()

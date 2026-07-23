@@ -24,14 +24,20 @@ from nsdimagery.encoding import (  # noqa: E402
 )
 
 
+def resolved_path(value: str) -> Path:
+    if not value.strip():
+        raise argparse.ArgumentTypeError("path must not be empty")
+    return Path(value).expanduser().resolve()
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data-root", type=Path, required=True)
+    parser.add_argument("--data-root", type=resolved_path, required=True)
     parser.add_argument("--subject", type=int, choices=range(1, 9), required=True)
-    parser.add_argument("--encoder-model", type=Path, required=True)
-    parser.add_argument("--image-manifest", type=Path, required=True)
-    parser.add_argument("--image-features", type=Path, required=True)
-    parser.add_argument("--output-prefix", type=Path, required=True)
+    parser.add_argument("--encoder-model", type=resolved_path, required=True)
+    parser.add_argument("--image-manifest", type=resolved_path, required=True)
+    parser.add_argument("--image-features", type=resolved_path, required=True)
+    parser.add_argument("--output-prefix", type=resolved_path, required=True)
     parser.add_argument(
         "--tasks", nargs="+", choices=("vision", "imagery"), default=("vision", "imagery")
     )
@@ -55,6 +61,18 @@ def load_features(path: Path) -> tuple[np.ndarray, np.ndarray, dict]:
 
 def main() -> None:
     args = parse_args()
+    required_files = {
+        "encoder model": args.encoder_model,
+        "image manifest": args.image_manifest,
+        "image features": args.image_features,
+    }
+    missing = [
+        f"{label}: {path}"
+        for label, path in required_files.items()
+        if not path.is_file()
+    ]
+    if missing:
+        raise FileNotFoundError("Missing evaluation input files:\n" + "\n".join(missing))
     model = load_encoder_model(args.encoder_model)
     model_metadata = model["metadata"]
     manifest = pd.read_csv(args.image_manifest)

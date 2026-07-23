@@ -17,10 +17,16 @@ if str(REPO_ROOT) not in sys.path:
 from nsdimagery import load_target_table  # noqa: E402
 
 
+def resolved_path(value: str) -> Path:
+    if not value.strip():
+        raise argparse.ArgumentTypeError("path must not be empty")
+    return Path(value).expanduser().resolve()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data-root", type=Path, required=True)
-    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--data-root", type=resolved_path, required=True)
+    parser.add_argument("--output", type=resolved_path, required=True)
     parser.add_argument(
         "--stimulus-sets", nargs="+", choices=("A", "B"), default=("A", "B")
     )

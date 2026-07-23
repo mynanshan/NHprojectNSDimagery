@@ -22,6 +22,12 @@ if str(REPO_ROOT) not in sys.path:
 from nsdimagery.encoding import pool_transformer_hidden_state  # noqa: E402
 
 
+def resolved_path(value: str) -> Path:
+    if not value.strip():
+        raise argparse.ArgumentTypeError("path must not be empty")
+    return Path(value).expanduser().resolve()
+
+
 def parse_integer_list(value: str) -> tuple[int, ...]:
     parsed = tuple(int(item.strip()) for item in value.split(",") if item.strip())
     if not parsed:
@@ -36,8 +42,8 @@ def parse_args() -> argparse.Namespace:
             "vision transformer. The output rows preserve manifest order."
         )
     )
-    parser.add_argument("--manifest", type=Path, required=True)
-    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--manifest", type=resolved_path, required=True)
+    parser.add_argument("--output", type=resolved_path, required=True)
     parser.add_argument("--model-id", default="facebook/dinov2-small")
     parser.add_argument(
         "--layers",
@@ -58,7 +64,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--device", default="auto")
     parser.add_argument(
         "--nsd-stimuli",
-        type=Path,
+        type=resolved_path,
         help=(
             "Path to nsd_stimuli.hdf5; manifest must then contain nsd_73k_id. "
             "Without this option the manifest must contain image_path."
@@ -66,7 +72,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--image-root",
-        type=Path,
+        type=resolved_path,
         help="Base for relative image_path values (default: manifest directory)",
     )
     return parser.parse_args()
@@ -129,6 +135,21 @@ def main() -> None:
     args = parse_args()
     if args.batch_size < 1:
         raise ValueError("--batch-size must be positive")
+    args.manifest = args.manifest.expanduser().resolve()
+    args.output = args.output.expanduser().resolve()
+    if not args.manifest.is_file():
+        raise FileNotFoundError(f"Image manifest not found: {args.manifest}")
+    if args.nsd_stimuli is not None:
+        args.nsd_stimuli = args.nsd_stimuli.expanduser().resolve()
+        if not args.nsd_stimuli.is_file():
+            raise FileNotFoundError(
+                f"NSD stimulus HDF5 not found: {args.nsd_stimuli}\n"
+                "The beta-only download option --skip-stimuli does not install "
+                "this 36.84 GiB file. Run download_core_nsd_encoder_mvp.sh "
+                "with --stimuli-only, or pass the actual external HDF5 path."
+            )
+    if args.image_root is not None:
+        args.image_root = args.image_root.expanduser().resolve()
     manifest = pd.read_csv(args.manifest)
     if manifest.empty:
         raise ValueError("manifest is empty")

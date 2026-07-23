@@ -24,6 +24,12 @@ from nsdimagery.encoding import (  # noqa: E402
 )
 
 
+def resolved_path(value: str) -> Path:
+    if not value.strip():
+        raise argparse.ArgumentTypeError("path must not be empty")
+    return Path(value).expanduser().resolve()
+
+
 def parse_float_list(value: str) -> tuple[float, ...]:
     values = tuple(float(item.strip()) for item in value.split(",") if item.strip())
     if not values or any(item <= 0 for item in values):
@@ -33,18 +39,18 @@ def parse_float_list(value: str) -> tuple[float, ...]:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--manifest", type=Path, required=True)
-    parser.add_argument("--betas", type=Path, required=True)
-    parser.add_argument("--coordinates", type=Path, required=True)
+    parser.add_argument("--manifest", type=resolved_path, required=True)
+    parser.add_argument("--betas", type=resolved_path, required=True)
+    parser.add_argument("--coordinates", type=resolved_path, required=True)
     parser.add_argument(
         "--voxel-regions",
-        type=Path,
+        type=resolved_path,
         help="Optional voxel-region CSV written by the preparation script",
     )
-    parser.add_argument("--features", type=Path, required=True)
-    parser.add_argument("--output-model", type=Path, required=True)
-    parser.add_argument("--output-summary", type=Path, required=True)
-    parser.add_argument("--output-voxel-metrics", type=Path, required=True)
+    parser.add_argument("--features", type=resolved_path, required=True)
+    parser.add_argument("--output-model", type=resolved_path, required=True)
+    parser.add_argument("--output-summary", type=resolved_path, required=True)
+    parser.add_argument("--output-voxel-metrics", type=resolved_path, required=True)
     parser.add_argument("--pca-components", type=int, default=512)
     parser.add_argument(
         "--alphas", type=parse_float_list, default=(0.1, 1.0, 10.0, 100.0, 1000.0)
@@ -103,6 +109,21 @@ def mean_finite(values: np.ndarray) -> float:
 
 def main() -> None:
     args = parse_args()
+    required_files = {
+        "manifest": args.manifest,
+        "betas": args.betas,
+        "coordinates": args.coordinates,
+        "features": args.features,
+    }
+    if args.voxel_regions is not None:
+        required_files["voxel regions"] = args.voxel_regions
+    missing = [
+        f"{label}: {path}"
+        for label, path in required_files.items()
+        if not path.is_file()
+    ]
+    if missing:
+        raise FileNotFoundError("Missing encoder input files:\n" + "\n".join(missing))
     manifest = pd.read_csv(args.manifest)
     betas = np.load(args.betas, mmap_mode="r")
     coordinates = np.load(args.coordinates)

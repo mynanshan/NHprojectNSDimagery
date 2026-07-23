@@ -10,6 +10,7 @@ SUBJECT="01"
 SESSION_SPEC="all"
 MODE="download"
 SKIP_STIMULI=0
+STIMULI_ONLY=0
 
 usage() {
   printf '%s\n' \
@@ -23,6 +24,7 @@ usage() {
     '  --estimate         Report large-file sizes without downloading' \
     '  --dry-run          Preview AWS transfers' \
     '  --skip-stimuli     Do not transfer the shared 73K image HDF5' \
+    '  --stimuli-only     Transfer only the shared 73K image HDF5' \
     '  -h, --help         Show this help'
 }
 
@@ -55,6 +57,10 @@ while (($#)); do
       SKIP_STIMULI=1
       shift
       ;;
+    --stimuli-only)
+      STIMULI_ONLY=1
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -75,6 +81,10 @@ command -v aws >/dev/null 2>&1 || {
   echo "ERROR: subject must be 01 through 08." >&2
   exit 2
 }
+if ((SKIP_STIMULI == 1 && STIMULI_ONLY == 1)); then
+  echo "ERROR: --skip-stimuli and --stimuli-only cannot be used together." >&2
+  exit 2
+fi
 
 SESSION_COUNTS=(40 40 32 30 40 32 40 30)
 subject_index=$((10#$SUBJECT - 1))
@@ -133,7 +143,11 @@ stimulus_local="$DEST/nsddata_stimuli/stimuli/nsd/nsd_stimuli.hdf5"
 
 echo "NSD destination: $DEST"
 echo "Subject: $subj"
-echo "Core sessions: 1-$last_session"
+if ((STIMULI_ONLY == 1)); then
+  echo "Core sessions: skipped (--stimuli-only)"
+else
+  echo "Core sessions: 1-$last_session"
+fi
 echo "Beta preparation: func1pt8mm/betas_fithrf_GLMdenoise_RR"
 
 if [[ "$MODE" == "estimate" ]]; then
@@ -143,42 +157,48 @@ if [[ "$MODE" == "estimate" ]]; then
     total=$((total + bytes))
     printf '  shared stimulus HDF5: %s\n' "$(human_bytes "$bytes")"
   fi
-  for session in $(seq 1 "$last_session"); do
-    uri="$beta_remote/betas_session$(printf '%02d' "$session").nii.gz"
-    bytes=$(object_size "$uri")
-    total=$((total + bytes))
-    printf '  session %02d beta: %s\n' "$session" "$(human_bytes "$bytes")"
-  done
+  if ((STIMULI_ONLY == 0)); then
+    for session in $(seq 1 "$last_session"); do
+      uri="$beta_remote/betas_session$(printf '%02d' "$session").nii.gz"
+      bytes=$(object_size "$uri")
+      total=$((total + bytes))
+      printf '  session %02d beta: %s\n' "$session" "$(human_bytes "$bytes")"
+    done
+  fi
   printf '  large-file subtotal: %s\n' "$(human_bytes "$total")"
   exit 0
 fi
 
-echo
-echo "Downloading shared experiment design..."
-copy_object \
-  "$BUCKET/nsddata/experiments/nsd/nsd_expdesign.mat" \
-  "$DEST/nsddata/experiments/nsd/nsd_expdesign.mat"
-copy_object \
-  "$BUCKET/nsddata/experiments/nsd/nsd_stim_info_merged.csv" \
-  "$DEST/nsddata/experiments/nsd/nsd_stim_info_merged.csv"
+if ((STIMULI_ONLY == 0)); then
+  echo
+  echo "Downloading shared experiment design..."
+  copy_object \
+    "$BUCKET/nsddata/experiments/nsd/nsd_expdesign.mat" \
+    "$DEST/nsddata/experiments/nsd/nsd_expdesign.mat"
+  copy_object \
+    "$BUCKET/nsddata/experiments/nsd/nsd_stim_info_merged.csv" \
+    "$DEST/nsddata/experiments/nsd/nsd_stim_info_merged.csv"
+fi
 
 if ((SKIP_STIMULI == 0)); then
   echo "Downloading the shared 73K image bank..."
   copy_object "$stimulus_remote" "$stimulus_local"
 fi
 
-echo "Downloading ROI masks..."
-for roi in nsdgeneral prf-visualrois; do
-  copy_object \
-    "$BUCKET/nsddata/ppdata/$subj/func1pt8mm/roi/${roi}.nii.gz" \
-    "$DEST/nsddata/ppdata/$subj/func1pt8mm/roi/${roi}.nii.gz"
-done
+if ((STIMULI_ONLY == 0)); then
+  echo "Downloading ROI masks..."
+  for roi in nsdgeneral prf-visualrois; do
+    copy_object \
+      "$BUCKET/nsddata/ppdata/$subj/func1pt8mm/roi/${roi}.nii.gz" \
+      "$DEST/nsddata/ppdata/$subj/func1pt8mm/roi/${roi}.nii.gz"
+  done
 
-echo "Downloading beta sessions..."
-for session in $(seq 1 "$last_session"); do
-  filename="betas_session$(printf '%02d' "$session").nii.gz"
-  copy_object "$beta_remote/$filename" "$beta_local/$filename"
-done
+  echo "Downloading beta sessions..."
+  for session in $(seq 1 "$last_session"); do
+    filename="betas_session$(printf '%02d' "$session").nii.gz"
+    copy_object "$beta_remote/$filename" "$beta_local/$filename"
+  done
+fi
 
 echo
 if [[ "$MODE" == "dry-run" ]]; then
