@@ -14,6 +14,7 @@ from typing import Iterable, Mapping
 import numpy as np
 import pandas as pd
 from scipy.io import loadmat
+from scipy.special import ndtr
 
 
 CORE_NSD_SESSIONS = (40, 40, 32, 30, 40, 32, 40, 30)
@@ -276,14 +277,157 @@ def predict_with_encoder(
     *,
     standardized_betas: bool = True,
 ) -> np.ndarray:
-    """Predict image-evoked beta patterns from cached image features."""
+    """Predict image-evoked beta patterns from cached image features.
+
+    Ridge encoders contain only ``ridge_weights``. A nonlinear residual
+    encoder additionally stores a one-hidden-layer GELU readout. Its output is
+    added to the frozen ridge prediction, so a zero residual exactly recovers
+    the auditable linear baseline.
+    """
     transformed = apply_feature_transform(features, model)
     predicted = transformed @ np.asarray(model["ridge_weights"], dtype=np.float32)
+    nonlinear_keys = {
+        "nonlinear_input_mean",
+        "nonlinear_input_scale",
+        "nonlinear_hidden_weight",
+        "nonlinear_hidden_bias",
+        "nonlinear_output_weight",
+        "nonlinear_output_bias",
+    }
+    present = nonlinear_keys.intersection(model)
+    if present and present != nonlinear_keys:
+        missing = ", ".join(sorted(nonlinear_keys - present))
+        raise ValueError(f"Nonlinear encoder is incomplete; missing {missing}")
+    if present:
+        nonlinear_input = (
+            transformed
+            - np.asarray(model["nonlinear_input_mean"], dtype=np.float32)
+        ) / np.asarray(model["nonlinear_input_scale"], dtype=np.float32)
+        hidden = (
+            nonlinear_input
+            @ np.asarray(model["nonlinear_hidden_weight"], dtype=np.float32).T
+            + np.asarray(model["nonlinear_hidden_bias"], dtype=np.float32)
+        )
+        # PyTorch's default GELU is x * Phi(x). ndtr is the standard-normal CDF.
+        hidden = hidden * ndtr(hidden)
+        predicted = (
+            predicted
+            + hidden
+            @ np.asarray(model["nonlinear_output_weight"], dtype=np.float32).T
+            + np.asarray(model["nonlinear_output_bias"], dtype=np.float32)
+        )
     if not standardized_betas:
         predicted = (
             predicted * np.asarray(model["beta_scale"], dtype=np.float32)
             + np.asarray(model["beta_mean"], dtype=np.float32)
         )
+    return predicted
+
+
+def kernel_ridge_predict(
+    train_features: np.ndarray,
+    train_targets: np.ndarray,
+    test_features: np.ndarray,
+    *,
+    alpha: float,
+    kernel: str = "linear",
+    gamma_scale: float = 1.0,
+) -> np.ndarray:
+    """Fit a centered dual kernel ridge model and predict held-out samples.
+
+    Feature centering is learned from ``train_features`` only. Per-component
+    scaling is deliberately not estimated from 5--11 targets: the fixed
+    core-NSD PCA variances are more stable than tiny-sample standard
+    deviations. The linear kernel is normalized to mean unit diagonal; RBF
+    distances are normalized by the median training-pair distance.
+    """
+    train_features = np.asarray(train_features, dtype=np.float64)
+    train_targets = np.asarray(train_targets, dtype=np.float64)
+    test_features = np.asarray(test_features, dtype=np.float64)
+    if (
+        train_features.ndim != 2
+        or test_features.ndim != 2
+        or train_targets.ndim != 2
+        or len(train_features) != len(train_targets)
+        or train_features.shape[1] != test_features.shape[1]
+    ):
+        raise ValueError(
+            "train/test features and train targets must be aligned 2-D arrays"
+        )
+    if len(train_features) < 2 or len(test_features) < 1:
+        raise ValueError("kernel ridge requires at least two training samples")
+    if alpha <= 0 or not np.isfinite(alpha):
+        raise ValueError("alpha must be finite and positive")
+    if kernel not in {"linear", "rbf"}:
+        raise ValueError("kernel must be linear or rbf")
+    if gamma_scale <= 0 or not np.isfinite(gamma_scale):
+        raise ValueError("gamma_scale must be finite and positive")
+
+    feature_mean = train_features.mean(axis=0, keepdims=True)
+    x_train = train_features - feature_mean
+    x_test = test_features - feature_mean
+
+    if kernel == "linear":
+        train_kernel = x_train @ x_train.T
+        test_kernel = x_test @ x_train.T
+        kernel_scale = float(np.mean(np.diag(train_kernel)))
+        if not np.isfinite(kernel_scale) or kernel_scale <= 0:
+            raise ValueError("training features have no finite variation")
+        train_kernel /= kernel_scale
+        test_kernel /= kernel_scale
+    else:
+        train_norm = np.sum(x_train**2, axis=1)
+        test_norm = np.sum(x_test**2, axis=1)
+        train_distance = (
+            train_norm[:, None] + train_norm[None, :] - 2 * x_train @ x_train.T
+        )
+        test_distance = (
+            test_norm[:, None] + train_norm[None, :] - 2 * x_test @ x_train.T
+        )
+        np.maximum(train_distance, 0, out=train_distance)
+        np.maximum(test_distance, 0, out=test_distance)
+        upper = train_distance[np.triu_indices(len(train_distance), k=1)]
+        positive = upper[np.isfinite(upper) & (upper > 0)]
+        if not len(positive):
+            raise ValueError("training features have no finite pairwise distances")
+        distance_scale = float(np.median(positive))
+        train_kernel = np.exp(-gamma_scale * train_distance / distance_scale)
+        test_kernel = np.exp(-gamma_scale * test_distance / distance_scale)
+
+    target_mean = train_targets.mean(axis=0, keepdims=True)
+    centered_targets = train_targets - target_mean
+    regularized = train_kernel.copy()
+    regularized.flat[:: len(regularized) + 1] += alpha
+    dual_weights = np.linalg.solve(regularized, centered_targets)
+    return (test_kernel @ dual_weights + target_mean).astype(np.float32)
+
+
+def leave_one_target_out_predictions(
+    features: np.ndarray,
+    targets: np.ndarray,
+    *,
+    alpha: float,
+    kernel: str = "linear",
+    gamma_scale: float = 1.0,
+) -> np.ndarray:
+    """Return predictions where each target identity is held out in turn."""
+    features = np.asarray(features)
+    targets = np.asarray(targets)
+    if features.ndim != 2 or targets.ndim != 2 or len(features) != len(targets):
+        raise ValueError("features and targets must be aligned 2-D arrays")
+    if len(features) < 3:
+        raise ValueError("leave-one-target-out prediction needs at least three targets")
+    predicted = np.empty_like(targets, dtype=np.float32)
+    for held_out in range(len(features)):
+        train = np.arange(len(features)) != held_out
+        predicted[held_out] = kernel_ridge_predict(
+            features[train],
+            targets[train],
+            features[[held_out]],
+            alpha=alpha,
+            kernel=kernel,
+            gamma_scale=gamma_scale,
+        )[0]
     return predicted
 
 
@@ -364,15 +508,28 @@ def transformer_patch_grid(
     return height // patch_height, width // patch_width
 
 
-def measured_nsdimagery_patterns(
+def measured_nsdimagery_target_data(
     data_root: str | Path,
     subject: int,
     task: str,
     stimulus_sets: Iterable[str],
     *,
     expected_coordinates: np.ndarray | None = None,
-) -> tuple[np.ndarray, pd.DataFrame, dict[str, np.ndarray], np.ndarray]:
-    """Return paper-preprocessed target patterns and ROI masks for one task."""
+) -> tuple[
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    pd.DataFrame,
+    dict[str, np.ndarray],
+    np.ndarray,
+]:
+    """Return target means, independent repeat halves, labels, and ROI masks.
+
+    The response preprocessing matches the paper workflow: every voxel is
+    Z-scored within run before repetitions are averaged. Imagery halves are
+    the two acquisition runs. Vision has one run, so alternating occurrences
+    of each target form two deterministic four-trial halves.
+    """
     from .analysis import zscore_within_groups
     from .io import (
         build_event_table,
@@ -407,6 +564,8 @@ def measured_nsdimagery_patterns(
 
     rows = []
     measured = []
+    first_halves = []
+    second_halves = []
     for stimulus_set in stimulus_sets:
         for target_number in range(1, 7):
             selected = (
@@ -420,7 +579,31 @@ def measured_nsdimagery_patterns(
                     f"Unexpected repeat count for {task} {stimulus_set}{target_number}: "
                     f"{int(selected.sum())}"
                 )
-            measured.append(normalized[selected].mean(axis=0))
+            selected_rows = np.flatnonzero(selected)
+            selected_runs = events.iloc[selected_rows]["run_name"].to_numpy()
+            unique_runs = tuple(dict.fromkeys(selected_runs.tolist()))
+            if task == "imagery":
+                if len(unique_runs) != 2:
+                    raise ValueError(
+                        f"Expected two imagery runs for {stimulus_set}{target_number}"
+                    )
+                first = selected_rows[selected_runs == unique_runs[0]]
+                second = selected_rows[selected_runs == unique_runs[1]]
+            else:
+                if len(unique_runs) != 1:
+                    raise ValueError(
+                        f"Expected one vision run for {stimulus_set}{target_number}"
+                    )
+                first = selected_rows[::2]
+                second = selected_rows[1::2]
+            if len(first) != len(second) or len(first) < 2:
+                raise ValueError(
+                    f"Could not form balanced repeat halves for "
+                    f"{task} {stimulus_set}{target_number}"
+                )
+            measured.append(normalized[selected_rows].mean(axis=0))
+            first_halves.append(normalized[first].mean(axis=0))
+            second_halves.append(normalized[second].mean(axis=0))
             rows.append(
                 {
                     "stimulus_set": stimulus_set,
@@ -432,4 +615,32 @@ def measured_nsdimagery_patterns(
         name: mask_at_coordinates(mask, coordinates)
         for name, mask in masks_3d.items()
     }
-    return np.stack(measured), pd.DataFrame(rows), roi_masks, coordinates
+    return (
+        np.stack(measured),
+        np.stack(first_halves),
+        np.stack(second_halves),
+        pd.DataFrame(rows),
+        roi_masks,
+        coordinates,
+    )
+
+
+def measured_nsdimagery_patterns(
+    data_root: str | Path,
+    subject: int,
+    task: str,
+    stimulus_sets: Iterable[str],
+    *,
+    expected_coordinates: np.ndarray | None = None,
+) -> tuple[np.ndarray, pd.DataFrame, dict[str, np.ndarray], np.ndarray]:
+    """Return paper-preprocessed target patterns and ROI masks for one task."""
+    measured, _, _, labels, roi_masks, coordinates = (
+        measured_nsdimagery_target_data(
+            data_root,
+            subject,
+            task,
+            stimulus_sets,
+            expected_coordinates=expected_coordinates,
+        )
+    )
+    return measured, labels, roi_masks, coordinates

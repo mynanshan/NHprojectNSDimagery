@@ -8,7 +8,10 @@ from nsdimagery.encoding import (
     assign_image_splits,
     core_nsd_trial_ids,
     fit_ridge_weights,
+    kernel_ridge_predict,
+    leave_one_target_out_predictions,
     pool_transformer_hidden_state,
+    predict_with_encoder,
     transformer_patch_grid,
     voxelwise_prediction_metrics,
 )
@@ -67,6 +70,61 @@ class EncodingHelperTests(unittest.TestCase):
         )
         averaged = average_predictions_by_target(manifest, predicted, labels)
         np.testing.assert_allclose(averaged, [[2.0, 4.0], [6.0, 3.0]])
+
+    def test_nonlinear_encoder_adds_residual_to_ridge(self):
+        features = np.asarray([[1.0, 2.0], [3.0, 4.0]], dtype=np.float32)
+        model = {
+            "feature_mean": np.zeros(2, dtype=np.float32),
+            "feature_scale": np.ones(2, dtype=np.float32),
+            "pca_mean": np.zeros(2, dtype=np.float32),
+            "pca_components": np.eye(2, dtype=np.float32),
+            "ridge_weights": np.asarray([[1.0], [0.5]], dtype=np.float32),
+            "nonlinear_input_mean": np.zeros(2, dtype=np.float32),
+            "nonlinear_input_scale": np.ones(2, dtype=np.float32),
+            "nonlinear_hidden_weight": np.asarray([[1.0, -1.0]], dtype=np.float32),
+            "nonlinear_hidden_bias": np.asarray([0.25], dtype=np.float32),
+            "nonlinear_output_weight": np.asarray([[2.0]], dtype=np.float32),
+            "nonlinear_output_bias": np.asarray([0.1], dtype=np.float32),
+            "beta_mean": np.asarray([5.0], dtype=np.float32),
+            "beta_scale": np.asarray([3.0], dtype=np.float32),
+        }
+        standardized = predict_with_encoder(features, model)
+        hidden_pre_activation = features @ np.asarray([[1.0], [-1.0]]) + 0.25
+        from scipy.special import ndtr
+
+        expected = (
+            features @ model["ridge_weights"]
+            + 2 * hidden_pre_activation * ndtr(hidden_pre_activation)
+            + 0.1
+        )
+        np.testing.assert_allclose(standardized, expected, rtol=1e-6, atol=1e-6)
+        response_units = predict_with_encoder(
+            features, model, standardized_betas=False
+        )
+        np.testing.assert_allclose(response_units, expected * 3 + 5, rtol=1e-6)
+
+    def test_kernel_ridge_predicts_held_out_samples(self):
+        x_train = np.asarray(
+            [[-2.0], [-1.0], [0.0], [1.0], [2.0]], dtype=np.float32
+        )
+        y_train = 1.5 * x_train + 0.25
+        predicted = kernel_ridge_predict(
+            x_train,
+            y_train,
+            np.asarray([[0.5]], dtype=np.float32),
+            alpha=1e-6,
+            kernel="linear",
+        )
+        np.testing.assert_allclose(predicted, [[1.0]], atol=1e-4)
+
+    def test_leave_one_target_out_never_trains_on_held_target(self):
+        features = np.arange(8, dtype=np.float32)[:, None]
+        targets = np.column_stack((2 * features[:, 0], -features[:, 0]))
+        predicted = leave_one_target_out_predictions(
+            features, targets, alpha=1e-5, kernel="linear"
+        )
+        correlation, _ = voxelwise_prediction_metrics(targets, predicted)
+        self.assertGreater(float(np.min(correlation)), 0.999)
 
     def test_transformer_spatial_pyramid_shape(self):
         try:

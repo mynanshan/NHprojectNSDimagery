@@ -22,6 +22,18 @@ The first implemented model is deliberately strong but auditable:
 Repeated fMRI presentations are averaged before splitting. No image identity
 can occur in more than one partition.
 
+Two optional extensions answer different questions:
+
+- a **core-NSD residual MLP** tests whether a nonlinear readout improves
+  perception encoding before that model is frozen and transferred;
+- a **direct NSD-Imagery encoder** fits vision and imagery separately, while
+  holding out entire target identities. It estimates within-dataset
+  predictability rather than zero-shot transfer.
+
+The pretrained transformer is already a nonlinear image model. Ridge is only
+its voxel readout, and remains the primary reference model rather than a
+straw-man baseline.
+
 ## 1. Start every shell with explicit paths
 
 The examples below assume that the repository and its existing `data/nsd`
@@ -404,7 +416,136 @@ readlink -f "$NSD_STIMULI"
 tree -L 4 "$NSD_DATA_ROOT/nsddata_stimuli" 2>/dev/null || true
 ```
 
-## 10. Next model tier
+## 10. Optional nonlinear core-NSD readout
+
+The quick nonlinear extension is a shared one-hidden-layer GELU residual:
+
+```text
+prediction = frozen ridge prediction + MLP(PCA image features)
+```
+
+The residual output is initialized to exactly zero, so epoch 0 is the fitted
+ridge model. Training and early stopping use only the existing core-NSD
+train/validation identities. The selected model is evaluated once on the
+untouched shared-1000 test set. If no validation epoch improves mean voxel
+correlation, epoch 0 is selected and the saved model remains exactly ridge.
+This prevents added capacity from being accepted merely because it is more
+complicated.
+
+```bash
+export NL_WORK="$WORK/nonlinear_residual"
+mkdir -p "$NL_WORK"
+
+python scripts/fit_nonlinear_encoder.py \
+  --manifest "$WORK/core_subj01_manifest.csv" \
+  --betas "$WORK/core_subj01_betas.npy" \
+  --coordinates "$WORK/core_subj01_coordinates.npy" \
+  --voxel-regions "$WORK/core_subj01_voxel_regions.csv" \
+  --features "$WORK/core_features.npz" \
+  --ridge-model "$WORK/encoder_model.npz" \
+  --pca-components 512 \
+  --hidden-width 256 \
+  --dropout 0.1 \
+  --learning-rate 3e-4 \
+  --weight-decay 1e-4 \
+  --batch-size 128 \
+  --max-epochs 80 \
+  --patience 10 \
+  --device auto \
+  --output-model "$NL_WORK/encoder_model.npz" \
+  --output-summary "$NL_WORK/core_test_summary.json" \
+  --output-voxel-metrics "$NL_WORK/core_test_voxels.csv" \
+  --output-history "$NL_WORK/validation_history.csv"
+```
+
+The summary reports ridge and nonlinear held-out core correlation and
+$R^2$. Treat the nonlinear model as accepted only when
+`nonlinear_accepted_on_validation` is true. The test comparison is an
+evaluation, not another opportunity to select the model.
+
+Freeze the selected nonlinear model and run the same transfer evaluator:
+
+```bash
+python scripts/evaluate_encoder_nsdimagery.py \
+  --data-root "$NSD_DATA_ROOT" \
+  --subject 1 \
+  --encoder-model "$NL_WORK/encoder_model.npz" \
+  --image-manifest "$WORK/nsdimagery_AB_manifest.csv" \
+  --image-features "$WORK/nsdimagery_AB_features.npz" \
+  --method DINOv2_PyramidResidualMLP \
+  --output-prefix "$NL_WORK/dinov2_residual_subj01"
+```
+
+This is analysis A: the readout is trained only on core NSD and fixed for both
+NSD-Imagery tasks. A nonlinear model that fails to improve held-out core NSD
+does not provide evidence that transfer failure was caused by linear ridge.
+
+## 11. Direct NSD-Imagery target encoding
+
+The direct analysis is intentionally low-capacity. A+B contains 12 unique
+images, not 288 independent training examples: vision has 8 repeated trials
+per target and imagery has 16. Repetitions improve each target mean but never
+cross a train/test boundary.
+
+The script fits two predeclared models separately for vision and imagery:
+
+- linear kernel ridge, the primary direct encoding model;
+- RBF kernel ridge, a small nonlinear sensitivity analysis.
+
+Both use the fixed core-NSD PCA representation. Every reported prediction is
+from nested leave-one-target-out cross-validation. The inner loop chooses
+regularization without the outer held-out target; the outer loop predicts one
+entirely unseen identity. A random trial split would leak the same image into
+training and test and is not implemented.
+
+```bash
+export DIRECT_WORK="$WORK/direct_nsdimagery"
+mkdir -p "$DIRECT_WORK"
+
+python scripts/fit_nsdimagery_direct_encoder.py \
+  --data-root "$NSD_DATA_ROOT" \
+  --subject 1 \
+  --feature-transform-model "$WORK/encoder_model.npz" \
+  --image-manifest "$WORK/nsdimagery_AB_manifest.csv" \
+  --image-features "$WORK/nsdimagery_AB_features.npz" \
+  --tasks vision imagery \
+  --stimulus-sets A B \
+  --kernels linear rbf \
+  --alphas 0.01,0.1,1,10,100 \
+  --rbf-gamma-scales 0.25,1,4 \
+  --output-prefix "$DIRECT_WORK/direct_subj01"
+```
+
+Outputs include:
+
+- `*_voxel_metrics.csv`: outer-CV correlation and predictive $R^2$ for every
+  voxel, plus split-half response reliability;
+- `*_summary.csv`: ROI summaries for vision and imagery;
+- `*_fold_selection.csv`: the inner-CV choice for every held-out identity;
+- `*_predictions.npz`: the 12 target-level held-out predictions.
+
+Create slide-style native-space maps for the primary linear direct model:
+
+```bash
+python scripts/plot_encoder_r2_maps.py \
+  --data-root "$NSD_DATA_ROOT" \
+  --subject 1 \
+  --core-voxel-metrics "$WORK/core_test_voxels.csv" \
+  --transfer-voxel-metrics \
+    "$DIRECT_WORK/direct_subj01_voxel_metrics.csv" \
+  --vision-r2-column linear_vision_target_r2 \
+  --imagery-r2-column linear_imagery_target_r2 \
+  --analysis-label "NSD-Imagery direct target-CV encoding" \
+  --output-dir "$DIRECT_WORK/linear_r2_maps"
+```
+
+Interpret the direct vision-imagery difference jointly with
+`*_spearman_brown_reliability`. If imagery response reliability is lower, a
+smaller imagery $R^2$ is partly a measurement ceiling difference, not purely a
+loss of image information. With only 12 identities, single-subject voxel maps
+are exploratory; ROI conclusions need replication across subjects.
+
+## 12. Choosing the next model tier
 
 The spatial pyramid is a controlled ridge baseline, not the endpoint. After it
 passes core-NSD validation, replace fixed pooling with a learned factorized

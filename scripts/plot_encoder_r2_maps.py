@@ -38,6 +38,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--core-voxel-metrics", type=resolved_path, required=True)
     parser.add_argument("--transfer-voxel-metrics", type=resolved_path, required=True)
     parser.add_argument("--output-dir", type=resolved_path, required=True)
+    parser.add_argument("--vision-r2-column", default="vision_target_r2")
+    parser.add_argument("--imagery-r2-column", default="imagery_target_r2")
+    parser.add_argument(
+        "--analysis-label",
+        default="NSD-Imagery zero-shot target prediction",
+        help="Figure title prefix, e.g. NSD-Imagery direct target-CV encoding",
+    )
     parser.add_argument(
         "--background-image",
         type=resolved_path,
@@ -134,6 +141,7 @@ def summarize_regions(
     transfer: pd.DataFrame,
     masks: dict[str, np.ndarray],
     *,
+    task_columns: dict[str, str] | None = None,
     eligible: np.ndarray | None = None,
     voxel_set: str = "all_visual_voxels",
 ) -> pd.DataFrame:
@@ -142,9 +150,14 @@ def summarize_regions(
     eligible = np.asarray(eligible, dtype=bool)
     if eligible.shape != (len(transfer),):
         raise ValueError("eligible must contain one value per voxel")
+    if task_columns is None:
+        task_columns = {
+            "vision": "vision_target_r2",
+            "imagery": "imagery_target_r2",
+        }
     rows = []
     for task in ("vision", "imagery"):
-        values = transfer[f"{task}_target_r2"].to_numpy(dtype=float)
+        values = transfer[task_columns[task]].to_numpy(dtype=float)
         for region in (
             "visual_cortex",
             "early_visual",
@@ -226,6 +239,7 @@ def plot_roi_summary(
     dpi: int,
     *,
     core_r2_threshold: float,
+    analysis_label: str,
 ) -> None:
     region_order = [
         "visual_cortex",
@@ -272,7 +286,7 @@ def plot_roi_summary(
         axis.spines[["top", "right"]].set_visible(False)
     axes[1].legend(frameon=False)
     figure.suptitle(
-        "NSD-Imagery zero-shot target prediction "
+        f"{analysis_label} "
         f"(12 A+B targets; core test $R^2 > {core_r2_threshold:g}$)"
     )
     figure.tight_layout()
@@ -312,12 +326,12 @@ def main() -> None:
     transfer = validate_voxel_table(
         pd.read_csv(args.transfer_voxel_metrics),
         coordinates,
-        required_columns=("vision_target_r2", "imagery_target_r2"),
+        required_columns=(args.vision_r2_column, args.imagery_r2_column),
         label="transfer voxel metrics",
     )
     core_r2 = core["test_r2"].to_numpy(dtype=float)
-    vision_r2 = transfer["vision_target_r2"].to_numpy(dtype=float)
-    imagery_r2 = transfer["imagery_target_r2"].to_numpy(dtype=float)
+    vision_r2 = transfer[args.vision_r2_column].to_numpy(dtype=float)
+    imagery_r2 = transfer[args.imagery_r2_column].to_numpy(dtype=float)
     independently_predictable = np.isfinite(core_r2) & (
         core_r2 > args.core_r2_threshold
     )
@@ -403,10 +417,17 @@ def main() -> None:
         symmetric=[True],
     )
 
-    roi_summary_all = summarize_regions(transfer, masks)
+    task_columns = {
+        "vision": args.vision_r2_column,
+        "imagery": args.imagery_r2_column,
+    }
+    roi_summary_all = summarize_regions(
+        transfer, masks, task_columns=task_columns
+    )
     roi_summary_predictable = summarize_regions(
         transfer,
         masks,
+        task_columns=task_columns,
         eligible=independently_predictable,
         voxel_set=f"core_test_r2_gt_{args.core_r2_threshold:g}",
     )
@@ -419,6 +440,7 @@ def main() -> None:
         args.output_dir / "transfer_r2_roi_summary.png",
         args.dpi,
         core_r2_threshold=args.core_r2_threshold,
+        analysis_label=args.analysis_label,
     )
 
     print(

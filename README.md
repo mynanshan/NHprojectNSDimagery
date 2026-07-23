@@ -14,6 +14,7 @@
 - [Measurement-first validation notebook](notebooks/04_measurement_first_validation.ipynb)
 - [Paper-aligned brain-correlation notebook](notebooks/05_paper_brain_correlation.ipynb)
 - [Core-NSD brain-encoder workflow](notebooks/06_core_nsd_brain_encoder.ipynb)
+- [Nonlinear transfer and direct NSD-Imagery encoding](notebooks/07_nonlinear_and_direct_brain_encoder.ipynb)
 
 Start with one subject and no downloads:
 
