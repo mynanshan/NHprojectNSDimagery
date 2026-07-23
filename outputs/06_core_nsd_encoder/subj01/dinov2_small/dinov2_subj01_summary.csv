@@ -1,0 +1,7 @@
+method,subject,task,region,brain_correlation,sd_across_target_samples,n_target_samples,n_voxels
+DINOv2_PyramidRidge,subj01,vision,early_visual,0.25881048757017133,0.23517221517608816,12,4657
+DINOv2_PyramidRidge,subj01,vision,higher_visual,0.22393836717870255,0.20221514427022522,12,11067
+DINOv2_PyramidRidge,subj01,vision,visual_cortex,0.2436387060584478,0.20048559195629773,12,15724
+DINOv2_PyramidRidge,subj01,imagery,early_visual,0.08695105915634903,0.20160829271204495,12,4657
+DINOv2_PyramidRidge,subj01,imagery,higher_visual,0.14241377356147225,0.11577190415763264,12,11067
+DINOv2_PyramidRidge,subj01,imagery,visual_cortex,0.13224991848998277,0.1032083795341493,12,15724

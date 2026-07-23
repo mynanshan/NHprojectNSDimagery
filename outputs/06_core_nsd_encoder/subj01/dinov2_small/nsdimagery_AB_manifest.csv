@@ -1,0 +1,13 @@
+row_id,stimulus_set,target_number,target_code,target_name,image_path,sample
+0,A,1,H,bar_000.0deg_450L_43W.png,/home/jovyan/NHprojectNSDimagery/data/nsd/nsddata/experiments/nsdimagery/rawtargetimages/setA/bar_000.0deg_450L_43W.png,1
+1,A,2,R,bar_045.0deg_450L_43W.png,/home/jovyan/NHprojectNSDimagery/data/nsd/nsddata/experiments/nsdimagery/rawtargetimages/setA/bar_045.0deg_450L_43W.png,1
+2,A,3,V,bar_090.0deg_450L_43W.png,/home/jovyan/NHprojectNSDimagery/data/nsd/nsddata/experiments/nsdimagery/rawtargetimages/setA/bar_090.0deg_450L_43W.png,1
+3,A,4,L,bar_135.0deg_450L_43W.png,/home/jovyan/NHprojectNSDimagery/data/nsd/nsddata/experiments/nsdimagery/rawtargetimages/setA/bar_135.0deg_450L_43W.png,1
+4,A,5,P,crs_000.0deg_450L_43W.png,/home/jovyan/NHprojectNSDimagery/data/nsd/nsddata/experiments/nsdimagery/rawtargetimages/setA/crs_000.0deg_450L_43W.png,1
+5,A,6,E,crs_045.0deg_450L_43W.png,/home/jovyan/NHprojectNSDimagery/data/nsd/nsddata/experiments/nsdimagery/rawtargetimages/setA/crs_045.0deg_450L_43W.png,1
+6,B,1,W,shared0385_nsd28752.png,/home/jovyan/NHprojectNSDimagery/data/nsd/nsddata/experiments/nsdimagery/rawtargetimages/setB/shared0385_nsd28752.png,1
+7,B,2,K,shared0413_nsd30857.png,/home/jovyan/NHprojectNSDimagery/data/nsd/nsddata/experiments/nsdimagery/rawtargetimages/setB/shared0413_nsd30857.png,1
+8,B,3,B,shared0741_nsd53882.png,/home/jovyan/NHprojectNSDimagery/data/nsd/nsddata/experiments/nsdimagery/rawtargetimages/setB/shared0741_nsd53882.png,1
+9,B,4,C,shared0842_nsd61178.png,/home/jovyan/NHprojectNSDimagery/data/nsd/nsddata/experiments/nsdimagery/rawtargetimages/setB/shared0842_nsd61178.png,1
+10,B,5,D,shared0907_nsd65873.png,/home/jovyan/NHprojectNSDimagery/data/nsd/nsddata/experiments/nsdimagery/rawtargetimages/setB/shared0907_nsd65873.png,1
+11,B,6,T,shared0000_nsd00000.png,/home/jovyan/NHprojectNSDimagery/data/nsd/nsddata/experiments/nsdimagery/rawtargetimages/setB/shared0000_nsd00000.png,1

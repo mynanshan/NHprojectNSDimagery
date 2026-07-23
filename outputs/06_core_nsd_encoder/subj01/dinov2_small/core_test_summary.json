@@ -1,0 +1,92 @@
+{
+  "method": "DINOv2_PyramidRidge",
+  "selected_alpha": 1000.0,
+  "pca_components": 512,
+  "feature_metadata": {
+    "feature_dimension": 9216,
+    "grid_size": [
+      16,
+      16
+    ],
+    "hidden_state_layers": [
+      3,
+      6,
+      9,
+      12
+    ],
+    "include_cls": true,
+    "model_id": "facebook/dinov2-small",
+    "pyramid_levels": [
+      1,
+      2
+    ],
+    "resolved_hidden_state_layers": [
+      3,
+      6,
+      9,
+      12
+    ],
+    "transformers_version": "5.14.1"
+  },
+  "n_train_images": 8100,
+  "n_validation_images": 900,
+  "n_final_train_images": 9000,
+  "n_test_images": 1000,
+  "n_voxels": 15724,
+  "target_space": "per-voxel standardized core-NSD betas",
+  "test_mean_voxel_correlation": 0.3515808445154733,
+  "test_median_voxel_correlation": 0.3493953916517786,
+  "test_mean_voxel_r2": 0.14444005837608764,
+  "test_by_region": {
+    "early_visual": {
+      "n_voxels": 4657,
+      "mean_voxel_correlation": 0.3876425407654594,
+      "median_voxel_correlation": 0.3966950783404962,
+      "mean_voxel_r2": 0.1701952718829503
+    },
+    "higher_visual": {
+      "n_voxels": 11067,
+      "mean_voxel_correlation": 0.33640606187915045,
+      "median_voxel_correlation": 0.3279991122568385,
+      "mean_voxel_r2": 0.13360224963826717
+    },
+    "visual_cortex": {
+      "n_voxels": 15724,
+      "mean_voxel_correlation": 0.3515808445154733,
+      "median_voxel_correlation": 0.3493953916517786,
+      "mean_voxel_r2": 0.14444005837608764
+    }
+  },
+  "validation_grid": [
+    {
+      "alpha": 0.1,
+      "mean_voxel_correlation": 0.34905716906773493,
+      "median_voxel_correlation": 0.350485293598196,
+      "mean_voxel_r2": 0.13919551312224437
+    },
+    {
+      "alpha": 1.0,
+      "mean_voxel_correlation": 0.34905831199938736,
+      "median_voxel_correlation": 0.35048636217934304,
+      "mean_voxel_r2": 0.13919753578528646
+    },
+    {
+      "alpha": 10.0,
+      "mean_voxel_correlation": 0.34906972881431053,
+      "median_voxel_correlation": 0.3504970385791873,
+      "mean_voxel_r2": 0.13921775006677015
+    },
+    {
+      "alpha": 100.0,
+      "mean_voxel_correlation": 0.3491833277421311,
+      "median_voxel_correlation": 0.3505950987126518,
+      "mean_voxel_r2": 0.13941866697053404
+    },
+    {
+      "alpha": 1000.0,
+      "mean_voxel_correlation": 0.35026592857890376,
+      "median_voxel_correlation": 0.35188956891961265,
+      "mean_voxel_r2": 0.14131101255783285
+    }
+  ]
+}
