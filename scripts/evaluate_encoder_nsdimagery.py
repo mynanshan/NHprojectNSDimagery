@@ -18,9 +18,11 @@ if str(REPO_ROOT) not in sys.path:
 
 from nsdimagery import reconstruction_brain_correlations  # noqa: E402
 from nsdimagery.encoding import (  # noqa: E402
+    average_predictions_by_target,
     load_encoder_model,
     measured_nsdimagery_patterns,
     predict_with_encoder,
+    voxelwise_prediction_metrics,
 )
 
 
@@ -57,6 +59,23 @@ def load_features(path: Path) -> tuple[np.ndarray, np.ndarray, dict]:
         row_id = archive["row_id"]
         metadata = json.loads(str(np.asarray(archive["metadata_json"]).item()))
     return features, row_id, metadata
+
+
+def finite_summary(values: np.ndarray) -> dict[str, float]:
+    """Return robust scalar summaries without warning on all-NaN arrays."""
+    values = np.asarray(values, dtype=np.float64)
+    finite = values[np.isfinite(values)]
+    if not len(finite):
+        return {
+            "mean": float("nan"),
+            "median": float("nan"),
+            "fraction_positive": float("nan"),
+        }
+    return {
+        "mean": float(finite.mean()),
+        "median": float(np.median(finite)),
+        "fraction_positive": float(np.mean(finite > 0)),
+    }
 
 
 def main() -> None:
@@ -113,13 +132,31 @@ def main() -> None:
             + json.dumps(mismatches)
         )
 
-    predicted = predict_with_encoder(features, model, standardized_betas=True)
+    # Keep the standardized prediction for the paper's spatial correlation,
+    # which is the behavior of earlier versions of this script. R-squared is
+    # scale-sensitive, so its prediction must instead be returned to the
+    # response units learned from the session-normalized core-NSD betas.
+    predicted_standardized = predict_with_encoder(
+        features, model, standardized_betas=True
+    )
+    predicted_response_units = predict_with_encoder(
+        features, model, standardized_betas=False
+    )
     method = args.method or str(model_metadata["method"])
     coordinates = np.asarray(model["coordinates"])
     detail_rows = []
+    voxel_table = pd.DataFrame(
+        {
+            "voxel": np.arange(len(coordinates)),
+            "x": coordinates[:, 0],
+            "y": coordinates[:, 1],
+            "z": coordinates[:, 2],
+        }
+    )
+    voxel_summary_rows = []
     table_regions = ("early_visual", "higher_visual", "visual_cortex")
     for task in args.tasks:
-        measured, labels, roi_masks, _ = measured_nsdimagery_patterns(
+        measured, labels, roi_masks, measured_coordinates = measured_nsdimagery_patterns(
             args.data_root,
             args.subject,
             task,
@@ -130,7 +167,7 @@ def main() -> None:
             (row.stimulus_set, int(row.target_number)): index
             for index, row in labels.iterrows()
         }
-        measured_rows = np.stack(
+        measured_sample_rows = np.stack(
             [
                 measured[label_to_row[(row.stimulus_set, int(row.target_number))]]
                 for row in manifest.itertuples()
@@ -138,7 +175,9 @@ def main() -> None:
         )
         for region in table_regions:
             scores = reconstruction_brain_correlations(
-                measured_rows, predicted, voxel_mask=roi_masks[region]
+                measured_sample_rows,
+                predicted_standardized,
+                voxel_mask=roi_masks[region],
             )
             for row, score in zip(manifest.itertuples(), scores):
                 detail_rows.append(
@@ -155,6 +194,44 @@ def main() -> None:
                     }
                 )
 
+        target_predictions = average_predictions_by_target(
+            manifest, predicted_response_units, labels
+        )
+        target_correlation, target_r2 = voxelwise_prediction_metrics(
+            measured, target_predictions
+        )
+        voxel_table[f"{task}_target_correlation"] = target_correlation
+        voxel_table[f"{task}_target_r2"] = target_r2
+        voxel_table[f"{task}_tuning_r2"] = target_correlation**2
+        if not np.array_equal(measured_coordinates, coordinates):
+            raise AssertionError("Measured and encoder voxel coordinates changed")
+
+        for region, mask in roi_masks.items():
+            mask = np.asarray(mask, dtype=bool)
+            if region not in voxel_table:
+                voxel_table[region] = mask
+            correlation_summary = finite_summary(target_correlation[mask])
+            r2_summary = finite_summary(target_r2[mask])
+            voxel_summary_rows.append(
+                {
+                    "method": method,
+                    "subject": f"subj{args.subject:02d}",
+                    "task": task,
+                    "stimulus_sets": "+".join(args.stimulus_sets),
+                    "region": region,
+                    "n_targets": int(len(labels)),
+                    "n_voxels": int(mask.sum()),
+                    "mean_voxel_target_correlation": correlation_summary["mean"],
+                    "median_voxel_target_correlation": correlation_summary["median"],
+                    "fraction_positive_target_correlation": correlation_summary[
+                        "fraction_positive"
+                    ],
+                    "mean_voxel_target_r2": r2_summary["mean"],
+                    "median_voxel_target_r2": r2_summary["median"],
+                    "fraction_positive_target_r2": r2_summary["fraction_positive"],
+                }
+            )
+
     detail = pd.DataFrame(detail_rows)
     summary = (
         detail.groupby(["method", "subject", "task", "region"], sort=False)
@@ -166,18 +243,43 @@ def main() -> None:
         )
         .reset_index()
     )
+    if {"vision_target_r2", "imagery_target_r2"}.issubset(voxel_table):
+        voxel_table["vision_minus_imagery_target_r2"] = (
+            voxel_table["vision_target_r2"] - voxel_table["imagery_target_r2"]
+        )
+        voxel_table["vision_minus_imagery_target_correlation"] = (
+            voxel_table["vision_target_correlation"]
+            - voxel_table["imagery_target_correlation"]
+        )
+    voxel_summary = pd.DataFrame(voxel_summary_rows)
     args.output_prefix.parent.mkdir(parents=True, exist_ok=True)
     detail_path = args.output_prefix.parent / f"{args.output_prefix.name}_detail.csv"
     summary_path = args.output_prefix.parent / f"{args.output_prefix.name}_summary.csv"
+    voxel_path = (
+        args.output_prefix.parent / f"{args.output_prefix.name}_voxel_metrics.csv"
+    )
+    voxel_summary_path = (
+        args.output_prefix.parent / f"{args.output_prefix.name}_voxel_summary.csv"
+    )
     predicted_path = (
         args.output_prefix.parent / f"{args.output_prefix.name}_predicted_betas.npy"
     )
     detail.to_csv(detail_path, index=False)
     summary.to_csv(summary_path, index=False)
-    np.save(predicted_path, predicted.astype(np.float32))
+    voxel_table.to_csv(voxel_path, index=False)
+    voxel_summary.to_csv(voxel_summary_path, index=False)
+    np.save(predicted_path, predicted_standardized.astype(np.float32))
     print(summary.to_string(index=False))
+    print()
+    print(
+        "Per-voxel target prediction "
+        f"({'+'.join(args.stimulus_sets)} targets; strict zero-shot R-squared):"
+    )
+    print(voxel_summary.to_string(index=False))
     print(f"Wrote {detail_path}")
     print(f"Wrote {summary_path}")
+    print(f"Wrote {voxel_path}")
+    print(f"Wrote {voxel_summary_path}")
     print(f"Wrote {predicted_path}")
 
 

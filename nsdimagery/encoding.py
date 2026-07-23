@@ -163,6 +163,34 @@ def voxelwise_prediction_metrics(
     return correlation, r_squared
 
 
+def average_predictions_by_target(
+    manifest: pd.DataFrame,
+    predicted: np.ndarray,
+    labels: pd.DataFrame,
+) -> np.ndarray:
+    """Average image samples and align predictions to a measured target table."""
+    predicted = np.asarray(predicted)
+    if predicted.ndim != 2 or len(manifest) != len(predicted):
+        raise ValueError("manifest and predicted betas must be aligned 2-D arrays")
+    required = {"stimulus_set", "target_number"}
+    if not required.issubset(manifest) or not required.issubset(labels):
+        raise ValueError(f"manifest and labels must contain columns {required}")
+
+    averaged = []
+    for row in labels.itertuples():
+        selected = (
+            manifest["stimulus_set"].eq(row.stimulus_set)
+            & manifest["target_number"].eq(int(row.target_number))
+        ).to_numpy()
+        if not selected.any():
+            raise ValueError(
+                "No prediction found for target "
+                f"{row.stimulus_set}{int(row.target_number)}"
+            )
+        averaged.append(predicted[selected].mean(axis=0))
+    return np.stack(averaged)
+
+
 def fit_ridge_weights(
     features: np.ndarray,
     targets: np.ndarray,

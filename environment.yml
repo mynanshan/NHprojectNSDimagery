@@ -10,6 +10,7 @@ dependencies:
   - scipy
   - h5py
   - nibabel
+  - nilearn
   - matplotlib
   - seaborn
   - pillow

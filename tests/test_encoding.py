@@ -1,8 +1,10 @@
 import unittest
 
 import numpy as np
+import pandas as pd
 
 from nsdimagery.encoding import (
+    average_predictions_by_target,
     assign_image_splits,
     core_nsd_trial_ids,
     fit_ridge_weights,
@@ -44,6 +46,27 @@ class EncodingHelperTests(unittest.TestCase):
         correlation, r_squared = voxelwise_prediction_metrics(targets, predicted)
         self.assertGreater(float(np.min(correlation)), 0.999)
         self.assertGreater(float(np.min(r_squared)), 0.999)
+
+    def test_prediction_metrics_keep_negative_r_squared(self):
+        observed = np.asarray([[0.0], [1.0], [2.0]])
+        predicted = np.asarray([[2.0], [1.0], [0.0]])
+        correlation, r_squared = voxelwise_prediction_metrics(observed, predicted)
+        self.assertAlmostEqual(float(correlation[0]), -1.0)
+        self.assertAlmostEqual(float(r_squared[0]), -3.0)
+
+    def test_target_samples_are_averaged_and_label_aligned(self):
+        manifest = pd.DataFrame(
+            {
+                "stimulus_set": ["B", "A", "A", "B"],
+                "target_number": [1, 1, 1, 1],
+            }
+        )
+        predicted = np.asarray([[8.0, 4.0], [1.0, 3.0], [3.0, 5.0], [4.0, 2.0]])
+        labels = pd.DataFrame(
+            {"stimulus_set": ["A", "B"], "target_number": [1, 1]}
+        )
+        averaged = average_predictions_by_target(manifest, predicted, labels)
+        np.testing.assert_allclose(averaged, [[2.0, 4.0], [6.0, 3.0]])
 
     def test_transformer_spatial_pyramid_shape(self):
         try:

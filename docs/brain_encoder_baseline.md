@@ -16,8 +16,8 @@ The first implemented model is deliberately strong but auditable:
 4. a multi-output ridge readout predicts every `nsdgeneral` voxel;
 5. the ridge penalty is chosen on unique validation images;
 6. final perception accuracy is reported on held-out core-NSD images;
-7. the frozen encoder is scored on NSD-Imagery using the paper's spatial brain
-   correlation.
+7. the frozen encoder is scored on NSD-Imagery using both the paper's spatial
+   brain correlation and voxel-wise target prediction metrics.
 
 Repeated fMRI presentations are averaged before splitting. No image identity
 can occur in more than one partition.
@@ -285,15 +285,86 @@ python scripts/evaluate_encoder_nsdimagery.py \
   --output-prefix "$WORK/dinov2_subj01"
 ```
 
-The resulting `*_detail.csv` and `*_summary.csv` use the same schema as
-Notebook 05. Copy or point Notebook 05's `OUTPUT_DIR` to this directory to use
-its subject and simple/real-scene aggregation cells.
+The resulting `*_detail.csv` and `*_summary.csv` preserve the brain-correlation
+schema used by Notebook 05. The evaluator also writes:
+
+- `*_voxel_metrics.csv`: one row per voxel, with correlation and strict
+  predictive R-squared across the 12 A+B target identities for vision and
+  imagery;
+- `*_voxel_summary.csv`: mean, median, and fraction-positive voxel metrics for
+  visual cortex, early/higher visual cortex, and V1--V4.
+
+For the voxel-wise calculation, multiple reconstruction samples of a target
+are averaged first. R-squared is then calculated across target identities:
+
+```text
+R²(v) = 1 - sum_t (measured[t,v] - predicted[t,v])²
+             / sum_t (measured[t,v] - mean_t measured[t,v])²
+```
+
+Predictions are returned from the encoder's standardized target space to the
+session-normalized core-NSD response units before this calculation. The
+NSD-Imagery measurements are independently Z-scored within run and averaged
+over repetitions, so this is a **strict zero-shot transfer R-squared**, not a
+within-dataset calibrated encoding score. It can be negative: that means the
+frozen prediction is worse than predicting that voxel's mean response across
+the selected targets. `*_tuning_r2` is squared target correlation and is
+scale-insensitive, but it must not be described as predictive R-squared.
+
+The core `core_test_voxels.csv:test_r2` remains the closest, statistically
+stable analogue of the encoding-model slide because it uses 1,000 held-out
+viewed images. The NSD-Imagery value uses only 12 A+B targets and should be
+reported as exploratory transfer evidence.
 
 The image manifest may also contain several reconstructions per target. Add a
 `sample` column and one `image_path` row per reconstruction; the evaluator will
 score every sample against the corresponding measured target pattern.
 
-## 7. Evidence hierarchy
+## 7. Create native-space R-squared maps
+
+Install the new plotting dependency once:
+
+```bash
+conda env update -n nsdimagery -f environment.yml
+conda activate nsdimagery
+```
+
+Then convert both held-out core-NSD and NSD-Imagery transfer scores to NIfTI
+volumes and slice figures:
+
+```bash
+python scripts/plot_encoder_r2_maps.py \
+  --data-root "$NSD_DATA_ROOT" \
+  --subject 1 \
+  --core-voxel-metrics "$WORK/core_test_voxels.csv" \
+  --transfer-voxel-metrics "$WORK/dinov2_subj01_voxel_metrics.csv" \
+  --output-dir "$WORK/r2_maps"
+```
+
+The main figure displays `sqrt(max(R², 0))`, matching the convention in the
+example slide. Vision and imagery use the same color scale and the same
+independent voxel mask: core-NSD held-out `R² > 0`. The script also writes raw,
+signed R-squared NIfTI files, a vision-minus-imagery map, an ROI summary CSV,
+and an ROI summary figure. The CSV contains both all-visual-voxel summaries and
+summaries restricted to the independent core-predictable mask; the figure uses
+the latter. Negative values are retained in the NIfTI and CSV outputs even
+though the square-root display cannot show them.
+
+The minimal download does not include a cortical surface or anatomical
+background. Therefore the default figure is an honest native `func1pt8mm`
+slice mosaic using `nsdgeneral` as the backdrop. If a T1 image is already
+registered to that exact grid, add:
+
+```bash
+--background-image /path/to/T1_in_func1pt8mm.nii.gz
+```
+
+The script checks the shape and affine rather than silently resampling.
+Surface maps like the lecture slide require the subject's FreeSurfer meshes
+and an explicit volume-to-surface projection; do not treat a volumetric slice
+plot as a surface result.
+
+## 8. Evidence hierarchy
 
 Interpret results in this order:
 
@@ -313,7 +384,7 @@ group uncertainty. Match early/higher ROI voxel counts as a sensitivity check,
 and retain label-permutation and cue-mismatch controls from the earlier
 notebooks.
 
-## 8. Troubleshooting paths
+## 9. Troubleshooting paths
 
 Use the traceback to distinguish the two common failures:
 
@@ -333,7 +404,7 @@ readlink -f "$NSD_STIMULI"
 tree -L 4 "$NSD_DATA_ROOT/nsddata_stimuli" 2>/dev/null || true
 ```
 
-## 9. Next model tier
+## 10. Next model tier
 
 The spatial pyramid is a controlled ridge baseline, not the endpoint. After it
 passes core-NSD validation, replace fixed pooling with a learned factorized
