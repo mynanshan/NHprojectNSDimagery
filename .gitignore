@@ -1,5 +1,6 @@
 data/
 outputs/**/*.npy
+outputs/**/*.npz
 outputs/**/*.pt
 **/.ipynb_checkpoints/
 **/__pycache__/

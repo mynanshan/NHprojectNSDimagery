@@ -19,7 +19,10 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from nsdimagery.encoding import pool_transformer_hidden_state  # noqa: E402
+from nsdimagery.encoding import (  # noqa: E402
+    pool_transformer_hidden_state,
+    transformer_patch_grid,
+)
 
 
 def resolved_path(value: str) -> Path:
@@ -177,21 +180,14 @@ def main() -> None:
         model = AutoModel.from_pretrained(args.model_id)
     model = model.to(device).eval()
 
-    image_size = getattr(model.config, "image_size", None)
     patch_size = getattr(model.config, "patch_size", None)
-    if isinstance(image_size, (tuple, list)):
-        image_height, image_width = (int(value) for value in image_size)
-    else:
-        image_height = image_width = int(image_size)
-    if isinstance(patch_size, (tuple, list)):
-        patch_height, patch_width = (int(value) for value in patch_size)
-    else:
-        patch_height = patch_width = int(patch_size)
-    grid_size = (image_height // patch_height, image_width // patch_width)
+    if patch_size is None:
+        raise ValueError(f"{args.model_id} does not expose a patch_size")
 
     all_features = []
     root = args.image_root or args.manifest.parent
     seen = 0
+    grid_size = None
     for images in image_batches(
         manifest,
         batch_size=args.batch_size,
@@ -200,6 +196,21 @@ def main() -> None:
     ):
         inputs = processor(images=images, return_tensors="pt")
         pixel_values = inputs["pixel_values"].to(device)
+        batch_grid_size = transformer_patch_grid(
+            pixel_values.shape[-2:], patch_size
+        )
+        if grid_size is None:
+            grid_size = batch_grid_size
+            print(
+                f"Processed pixels: {tuple(pixel_values.shape[-2:])}; "
+                f"patch grid: {grid_size}",
+                flush=True,
+            )
+        elif batch_grid_size != grid_size:
+            raise ValueError(
+                f"Processor produced inconsistent patch grids: "
+                f"{grid_size} then {batch_grid_size}"
+            )
         with torch.inference_mode(), torch.autocast(
             device_type=device.type,
             dtype=torch.float16,
@@ -231,6 +242,8 @@ def main() -> None:
         print(f"Extracted {seen}/{len(manifest)} images", flush=True)
 
     features = np.concatenate(all_features).astype(np.float32, copy=False)
+    if grid_size is None:
+        raise AssertionError("No image batches were processed")
     metadata = {
         "model_id": args.model_id,
         "hidden_state_layers": list(args.layers),

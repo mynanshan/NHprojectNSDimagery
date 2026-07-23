@@ -302,6 +302,40 @@ def pool_transformer_hidden_state(
     return torch.cat(pieces, dim=1)
 
 
+def transformer_patch_grid(
+    image_size: int | Iterable[int],
+    patch_size: int | Iterable[int],
+) -> tuple[int, int]:
+    """Infer the transformer patch grid from the processed pixel dimensions.
+
+    ``image_size`` must describe the tensor actually sent to the model, rather
+    than the nominal image size stored in the model configuration. Hugging Face
+    processors can resize or crop to a different size.
+    """
+    if np.isscalar(image_size):
+        height = width = int(image_size)
+    else:
+        dimensions = tuple(int(value) for value in image_size)
+        if len(dimensions) != 2:
+            raise ValueError("image_size must be a scalar or height-width pair")
+        height, width = dimensions
+    if np.isscalar(patch_size):
+        patch_height = patch_width = int(patch_size)
+    else:
+        patches = tuple(int(value) for value in patch_size)
+        if len(patches) != 2:
+            raise ValueError("patch_size must be a scalar or height-width pair")
+        patch_height, patch_width = patches
+    if min(height, width, patch_height, patch_width) < 1:
+        raise ValueError("image and patch dimensions must be positive")
+    if height % patch_height or width % patch_width:
+        raise ValueError(
+            f"Processed image {(height, width)} is not divisible by patch size "
+            f"{(patch_height, patch_width)}"
+        )
+    return height // patch_height, width // patch_width
+
+
 def measured_nsdimagery_patterns(
     data_root: str | Path,
     subject: int,

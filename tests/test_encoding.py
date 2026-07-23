@@ -7,6 +7,7 @@ from nsdimagery.encoding import (
     core_nsd_trial_ids,
     fit_ridge_weights,
     pool_transformer_hidden_state,
+    transformer_patch_grid,
     voxelwise_prediction_metrics,
 )
 
@@ -55,6 +56,13 @@ class EncodingHelperTests(unittest.TestCase):
         )
         self.assertEqual(tuple(pooled.shape), (2, 18))
         torch.testing.assert_close(pooled[:, :3], hidden[:, 0, :])
+
+    def test_patch_grid_uses_processed_image_size(self):
+        # DINOv2's model configuration can advertise 518 pixels while the
+        # image processor actually supplies a 224-pixel crop.
+        self.assertEqual(transformer_patch_grid((224, 224), 14), (16, 16))
+        with self.assertRaises(ValueError):
+            transformer_patch_grid((225, 224), 14)
 
 
 if __name__ == "__main__":
