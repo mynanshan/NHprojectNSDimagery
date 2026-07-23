@@ -121,7 +121,7 @@ Two patterns are clear in this subject.
 
 This is consistent with the idea that imagery preserves more high-level information than local visual detail. It is not a strong test of that claim. Most target $R^2$ values are negative, so the model does not predict NSD-Imagery response amplitudes well. The positive correlations indicate weak target ordering or tuning, not accurate beta prediction.
 
-## 5. Direct fitting within NSD-Imagery
+## 5. Direct fitting within NSD-Imagery (Ignore this)
 
 We also fitted models separately to NSD-Imagery vision and imagery betas. The feature extractor and the core-NSD PCA transform were fixed. The primary model was linear kernel ridge regression. An RBF kernel ridge model was a nonlinear sensitivity analysis:
 
