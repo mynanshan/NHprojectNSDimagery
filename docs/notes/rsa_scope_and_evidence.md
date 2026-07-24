@@ -1,8 +1,13 @@
 # What an RDM correlation does—and does not—answer
 
+> **Related notebooks:** [03](../../notebooks/03_regional_vision_imagery_rsa.ipynb)
+> and [20](../../notebooks/20_measurement_first_validation.ipynb)
+>
+> **Role:** evidence-hierarchy and interpretation note
+
 This note explains why Representational Similarity Analysis (RSA) is common,
 why it is not sufficient by itself for our broad scientific question, and why
-Notebook 04 changes the order of the analysis.
+Notebook 20 changes the order of the analysis.
 
 ## 1. The short answer
 
@@ -18,7 +23,7 @@ identification. For this project, ordinary RDM correlation is therefore a
 **secondary relational summary**, not the primary evidence for perception-to-
 imagery transfer.
 
-The primary question in Notebook 04 is more direct:
+The primary question in Notebook 20 is more direct:
 
 > Can target identity be identified reliably within imagery, and can a target
 > template estimated from vision identify imagery trials?
@@ -120,7 +125,7 @@ No. The representation and distance must match the scientific question.
 | Crossvalidated Mahalanobis (crossnobis) | Reproducible condition contrast after noise normalization | Needs independent partitions and a stable noise-covariance estimate |
 | Crossvalidated dot-product distance | Reproducible contrast with an interpretable zero | Does not whiten correlated voxel noise |
 
-Notebook 04 adds the last option. For two independent partitions $a$ and $b$,
+Notebook 20 adds the last option. For two independent partitions $a$ and $b$,
 it estimates
 
 $$
@@ -152,7 +157,7 @@ distances. A nominal correlation can therefore be driven by a small number of
 targets. In addition, some imagery run-to-run RDM reliabilities in Notebook 03
 are near or below zero.
 
-Notebook 04 consequently reports:
+Notebook 20 consequently reports:
 
 - exact target-label permutation tests rather than pretending the 15 pairs are
   independent observations;

@@ -1,5 +1,10 @@
 # Core-NSD brain encoder baseline
 
+> **Related notebooks:** [05](../../notebooks/05_core_nsd_brain_encoder.ipynb)
+> and [22](../../notebooks/22_nonlinear_and_direct_brain_encoder.ipynb)
+>
+> **Role:** implementation and data-preparation guide
+
 This track trains an image-to-beta encoder on **core NSD perception data** and
 tests it, without refitting, on NSD-Imagery vision and imagery. It answers a
 different question from the reconstruction model:
@@ -297,8 +302,8 @@ python scripts/evaluate_encoder_nsdimagery.py \
   --output-prefix "$WORK/dinov2_subj01"
 ```
 
-The resulting `*_detail.csv` and `*_summary.csv` preserve the brain-correlation
-schema used by Notebook 05. The evaluator also writes:
+The resulting `*_detail.csv` and `*_summary.csv` preserve the
+brain-correlation schema used by Notebook 23. The evaluator also writes:
 
 - `*_voxel_metrics.csv`: one row per voxel, with correlation and strict
   predictive R-squared across the 12 A+B target identities for vision and

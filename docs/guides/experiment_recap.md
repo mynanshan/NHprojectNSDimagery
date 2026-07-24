@@ -1,6 +1,13 @@
 # NSD-Imagery experiment recap
 
-This note connects the participant's experience to the files used in Notebooks 02 and 03.
+> **Related notebooks:** [01](../../notebooks/01_data_orientation.ipynb),
+> [02](../../notebooks/02_event_alignment_neural_rdm.ipynb), and
+> [03](../../notebooks/03_regional_vision_imagery_rsa.ipynb)
+>
+> **Role:** dataset and experiment reference
+
+This note connects the participant's experience to the files used in
+Notebooks 01–03.
 
 ## 1. Vocabulary in one minute
 

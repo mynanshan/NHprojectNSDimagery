@@ -1,6 +1,17 @@
 # Brain encoding results
 
+> **Related notebooks:** [05](../../notebooks/05_core_nsd_brain_encoder.ipynb)
+> and [22](../../notebooks/22_nonlinear_and_direct_brain_encoder.ipynb)
+>
+> **Role:** current result report
+
 This report summarizes the current brain encoding analyses for subject 01. The main result is mixed. The encoder predicts held-out core-NSD perception responses, but it does not predict NSD-Imagery response amplitudes well. The frozen encoder still carries a weak target-related signal. This signal is lower for imagery than for vision, especially in early visual cortex.
+
+### Reading path
+
+Sections 2 and 4 contain the presentation-facing validation and frozen-transfer
+results. Sections 3 and 5 are secondary model extensions with negative or
+unstable outcomes; they are retained for completeness rather than foregrounded.
 
 ## 1. Data and questions
 
@@ -56,7 +67,7 @@ We used 8,100 unique images for training, 900 for validation, and 1,000 shared i
 
 ### Held-out core-NSD results
 
-![Held-out core-NSD encoder performance](../outputs/06_core_nsd_encoder/subj01/dinov2_small/report_figures/core_test_performance.png)
+![Held-out core-NSD encoder performance](../../outputs/06_core_nsd_encoder/subj01/dinov2_small/report_figures/core_test_performance.png)
 
 | Region | Voxels | Mean voxel correlation | Mean predictive $R^2$ |
 |---|---:|---:|---:|
@@ -66,7 +77,7 @@ We used 8,100 unique images for training, 900 for validation, and 1,000 shared i
 
 These are held-out results. The positive $R^2$ values show that the model predicts unseen core-NSD beta responses better than a test-set mean baseline. Performance is higher in early visual cortex than in higher visual cortex.
 
-## 3. Nonlinear readout
+## 3. Secondary extension: nonlinear readout
 
 We also tested a nonlinear residual readout:
 
@@ -79,11 +90,11 @@ $$
 
 The hidden layer has 256 units and dropout of 0.1. The residual output layer starts at zero. Epoch 0 is therefore exactly the ridge model. Extra capacity is accepted only if it improves validation correlation.
 
-![Nonlinear validation history](../outputs/06_core_nsd_encoder/subj01/dinov2_small/report_figures/nonlinear_validation_history.png)
+![Nonlinear validation history](../../outputs/06_core_nsd_encoder/subj01/dinov2_small/report_figures/nonlinear_validation_history.png)
 
 Validation performance decreased after residual training began. The procedure selected epoch 0, so the nonlinear model was rejected. Its held-out test result is identical to ridge. This test does not show that every nonlinear readout will fail. It shows that this residual MLP did not add useful predictive signal under the current split and features.
 
-## 4. Frozen transfer to NSD-Imagery
+## 4. Main result: frozen transfer to NSD-Imagery
 
 For this analysis, $\widehat W$ is trained only on core NSD and then fixed. No NSD-Imagery beta is used to update the model. We encode the 12 A+B target images and compare predicted responses with the mean NSD-Imagery response for each target.
 
@@ -103,7 +114,7 @@ $$
 
 $R^2$ can be negative on held-out or transferred data. A negative value means that the prediction has more squared error than predicting the voxel's mean response for every target. Correlation can still be positive because it does not require the prediction to have the correct scale or offset.
 
-![Frozen transfer summary](../outputs/06_core_nsd_encoder/subj01/dinov2_small/report_figures/frozen_transfer_summary.png)
+![Frozen transfer summary](../../outputs/06_core_nsd_encoder/subj01/dinov2_small/report_figures/frozen_transfer_summary.png)
 
 | Task | Region | Spatial brain correlation | Median voxel target correlation | Median voxel target $R^2$ | Voxels with $R^2>0$ |
 |---|---|---:|---:|---:|---:|
@@ -121,7 +132,7 @@ Two patterns are clear in this subject.
 
 This is consistent with the idea that imagery preserves more high-level information than local visual detail. It is not a strong test of that claim. Most target $R^2$ values are negative, so the model does not predict NSD-Imagery response amplitudes well. The positive correlations indicate weak target ordering or tuning, not accurate beta prediction.
 
-## 5. Direct fitting within NSD-Imagery (Ignore this)
+## 5. Secondary extension: direct fitting within NSD-Imagery
 
 We also fitted models separately to NSD-Imagery vision and imagery betas. The feature extractor and the core-NSD PCA transform were fixed. The primary model was linear kernel ridge regression. An RBF kernel ridge model was a nonlinear sensitivity analysis:
 
@@ -133,7 +144,7 @@ $$
 
 The outer cross-validation leaves out one target identity at a time. Repeated trials from one target never appear in both training and test data. Hyperparameters are selected inside each training fold.
 
-![Direct NSD-Imagery encoding](../outputs/06_core_nsd_encoder/subj01/dinov2_small/report_figures/direct_encoding_summary.png)
+![Direct NSD-Imagery encoding](../../outputs/06_core_nsd_encoder/subj01/dinov2_small/report_figures/direct_encoding_summary.png)
 
 The median held-out target correlations were negative for both tasks and both kernels.
 

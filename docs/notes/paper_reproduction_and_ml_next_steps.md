@@ -1,11 +1,15 @@
 # Paper reproduction and machine-learning next steps
 
+> **Related notebook:** [23](../../notebooks/23_paper_brain_correlation.ipynb)
+>
+> **Role:** development and reproduction note
+
 ## Short answer
 
 - **Table 1 brain correlation is not beta-only.** It compares a measured,
   repeat-averaged beta pattern with the beta pattern that GNet predicts from a
   reconstructed image.
-- A useful **beta-only companion analysis is feasible now**. Notebook 05 uses
+- A useful **beta-only companion analysis is feasible now**. Notebook 23 uses
   the paper's exact nested ROIs and directly asks whether matched targets have
   more similar perception/imagery patterns than mismatched targets.
 - **Exact scoring is now implemented** once reconstruction images and the
@@ -42,8 +46,8 @@ The paper ROIs are nested:
 | Early visual | `(V1d/V1v/V2d/V2v/V3d/V3v/hV4) ∩ nsdgeneral` (`prf-visualrois` labels 1–7) |
 | Higher visual | `nsdgeneral − early visual` |
 
-This matters because Notebook 04 used a different exploratory contrast:
-V1–V3 for early and labels 5–7 from `streams` for higher. Notebook 05 leaves
+This matters because Notebook 20 used a different exploratory contrast:
+V1–V3 for early and labels 5–7 from `streams` for higher. Notebook 23 leaves
 the old notebook untouched and constructs the paper definitions explicitly.
 
 The paper's interpretation also needs care. It reports a **larger drop from
@@ -54,7 +58,7 @@ score itself to be lower than the imagery higher score.
 
 ### Beta-only companion
 
-Run [Notebook 05](../notebooks/05_paper_brain_correlation.ipynb). It:
+Run [Notebook 23](../../notebooks/23_paper_brain_correlation.ipynb). It:
 
 1. extracts all `nsdgeneral` voxels in checkpoint-compatible flattening order;
 2. performs the authors' within-run voxelwise Z-scoring;
@@ -87,7 +91,7 @@ python scripts/score_table1_brain_correlation.py \
 The official HDF5 masks are recommended for the closest reproduction; if that
 argument is omitted, the scorer reconstructs the same ROI definitions from
 the local NSD masks. It writes target/sample-level correlations and a subject summary. Repeat for
-vision and imagery for subjects 1, 2, 5, and 7, then use Notebook 05 to average
+vision and imagery for subjects 1, 2, 5, and 7, then use Notebook 23 to average
 the subject summaries.
 
 The implementation uses the minimal GNet architecture only; it does not import

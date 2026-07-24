@@ -1,12 +1,18 @@
 # RSA studies: methods, results, and current interpretation
 
+> **Related notebooks:** [02](../../notebooks/02_event_alignment_neural_rdm.ipynb),
+> [03](../../notebooks/03_regional_vision_imagery_rsa.ipynb), and
+> [21](../../notebooks/21_full18_rdm_preprocessing_sensitivity.ipynb)
+>
+> **Role:** main regional RSA report, with exploratory feature/full-18 follow-ups
+
 This report summarizes the representational similarity analyses in:
 
-- [Notebook 02](../notebooks/02_event_alignment_neural_rdm.ipynb), which
+- [Notebook 02](../../notebooks/02_event_alignment_neural_rdm.ipynb), which
   validates trial-to-beta alignment and builds the first neural RDMs;
-- [Notebook 02a](../notebooks/02a_full18_rdm_preprocessing_sensitivity.ipynb),
+- [Notebook 21](../../notebooks/21_full18_rdm_preprocessing_sensitivity.ipynb),
   which explores a joint 18-target RDM and several preprocessing choices;
-- [Notebook 03](../notebooks/03_group_transfer_feature_rsa.ipynb), which
+- [Notebook 03](../../notebooks/03_regional_vision_imagery_rsa.ipynb), which
   repeats the neural analysis across participants and compares the neural RDMs
   with HOG and CLIP feature RDMs.
 
@@ -17,6 +23,13 @@ complementary pattern, with the clearest transfer in early visual cortex.
 However, the direct higher-versus-early regional contrast is not statistically
 decisive, and the pretrained feature models do not identify the transferred
 Set B information as semantic.
+
+### Reading path
+
+For the presentation-facing result, read Sections 1, 2, 4, 6, and 9. Section 3
+is an exploratory preprocessing analysis, Section 5 is the inconclusive
+HOG/CLIP follow-up, and Section 7 keeps reliability checks available without
+making them the main story.
 
 ## 1. Questions
 
@@ -99,13 +112,13 @@ pilot. Group tests use participants 02-08. Exact sign-flip tests treat
 participants, rather than the 15 correlated RDM entries, as the uncertainty
 unit.
 
-## 3. Exploratory 18-target RDM
+## 3. Secondary analysis: exploratory 18-target RDM
 
-Notebook 02a concatenates Sets A, B, and C into one 18-target RDM. This gives a
+Notebook 21 concatenates Sets A, B, and C into one 18-target RDM. This gives a
 compact overview of within-set and between-set distances. The lower triangle
 of each panel is vision and the upper triangle is imagery.
 
-![Group 18-target RDMs across visual regions](figures/rsa_studies/full18_regional_rdms.png)
+![Group 18-target RDMs across visual regions](../figures/rsa_studies/full18_regional_rdms.png)
 
 *Figure 1. Group 18-target neural RDMs. White lines separate Sets A, B, and C.
 The lower triangle shows vision and the upper triangle shows imagery.*
@@ -129,7 +142,7 @@ $$
 Positive values indicate category-like blocks: targets from the same set are,
 on average, closer than targets from different sets.
 
-![Full RDM between-minus-within contrasts](figures/rsa_studies/full18_block_contrasts.png)
+![Full RDM between-minus-within contrasts](../figures/rsa_studies/full18_block_contrasts.png)
 
 *Figure 2. Between-set minus within-set distance for each participant, task,
 ROI, and preprocessing route. Gray points are participants and red diamonds
@@ -153,13 +166,13 @@ This is why the separate 6-by-6 analyses are the clearer primary analysis:
 they compare vision and imagery within a common stimulus domain without
 asking the between-set distances to carry the result.
 
-## 4. Regional six-target neural RSA
+## 4. Main result: regional six-target neural RSA
 
 Notebook 03 averages the held-out participants' RDMs for visualization. Each
 panel combines two ordinary six-target RDMs: vision is below the diagonal and
 imagery is above it.
 
-![Held-out regional six-target RDMs](figures/rsa_studies/regional_group_6x6_rdms.png)
+![Held-out regional six-target RDMs](../figures/rsa_studies/regional_group_6x6_rdms.png)
 
 *Figure 3. Held-out group RDMs for Sets A and B. Lower triangles show vision;
 upper triangles show imagery.*
@@ -176,7 +189,7 @@ correlation:
 | B | Higher visual | **0.365** | 0.314 | **0.0078** | **0.0156** |
 | B | `nsdgeneral` | 0.364 | 0.361 | 0.0313 | 0.0625 |
 
-![Cross-condition neural geometry across participants](figures/rsa_studies/cross_condition_neural_geometry.png)
+![Cross-condition neural geometry across participants](../figures/rsa_studies/cross_condition_neural_geometry.png)
 
 *Figure 4. Vision-imagery RDM correlations. Black points are held-out
 participants, red diamonds and lines are held-out means, and blue crosses show
@@ -263,7 +276,7 @@ treated as an independent anatomical sample. Its Set B transfer is almost
 identical to the higher-visual result, showing that the signal is visible in
 the broad mask but not localizing it more precisely.
 
-## 5. RSA with pretrained image features
+## 5. Secondary analysis: RSA with pretrained image features
 
 Notebook 03 constructs two candidate feature RDMs:
 
@@ -276,7 +289,7 @@ Notebook 03 constructs two candidate feature RDMs:
 Feature RDMs use cosine distance, and feature-neural RSA correlates their 15
 distances with the corresponding neural RDM distances.
 
-![HOG and CLIP feature RDMs](figures/rsa_studies/feature_rdms.png)
+![HOG and CLIP feature RDMs](../figures/rsa_studies/feature_rdms.png)
 
 *Figure 5. HOG and CLIP feature RDMs for the fixed images in Sets A and B.*
 
@@ -306,7 +319,7 @@ The natural-image results are mixed:
 | Imagery | Early visual | -0.058 | -0.190 |
 | Imagery | Higher visual | 0.112 | -0.020 |
 
-![Set B feature RSA across participants](figures/rsa_studies/set_b_feature_rsa.png)
+![Set B feature RSA across participants](../figures/rsa_studies/set_b_feature_rsa.png)
 
 *Figure 6. Set B feature-neural RSA in held-out participants. Diamonds show
 group means.*
@@ -323,7 +336,7 @@ $$
 This is opposite to the predicted CLIP advantage. The broader regional
 contrast plot is also irregular:
 
-![Regional feature-RSA contrasts](figures/rsa_studies/regional_feature_contrasts.png)
+![Regional feature-RSA contrasts](../figures/rsa_studies/regional_feature_contrasts.png)
 
 *Figure 7. Mean early-minus-higher feature RSA for Sets A and B. These are
 exploratory paired contrasts across the seven held-out participants.*

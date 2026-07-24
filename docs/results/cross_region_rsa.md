@@ -1,6 +1,10 @@
 # Cross-region visual-to-parietal transfer
 
-Notebook 08 tests whether imagery responses in parietal cortex preserve the
+> **Related notebook:** [04](../../notebooks/04_cross_region_rsa.ipynb)
+>
+> **Role:** current exploratory result report
+
+Notebook 04 tests whether imagery responses in parietal cortex preserve the
 target structure seen during perception in visual cortex.
 
 This is a post-hoc, collaborator-inspired analysis. It is designed to be
@@ -12,7 +16,7 @@ A decoder trained on \(p_V\) visual voxels cannot directly receive \(p_P\)
 parietal voxels. The voxel counts differ, and the model weights refer to
 different anatomical locations.
 
-Notebook 08 uses two valid alternatives:
+Notebook 04 uses two valid alternatives:
 
 1. compare target RDMs, which do not require equal voxel dimensions;
 2. learn a low-dimensional parietal-to-visual alignment from independent
@@ -37,7 +41,7 @@ subject, up to the default cap of 1,200 voxels.
 
 This also corrects an ambiguity in earlier notebooks: the exploratory
 `higher_visual` definition used stream labels 5, 6, and 7, so it combined
-ventral, lateral, and parietal voxels. Notebook 08 isolates them.
+ventral, lateral, and parietal voxels. Notebook 04 isolates them.
 
 ## Primary RDM test
 
@@ -126,7 +130,7 @@ unseen images.
 Open:
 
 ```text
-notebooks/08_cross_region_parietal_transfer.ipynb
+notebooks/04_cross_region_rsa.ipynb
 ```
 
 The default notebook command analyzes all eight subjects:
@@ -180,12 +184,37 @@ python scripts/run_cross_region_transfer.py \
 | `stream_roi_counts.csv` | Available and sampled voxel counts |
 | `subject_rdms.npz` | Standard and crossvalidated subject RDMs |
 
-Notebook 08 saves its summary figures under
+Notebook 04 saves its summary figures under
 `outputs/08_cross_region_transfer/figures/`.
+
+The output directory keeps the original analysis number for provenance.
+
+## Current results
+
+The primary ordinary correlation-distance RDM analysis gives:
+
+| Comparison | A+B mean Spearman \(\rho\) | Two-sided sign-flip \(p\) |
+|---|---:|---:|
+| Visual vision → visual imagery | 0.433 | 0.0078 |
+| Visual vision → parietal imagery | 0.353 | 0.0078 |
+| Parietal vision → parietal imagery | 0.314 | 0.0078 |
+
+The planned cross-minus-same-visual contrast is \(-0.079\)
+(\(p=0.172\), two-sided). Thus visual-to-parietal geometry is detectably
+positive, but it is not stronger than transfer within visual cortex. The A and
+B stimulus sets point in the same broad direction.
+
+The repeat-crossvalidated RDM correlations are near zero and do not reproduce
+the standard-RDM result. This sensitivity prevents a strong claim that
+parietal imagery contains a robust transformed copy of visual perception
+geometry. The aligned-decoder analysis is therefore treated as a secondary
+mechanistic probe, not as confirmation of transfer.
+
+![Primary same- and cross-region RDM results](../../outputs/08_cross_region_transfer/figures/primary_cross_region_rdm.png)
 
 ## Interpretation
 
-A scientifically interesting result would have several features:
+A strong future result would have several features:
 
 - cross-region transfer is positive;
 - cross-region transfer exceeds same-visual transfer within subject;
@@ -197,6 +226,9 @@ A scientifically interesting result would have several features:
   baseline;
 - aligned parietal imagery identification beats chance and shuffled alignment.
 
-Even that pattern would be evidence consistent with transformed
-perception-to-imagery information. It would not prove a directed neural
-transformation or connectivity mechanism.
+The present data satisfy the first and broadly the third criteria, but not the
+cross-minus-same or standard-versus-crossvalidated agreement criteria.
+Accordingly, the defensible conclusion is exploratory: some target geometry is
+shared across visual perception and parietal imagery, but the evidence does not
+establish preferential cross-region transfer, a directed transformation, or a
+connectivity mechanism.

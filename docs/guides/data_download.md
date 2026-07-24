@@ -1,5 +1,9 @@
 # Downloading only the NSD-Imagery data needed for this project
 
+> **Related notebooks:** 01–04 and 20–23
+>
+> **Role:** setup guide
+
 This guide is intentionally narrower than the full NSD Data Manual. It downloads the prepared data needed for the RSA / representational-geometry MVP, not every NSD product.
 
 ## Quick start on NeuroHackademy JupyterHub
@@ -68,7 +72,9 @@ Pass `--include-allstim` if we decide to analyze the exact trial-varying images 
 - original NSD core betas;
 - reconstruction-model checkpoints.
 
-The original NSD core betas are needed only for the stretch goal that trains a new perception-to-feature ridge decoder. They are much larger than this MVP and should not be downloaded pre-emptively.
+The original NSD core betas are needed only for the separate perception-trained
+brain encoder in Notebook 05. They are much larger than the RSA download and
+should not be downloaded before the NSD-Imagery workflow is working.
 
 ## Recommended two-stage workflow
 

@@ -1,5 +1,9 @@
 # NSD-Imagery Workshop Project Notes
 
+> **Related notebooks:** all
+>
+> **Role:** historical project plan; not required for the main reading path
+
 **Working project title.**  
 **What Survives in the Mind’s Eye? Representation-Level Transfer from Perception to Mental Imagery**
 
@@ -41,10 +45,10 @@ The goal is to produce an interpretable analysis of how brain-response geometry 
 
 Three shorter notes now complement this project plan:
 
-- [Experiment recap](experiment_recap.md): what a participant did, and how runs, trials, design matrices, raw fMRI, and beta volumes relate.
-- [Original paper methodology](original_paper_methodology.md): the benchmark's cross-decoding workflow in compact notation.
-- [RSA studies report](notebook_02_03_results_review.md): methods, figures, held-out regional transfer, the exploratory 18-target RDM, and the mixed HOG/CLIP results.
-- [RSA scope and revised analysis](rsa_scope_and_revised_analysis.md): why RDM correlation is a standard but narrow statistic, and why direct identification is now primary.
+- [Experiment recap](../guides/experiment_recap.md): what a participant did, and how runs, trials, design matrices, raw fMRI, and beta volumes relate.
+- [Original paper methodology](../guides/original_paper_methodology.md): the benchmark's cross-decoding workflow in compact notation.
+- [RSA studies report](../results/rsa_results.md): methods, figures, held-out regional transfer, the exploratory 18-target RDM, and the mixed HOG/CLIP results.
+- [RSA scope and evidence hierarchy](rsa_scope_and_evidence.md): why RDM correlation is a standard but narrow statistic, and why direct identification is now primary.
 
 The essential counting identity for one participant is
 
@@ -74,7 +78,7 @@ evidence order:
 4. ask HOG, CLIP, or other feature models to explain the effect only if the
    neural measurement is reliable enough.
 
-Notebook 04 applies this plan to all eight participants. It does not select a
+Notebook 20 applies this plan to all eight participants. It does not select a
 hypothesis using `subj01`; the pilot/held-out distinction remains relevant only
 when describing how the earlier exploratory result was obtained.
 
@@ -990,7 +994,7 @@ How strong the meaningful neural signal is relative to noise. Mental imagery fMR
 Notebook 03 does **not** support the original “semantics more than low-level
 detail” claim: the planned CLIP-minus-HOG contrast went in the opposite
 direction. The final claim must therefore depend on the measurement-first
-checks in Notebook 04.
+checks in Notebook 20.
 
 If those checks show reliable imagery identification and cue-controlled
 vision-to-imagery identification, a cautious claim is:
@@ -1011,7 +1015,7 @@ If measurement validity or direct transfer fails, the useful claim is:
 The download, alignment, ROI extraction, HOG/CLIP features, and initial RSA
 steps are complete. The current order is:
 
-1. run Notebook 04 for all eight participants;
+1. run Notebook 20 for all eight participants;
 2. interpret within-imagery identification before direct transfer;
 3. check the cue-mismatch transfer control;
 4. inspect crossvalidated target differences, target-omission sensitivity, and

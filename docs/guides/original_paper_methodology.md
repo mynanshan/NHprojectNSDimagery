@@ -1,5 +1,11 @@
 # Original NSD-Imagery paper: methodology in compact notation
 
+> **Related notebooks:** [02](../../notebooks/02_event_alignment_neural_rdm.ipynb),
+> [03](../../notebooks/03_regional_vision_imagery_rsa.ipynb), and
+> [23](../../notebooks/23_paper_brain_correlation.ipynb)
+>
+> **Role:** original-paper reference
+
 This note summarizes Kneeland et al., *NSD-Imagery: A Benchmark Dataset for Extending fMRI Vision Decoding Methods to Mental Imagery* (CVPR 2025). It distinguishes the paper's benchmark from our RSA analysis.
 
 ## 1. What data enter the reconstruction models?
@@ -114,4 +120,4 @@ Low-level/structural metrics and early-visual brain correlations drop more from 
 - [CVPR 2025 paper](https://openaccess.thecvf.com/content/CVPR2025/html/Kneeland_NSD-Imagery_A_Benchmark_Dataset_for_Extending_fMRI_Vision_Decoding_Methods_CVPR_2025_paper.html)
 - [Paper PDF](https://openaccess.thecvf.com/content/CVPR2025/papers/Kneeland_NSD-Imagery_A_Benchmark_Dataset_for_Extending_fMRI_Vision_Decoding_Methods_CVPR_2025_paper.pdf)
 - [Supplement](https://openaccess.thecvf.com/content/CVPR2025/supplemental/Kneeland_NSD-Imagery_A_Benchmark_CVPR_2025_supplemental.pdf)
-- [Reproduction and ML next steps](paper_reproduction_and_ml_next_steps.md)
+- [Reproduction and ML next steps](../notes/paper_reproduction_and_ml_next_steps.md)
