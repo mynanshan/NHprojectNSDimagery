@@ -4,6 +4,7 @@ from .analysis import (
     average_by_target,
     balanced_split_reliability,
     balanced_split_identification,
+    balanced_crossvalidated_rdm,
     correlation_rdm,
     cosine_rdm,
     crossvalidated_dot_rdm,
@@ -19,6 +20,14 @@ from .analysis import (
     target_rdm,
     upper_triangle,
     zscore_within_groups,
+)
+
+from .cross_region import (
+    STREAM_ROI_LABELS,
+    RegionAlignment,
+    fit_region_alignment,
+    predictive_r2,
+    stream_roi_masks,
 )
 
 from .io import (
@@ -62,6 +71,7 @@ __all__ = [
     "assign_image_splits",
     "balanced_split_identification",
     "balanced_split_reliability",
+    "balanced_crossvalidated_rdm",
     "build_event_table",
     "build_run_table",
     "correlation_rdm",
@@ -100,4 +110,9 @@ __all__ = [
     "validate_download",
     "voxelwise_prediction_metrics",
     "zscore_within_groups",
+    "STREAM_ROI_LABELS",
+    "RegionAlignment",
+    "fit_region_alignment",
+    "predictive_r2",
+    "stream_roi_masks",
 ]

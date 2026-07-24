@@ -292,6 +292,60 @@ def crossvalidated_dot_rdm(
     return rdm, first_order
 
 
+def balanced_crossvalidated_rdm(
+    patterns: np.ndarray,
+    target_numbers: np.ndarray,
+    *,
+    n_splits: int = 100,
+    seed: int = 0,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Average crossvalidated dot RDMs over balanced random repeat splits.
+
+    Each target contributes the same number of trials to both halves. The two
+    halves therefore contain independent repeat averages under independent
+    trial noise. This helper is intended for within-task, within-ROI RDM
+    estimation; the resulting RDM can then be compared with an RDM from a
+    different ROI because RSA does not require matching voxel dimensions.
+    """
+    patterns = np.asarray(patterns)
+    target_numbers = np.asarray(target_numbers)
+    if patterns.ndim != 2 or len(patterns) != len(target_numbers):
+        raise ValueError("patterns must be trials x voxels and match targets")
+    if n_splits < 1:
+        raise ValueError("n_splits must be positive")
+
+    targets = np.unique(target_numbers)
+    indices = {
+        target: np.flatnonzero(target_numbers == target) for target in targets
+    }
+    if any(len(index) < 2 or len(index) % 2 for index in indices.values()):
+        raise ValueError("Every target needs an even number of at least two trials")
+
+    rng = np.random.default_rng(seed)
+    rdms = []
+    order = None
+    for _ in range(n_splits):
+        first_indices = []
+        second_indices = []
+        for target in targets:
+            shuffled = rng.permutation(indices[target])
+            middle = len(shuffled) // 2
+            first_indices.extend(shuffled[:middle])
+            second_indices.extend(shuffled[middle:])
+        rdm, current_order = crossvalidated_dot_rdm(
+            patterns[np.asarray(first_indices)],
+            target_numbers[np.asarray(first_indices)],
+            patterns[np.asarray(second_indices)],
+            target_numbers[np.asarray(second_indices)],
+        )
+        if order is None:
+            order = current_order
+        elif not np.array_equal(order, current_order):
+            raise AssertionError("Balanced splits produced inconsistent target orders")
+        rdms.append(rdm)
+    return np.mean(rdms, axis=0), np.asarray(order)
+
+
 def leave_one_target_out_rdm_spearman(
     first: np.ndarray, second: np.ndarray
 ) -> np.ndarray:

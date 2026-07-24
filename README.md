@@ -6,6 +6,7 @@
 - [Paper reproduction, released checkpoints, and ML next steps](docs/paper_reproduction_and_ml_next_steps.md)
 - [Train a core-NSD perception encoder and test imagery transfer](docs/brain_encoder_baseline.md)
 - [Current brain encoding results](docs/brain_encoding_results.md)
+- [Cross-region visual-to-parietal transfer](docs/cross_region_parietal_transfer.md)
 - [Notebook 02/03 results review](docs/notebook_02_03_results_review.md)
 - [What RDM correlation answers and the revised evidence hierarchy](docs/rsa_scope_and_revised_analysis.md)
 - [Minimal NSD-Imagery download guide](docs/data_download.md)
@@ -17,6 +18,7 @@
 - [Paper-aligned brain-correlation notebook](notebooks/05_paper_brain_correlation.ipynb)
 - [Core-NSD brain-encoder workflow](notebooks/06_core_nsd_brain_encoder.ipynb)
 - [Nonlinear transfer and direct NSD-Imagery encoding](notebooks/07_nonlinear_and_direct_brain_encoder.ipynb)
+- [Visual-to-parietal imagery transfer](notebooks/08_cross_region_parietal_transfer.ipynb)
 
 Start with one subject and no downloads:
 

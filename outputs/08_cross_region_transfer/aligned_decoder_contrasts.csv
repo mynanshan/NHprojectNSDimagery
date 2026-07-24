@@ -1,0 +1,73 @@
+subject,phase,stimulus_set,contrast,accuracy_difference
+1,pilot,A,aligned_minus_same_visual,0.010416666666666685
+1,pilot,A,aligned_minus_within_parietal,-0.04166666666666666
+1,pilot,A,within_parietal_minus_same_visual,0.05208333333333334
+1,pilot,B,aligned_minus_same_visual,-0.03125
+1,pilot,B,aligned_minus_within_parietal,0.0
+1,pilot,B,within_parietal_minus_same_visual,-0.03125
+2,validation,A,aligned_minus_same_visual,0.0
+2,validation,A,aligned_minus_within_parietal,0.020833333333333343
+2,validation,A,within_parietal_minus_same_visual,-0.020833333333333343
+2,validation,B,aligned_minus_same_visual,-0.020833333333333343
+2,validation,B,aligned_minus_within_parietal,-0.14583333333333331
+2,validation,B,within_parietal_minus_same_visual,0.12499999999999997
+3,validation,A,aligned_minus_same_visual,-0.03125
+3,validation,A,aligned_minus_within_parietal,-0.052083333333333315
+3,validation,A,within_parietal_minus_same_visual,0.020833333333333315
+3,validation,B,aligned_minus_same_visual,0.0
+3,validation,B,aligned_minus_within_parietal,-0.010416666666666685
+3,validation,B,within_parietal_minus_same_visual,0.010416666666666685
+4,validation,A,aligned_minus_same_visual,0.05208333333333333
+4,validation,A,aligned_minus_within_parietal,0.0
+4,validation,A,within_parietal_minus_same_visual,0.05208333333333333
+4,validation,B,aligned_minus_same_visual,-0.020833333333333343
+4,validation,B,aligned_minus_within_parietal,-0.03125
+4,validation,B,within_parietal_minus_same_visual,0.010416666666666657
+5,validation,A,aligned_minus_same_visual,0.05208333333333334
+5,validation,A,aligned_minus_within_parietal,-0.020833333333333343
+5,validation,A,within_parietal_minus_same_visual,0.07291666666666669
+5,validation,B,aligned_minus_same_visual,0.010416666666666657
+5,validation,B,aligned_minus_within_parietal,0.07291666666666666
+5,validation,B,within_parietal_minus_same_visual,-0.0625
+6,validation,A,aligned_minus_same_visual,-0.0625
+6,validation,A,aligned_minus_within_parietal,-0.07291666666666666
+6,validation,A,within_parietal_minus_same_visual,0.010416666666666657
+6,validation,B,aligned_minus_same_visual,0.0
+6,validation,B,aligned_minus_within_parietal,-0.010416666666666657
+6,validation,B,within_parietal_minus_same_visual,0.010416666666666657
+7,validation,A,aligned_minus_same_visual,-0.010416666666666685
+7,validation,A,aligned_minus_within_parietal,-0.020833333333333343
+7,validation,A,within_parietal_minus_same_visual,0.010416666666666657
+7,validation,B,aligned_minus_same_visual,0.0
+7,validation,B,aligned_minus_within_parietal,-0.020833333333333343
+7,validation,B,within_parietal_minus_same_visual,0.020833333333333343
+8,validation,A,aligned_minus_same_visual,0.020833333333333343
+8,validation,A,aligned_minus_within_parietal,-0.020833333333333343
+8,validation,A,within_parietal_minus_same_visual,0.041666666666666685
+8,validation,B,aligned_minus_same_visual,-0.03125
+8,validation,B,aligned_minus_within_parietal,-0.020833333333333343
+8,validation,B,within_parietal_minus_same_visual,-0.010416666666666657
+1,pilot,A+B average,aligned_minus_same_visual,-0.010416666666666657
+1,pilot,A+B average,aligned_minus_within_parietal,-0.02083333333333333
+1,pilot,A+B average,within_parietal_minus_same_visual,0.010416666666666671
+2,validation,A+B average,aligned_minus_same_visual,-0.010416666666666671
+2,validation,A+B average,aligned_minus_within_parietal,-0.062499999999999986
+2,validation,A+B average,within_parietal_minus_same_visual,0.052083333333333315
+3,validation,A+B average,aligned_minus_same_visual,-0.015625
+3,validation,A+B average,aligned_minus_within_parietal,-0.03125
+3,validation,A+B average,within_parietal_minus_same_visual,0.015625
+4,validation,A+B average,aligned_minus_same_visual,0.015624999999999993
+4,validation,A+B average,aligned_minus_within_parietal,-0.015625
+4,validation,A+B average,within_parietal_minus_same_visual,0.031249999999999993
+5,validation,A+B average,aligned_minus_same_visual,0.03125
+5,validation,A+B average,aligned_minus_within_parietal,0.026041666666666657
+5,validation,A+B average,within_parietal_minus_same_visual,0.005208333333333343
+6,validation,A+B average,aligned_minus_same_visual,-0.03125
+6,validation,A+B average,aligned_minus_within_parietal,-0.04166666666666666
+6,validation,A+B average,within_parietal_minus_same_visual,0.010416666666666657
+7,validation,A+B average,aligned_minus_same_visual,-0.005208333333333343
+7,validation,A+B average,aligned_minus_within_parietal,-0.020833333333333343
+7,validation,A+B average,within_parietal_minus_same_visual,0.015625
+8,validation,A+B average,aligned_minus_same_visual,-0.005208333333333329
+8,validation,A+B average,aligned_minus_within_parietal,-0.020833333333333343
+8,validation,A+B average,within_parietal_minus_same_visual,0.015625000000000014

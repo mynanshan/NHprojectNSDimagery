@@ -1,0 +1,36 @@
+{
+  "subjects": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "pilot_subject": 1,
+  "stimulus_sets": [
+    "A",
+    "B"
+  ],
+  "primary_visual_roi": "visual_streams",
+  "primary_visual_labels": [
+    1,
+    2,
+    3,
+    5,
+    6
+  ],
+  "primary_parietal_roi": "dorsal_parietal",
+  "primary_parietal_labels": [
+    4,
+    7
+  ],
+  "max_voxels": 1200,
+  "n_rdm_splits": 100,
+  "aligned_decoder": true,
+  "alignment_training": "Set C vision only",
+  "n_alignment_permutations": 100,
+  "interpretation": "exploratory; post-hoc collaborator-inspired analysis"
+}

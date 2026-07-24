@@ -3,6 +3,7 @@ import unittest
 import numpy as np
 
 from nsdimagery.analysis import (
+    balanced_crossvalidated_rdm,
     balanced_split_identification,
     correlation_rdm,
     crossvalidated_dot_rdm,
@@ -11,6 +12,11 @@ from nsdimagery.analysis import (
     nearest_centroid_predict,
     reconstruction_brain_correlations,
     rdm_noise_ceiling,
+)
+from nsdimagery.cross_region import (
+    fit_region_alignment,
+    predictive_r2,
+    stream_roi_masks,
 )
 from nsdimagery.io import mask_at_coordinates, paper_visual_roi_masks
 
@@ -47,6 +53,13 @@ class MeasurementHelperTests(unittest.TestCase):
         rdm, order = crossvalidated_dot_rdm(
             self.patterns[::2], self.targets[::2],
             self.patterns[1::2], self.targets[1::2],
+        )
+        np.testing.assert_array_equal(order, np.arange(1, 4))
+        self.assertTrue(np.all(rdm[np.triu_indices(3, k=1)] > 0))
+
+    def test_balanced_crossvalidated_rdm(self):
+        rdm, order = balanced_crossvalidated_rdm(
+            self.patterns, self.targets, n_splits=10, seed=6
         )
         np.testing.assert_array_equal(order, np.arange(1, 4))
         self.assertTrue(np.all(rdm[np.triu_indices(3, k=1)] > 0))
@@ -111,6 +124,49 @@ class MeasurementHelperTests(unittest.TestCase):
         np.testing.assert_array_equal(
             projected, masks["early_visual"][masks["visual_cortex"]]
         )
+
+    def test_stream_rois_are_disjoint_for_primary_comparison(self):
+        streams = np.arange(8).reshape(2, 2, 2)
+        masks = stream_roi_masks(
+            streams, ("visual_streams", "dorsal_parietal", "parietal")
+        )
+        self.assertFalse(
+            np.any(masks["visual_streams"] & masks["dorsal_parietal"])
+        )
+        np.testing.assert_array_equal(
+            masks["parietal"], streams == 7
+        )
+        self.assertEqual(
+            int((masks["visual_streams"] | masks["dorsal_parietal"]).sum()),
+            7,
+        )
+
+    def test_region_alignment_recovers_shared_vision_space(self):
+        rng = np.random.default_rng(12)
+        groups = np.repeat(np.arange(6), 8)
+        latent = rng.normal(size=(48, 4))
+        parietal = latent @ rng.normal(size=(4, 18))
+        visual = latent @ rng.normal(size=(4, 20))
+        parietal += rng.normal(scale=0.03, size=parietal.shape)
+        visual += rng.normal(scale=0.03, size=visual.shape)
+
+        alignment, history = fit_region_alignment(
+            parietal,
+            visual,
+            groups,
+            component_grid=(2, 4, 6),
+            alpha_grid=(0.01, 0.1, 1.0),
+        )
+        prediction = alignment.predict_visual_from_parietal(parietal)
+        observed = alignment.transform_visual(visual)
+        score = predictive_r2(
+            observed,
+            prediction,
+            alignment.transform_visual(visual).mean(axis=0),
+        )
+        self.assertGreater(alignment.cv_r2, 0.8)
+        self.assertGreater(score, 0.9)
+        self.assertEqual(len(history), 9)
 
 
 if __name__ == "__main__":

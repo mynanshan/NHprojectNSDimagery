@@ -1,0 +1,225 @@
+subject,phase,stimulus_set,task,roi,rdm_reliability,reliability_method
+1,pilot,A,vision,early,0.2642857142857143,balanced random repeat halves
+1,pilot,A,imagery,early,0.007142857142857141,independent imagery runs
+1,pilot,B,vision,early,0.035714285714285705,balanced random repeat halves
+1,pilot,B,imagery,early,-0.3321428571428571,independent imagery runs
+1,pilot,A,vision,ventral,0.02321428571428571,balanced random repeat halves
+1,pilot,A,imagery,ventral,0.19999999999999998,independent imagery runs
+1,pilot,B,vision,ventral,0.18214285714285713,balanced random repeat halves
+1,pilot,B,imagery,ventral,-0.16785714285714282,independent imagery runs
+1,pilot,A,vision,lateral,0.06964285714285713,balanced random repeat halves
+1,pilot,A,imagery,lateral,-0.007142857142857141,independent imagery runs
+1,pilot,B,vision,lateral,0.16249999999999998,balanced random repeat halves
+1,pilot,B,imagery,lateral,0.021428571428571425,independent imagery runs
+1,pilot,A,vision,midparietal,0.11249999999999999,balanced random repeat halves
+1,pilot,A,imagery,midparietal,0.028571428571428564,independent imagery runs
+1,pilot,B,vision,midparietal,0.41428571428571426,balanced random repeat halves
+1,pilot,B,imagery,midparietal,-0.33571428571428563,independent imagery runs
+1,pilot,A,vision,parietal,0.1089285714285714,balanced random repeat halves
+1,pilot,A,imagery,parietal,-0.010714285714285713,independent imagery runs
+1,pilot,B,vision,parietal,0.3392857142857142,balanced random repeat halves
+1,pilot,B,imagery,parietal,-0.37857142857142856,independent imagery runs
+1,pilot,A,vision,visual_streams,0.04642857142857142,balanced random repeat halves
+1,pilot,A,imagery,visual_streams,0.014285714285714282,independent imagery runs
+1,pilot,B,vision,visual_streams,0.09642857142857142,balanced random repeat halves
+1,pilot,B,imagery,visual_streams,-0.08928571428571427,independent imagery runs
+1,pilot,A,vision,dorsal_parietal,0.03749999999999999,balanced random repeat halves
+1,pilot,A,imagery,dorsal_parietal,-0.12857142857142856,independent imagery runs
+1,pilot,B,vision,dorsal_parietal,0.3482142857142857,balanced random repeat halves
+1,pilot,B,imagery,dorsal_parietal,-0.5714285714285713,independent imagery runs
+2,validation,A,vision,early,0.557142857142857,balanced random repeat halves
+2,validation,A,imagery,early,0.16428571428571426,independent imagery runs
+2,validation,B,vision,early,0.2946428571428571,balanced random repeat halves
+2,validation,B,imagery,early,-0.28928571428571426,independent imagery runs
+2,validation,A,vision,ventral,0.014285714285714282,balanced random repeat halves
+2,validation,A,imagery,ventral,0.39999999999999997,independent imagery runs
+2,validation,B,vision,ventral,0.18035714285714283,balanced random repeat halves
+2,validation,B,imagery,ventral,0.13928571428571426,independent imagery runs
+2,validation,A,vision,lateral,0.028571428571428564,balanced random repeat halves
+2,validation,A,imagery,lateral,0.41785714285714276,independent imagery runs
+2,validation,B,vision,lateral,0.17321428571428568,balanced random repeat halves
+2,validation,B,imagery,lateral,-0.08214285714285713,independent imagery runs
+2,validation,A,vision,midparietal,0.1696428571428571,balanced random repeat halves
+2,validation,A,imagery,midparietal,-0.11785714285714284,independent imagery runs
+2,validation,B,vision,midparietal,0.2089285714285714,balanced random repeat halves
+2,validation,B,imagery,midparietal,-0.37499999999999994,independent imagery runs
+2,validation,A,vision,parietal,-0.05714285714285713,balanced random repeat halves
+2,validation,A,imagery,parietal,0.007142857142857141,independent imagery runs
+2,validation,B,vision,parietal,-0.0982142857142857,balanced random repeat halves
+2,validation,B,imagery,parietal,0.4678571428571427,independent imagery runs
+2,validation,A,vision,visual_streams,0.22857142857142854,balanced random repeat halves
+2,validation,A,imagery,visual_streams,0.3571428571428571,independent imagery runs
+2,validation,B,vision,visual_streams,0.010714285714285711,balanced random repeat halves
+2,validation,B,imagery,visual_streams,-0.10714285714285714,independent imagery runs
+2,validation,A,vision,dorsal_parietal,0.030357142857142853,balanced random repeat halves
+2,validation,A,imagery,dorsal_parietal,-0.15357142857142855,independent imagery runs
+2,validation,B,vision,dorsal_parietal,-0.030357142857142853,balanced random repeat halves
+2,validation,B,imagery,dorsal_parietal,0.2571428571428571,independent imagery runs
+3,validation,A,vision,early,0.1357142857142857,balanced random repeat halves
+3,validation,A,imagery,early,-0.175,independent imagery runs
+3,validation,B,vision,early,-0.22321428571428567,balanced random repeat halves
+3,validation,B,imagery,early,-0.3107142857142856,independent imagery runs
+3,validation,A,vision,ventral,0.0875,balanced random repeat halves
+3,validation,A,imagery,ventral,-0.2964285714285714,independent imagery runs
+3,validation,B,vision,ventral,0.06428571428571428,balanced random repeat halves
+3,validation,B,imagery,ventral,0.27499999999999997,independent imagery runs
+3,validation,A,vision,lateral,-0.0035714285714285704,balanced random repeat halves
+3,validation,A,imagery,lateral,0.04285714285714285,independent imagery runs
+3,validation,B,vision,lateral,0.08928571428571427,balanced random repeat halves
+3,validation,B,imagery,lateral,0.10714285714285714,independent imagery runs
+3,validation,A,vision,midparietal,0.005357142857142856,balanced random repeat halves
+3,validation,A,imagery,midparietal,0.41785714285714276,independent imagery runs
+3,validation,B,vision,midparietal,0.008928571428571426,balanced random repeat halves
+3,validation,B,imagery,midparietal,-0.0857142857142857,independent imagery runs
+3,validation,A,vision,parietal,-0.021428571428571425,balanced random repeat halves
+3,validation,A,imagery,parietal,0.07142857142857141,independent imagery runs
+3,validation,B,vision,parietal,0.12678571428571428,balanced random repeat halves
+3,validation,B,imagery,parietal,0.07857142857142857,independent imagery runs
+3,validation,A,vision,visual_streams,0.04642857142857142,balanced random repeat halves
+3,validation,A,imagery,visual_streams,-0.35357142857142854,independent imagery runs
+3,validation,B,vision,visual_streams,0.11428571428571427,balanced random repeat halves
+3,validation,B,imagery,visual_streams,-0.08214285714285713,independent imagery runs
+3,validation,A,vision,dorsal_parietal,0.014285714285714282,balanced random repeat halves
+3,validation,A,imagery,dorsal_parietal,0.035714285714285705,independent imagery runs
+3,validation,B,vision,dorsal_parietal,0.07678571428571426,balanced random repeat halves
+3,validation,B,imagery,dorsal_parietal,0.04285714285714285,independent imagery runs
+4,validation,A,vision,early,0.04821428571428571,balanced random repeat halves
+4,validation,A,imagery,early,0.4928571428571427,independent imagery runs
+4,validation,B,vision,early,0.017857142857142853,balanced random repeat halves
+4,validation,B,imagery,early,0.2321428571428571,independent imagery runs
+4,validation,A,vision,ventral,-0.028571428571428564,balanced random repeat halves
+4,validation,A,imagery,ventral,0.48214285714285704,independent imagery runs
+4,validation,B,vision,ventral,-0.03214285714285714,balanced random repeat halves
+4,validation,B,imagery,ventral,0.021428571428571425,independent imagery runs
+4,validation,A,vision,lateral,-0.09999999999999998,balanced random repeat halves
+4,validation,A,imagery,lateral,0.16785714285714282,independent imagery runs
+4,validation,B,vision,lateral,0.14464285714285713,balanced random repeat halves
+4,validation,B,imagery,lateral,0.2821428571428571,independent imagery runs
+4,validation,A,vision,midparietal,0.06428571428571428,balanced random repeat halves
+4,validation,A,imagery,midparietal,0.039285714285714285,independent imagery runs
+4,validation,B,vision,midparietal,0.06428571428571428,balanced random repeat halves
+4,validation,B,imagery,midparietal,-0.14285714285714282,independent imagery runs
+4,validation,A,vision,parietal,0.039285714285714285,balanced random repeat halves
+4,validation,A,imagery,parietal,0.1607142857142857,independent imagery runs
+4,validation,B,vision,parietal,0.07142857142857142,balanced random repeat halves
+4,validation,B,imagery,parietal,0.10357142857142855,independent imagery runs
+4,validation,A,vision,visual_streams,-0.01964285714285714,balanced random repeat halves
+4,validation,A,imagery,visual_streams,0.6714285714285713,independent imagery runs
+4,validation,B,vision,visual_streams,0.08214285714285713,balanced random repeat halves
+4,validation,B,imagery,visual_streams,0.25357142857142856,independent imagery runs
+4,validation,A,vision,dorsal_parietal,0.01964285714285714,balanced random repeat halves
+4,validation,A,imagery,dorsal_parietal,0.3,independent imagery runs
+4,validation,B,vision,dorsal_parietal,0.035714285714285705,balanced random repeat halves
+4,validation,B,imagery,dorsal_parietal,-0.017857142857142853,independent imagery runs
+5,validation,A,vision,early,0.3107142857142856,balanced random repeat halves
+5,validation,A,imagery,early,0.4035714285714285,independent imagery runs
+5,validation,B,vision,early,0.20535714285714282,balanced random repeat halves
+5,validation,B,imagery,early,-0.0857142857142857,independent imagery runs
+5,validation,A,vision,ventral,0.09107142857142855,balanced random repeat halves
+5,validation,A,imagery,ventral,-0.0964285714285714,independent imagery runs
+5,validation,B,vision,ventral,0.22678571428571426,balanced random repeat halves
+5,validation,B,imagery,ventral,0.5249999999999999,independent imagery runs
+5,validation,A,vision,lateral,0.09107142857142855,balanced random repeat halves
+5,validation,A,imagery,lateral,-0.021428571428571425,independent imagery runs
+5,validation,B,vision,lateral,0.20357142857142854,balanced random repeat halves
+5,validation,B,imagery,lateral,0.3178571428571428,independent imagery runs
+5,validation,A,vision,midparietal,0.17857142857142855,balanced random repeat halves
+5,validation,A,imagery,midparietal,-0.0964285714285714,independent imagery runs
+5,validation,B,vision,midparietal,0.29107142857142854,balanced random repeat halves
+5,validation,B,imagery,midparietal,-0.0035714285714285704,independent imagery runs
+5,validation,A,vision,parietal,0.06428571428571428,balanced random repeat halves
+5,validation,A,imagery,parietal,0.0857142857142857,independent imagery runs
+5,validation,B,vision,parietal,0.16607142857142854,balanced random repeat halves
+5,validation,B,imagery,parietal,0.24642857142857136,independent imagery runs
+5,validation,A,vision,visual_streams,0.09464285714285714,balanced random repeat halves
+5,validation,A,imagery,visual_streams,0.20357142857142854,independent imagery runs
+5,validation,B,vision,visual_streams,0.19285714285714284,balanced random repeat halves
+5,validation,B,imagery,visual_streams,-0.06071428571428571,independent imagery runs
+5,validation,A,vision,dorsal_parietal,0.02321428571428571,balanced random repeat halves
+5,validation,A,imagery,dorsal_parietal,0.21071428571428572,independent imagery runs
+5,validation,B,vision,dorsal_parietal,0.15357142857142855,balanced random repeat halves
+5,validation,B,imagery,dorsal_parietal,0.21071428571428572,independent imagery runs
+6,validation,A,vision,early,0.19107142857142856,balanced random repeat halves
+6,validation,A,imagery,early,0.7714285714285712,independent imagery runs
+6,validation,B,vision,early,0.05357142857142856,balanced random repeat halves
+6,validation,B,imagery,early,-0.457142857142857,independent imagery runs
+6,validation,A,vision,ventral,-0.12499999999999999,balanced random repeat halves
+6,validation,A,imagery,ventral,0.17857142857142855,independent imagery runs
+6,validation,B,vision,ventral,-0.012499999999999997,balanced random repeat halves
+6,validation,B,imagery,ventral,-0.017857142857142853,independent imagery runs
+6,validation,A,vision,lateral,-0.12678571428571428,balanced random repeat halves
+6,validation,A,imagery,lateral,-0.039285714285714285,independent imagery runs
+6,validation,B,vision,lateral,0.1232142857142857,balanced random repeat halves
+6,validation,B,imagery,lateral,-0.4035714285714285,independent imagery runs
+6,validation,A,vision,midparietal,-0.11607142857142855,balanced random repeat halves
+6,validation,A,imagery,midparietal,-0.25357142857142856,independent imagery runs
+6,validation,B,vision,midparietal,-0.06249999999999999,balanced random repeat halves
+6,validation,B,imagery,midparietal,-0.24285714285714283,independent imagery runs
+6,validation,A,vision,parietal,-0.06607142857142856,balanced random repeat halves
+6,validation,A,imagery,parietal,0.11785714285714284,independent imagery runs
+6,validation,B,vision,parietal,0.007142857142857142,balanced random repeat halves
+6,validation,B,imagery,parietal,-0.039285714285714285,independent imagery runs
+6,validation,A,vision,visual_streams,-0.1464285714285714,balanced random repeat halves
+6,validation,A,imagery,visual_streams,0.17857142857142855,independent imagery runs
+6,validation,B,vision,visual_streams,0.0982142857142857,balanced random repeat halves
+6,validation,B,imagery,visual_streams,-0.23928571428571427,independent imagery runs
+6,validation,A,vision,dorsal_parietal,-0.12142857142857141,balanced random repeat halves
+6,validation,A,imagery,dorsal_parietal,0.11785714285714284,independent imagery runs
+6,validation,B,vision,dorsal_parietal,0.04285714285714285,balanced random repeat halves
+6,validation,B,imagery,dorsal_parietal,0.12142857142857141,independent imagery runs
+7,validation,A,vision,early,0.4535714285714285,balanced random repeat halves
+7,validation,A,imagery,early,-0.13214285714285715,independent imagery runs
+7,validation,B,vision,early,0.051785714285714275,balanced random repeat halves
+7,validation,B,imagery,early,0.1928571428571428,independent imagery runs
+7,validation,A,vision,ventral,-0.1089285714285714,balanced random repeat halves
+7,validation,A,imagery,ventral,-0.2607142857142857,independent imagery runs
+7,validation,B,vision,ventral,0.2178571428571428,balanced random repeat halves
+7,validation,B,imagery,ventral,-0.4035714285714285,independent imagery runs
+7,validation,A,vision,lateral,-0.1089285714285714,balanced random repeat halves
+7,validation,A,imagery,lateral,-0.15357142857142855,independent imagery runs
+7,validation,B,vision,lateral,0.12857142857142856,balanced random repeat halves
+7,validation,B,imagery,lateral,-0.3071428571428571,independent imagery runs
+7,validation,A,vision,midparietal,-0.08928571428571427,balanced random repeat halves
+7,validation,A,imagery,midparietal,-0.46071428571428563,independent imagery runs
+7,validation,B,vision,midparietal,0.14107142857142857,balanced random repeat halves
+7,validation,B,imagery,midparietal,-0.4428571428571427,independent imagery runs
+7,validation,A,vision,parietal,0.02321428571428571,balanced random repeat halves
+7,validation,A,imagery,parietal,-0.37857142857142856,independent imagery runs
+7,validation,B,vision,parietal,0.30178571428571427,balanced random repeat halves
+7,validation,B,imagery,parietal,-0.39999999999999997,independent imagery runs
+7,validation,A,vision,visual_streams,0.010714285714285711,balanced random repeat halves
+7,validation,A,imagery,visual_streams,-0.3321428571428571,independent imagery runs
+7,validation,B,vision,visual_streams,0.18928571428571425,balanced random repeat halves
+7,validation,B,imagery,visual_streams,-0.12857142857142856,independent imagery runs
+7,validation,A,vision,dorsal_parietal,-0.11964285714285713,balanced random repeat halves
+7,validation,A,imagery,dorsal_parietal,-0.3857142857142856,independent imagery runs
+7,validation,B,vision,dorsal_parietal,0.1839285714285714,balanced random repeat halves
+7,validation,B,imagery,dorsal_parietal,-0.4035714285714285,independent imagery runs
+8,validation,A,vision,early,0.15535714285714286,balanced random repeat halves
+8,validation,A,imagery,early,0.07142857142857141,independent imagery runs
+8,validation,B,vision,early,0.1464285714285714,balanced random repeat halves
+8,validation,B,imagery,early,-0.18214285714285713,independent imagery runs
+8,validation,A,vision,ventral,-0.06428571428571427,balanced random repeat halves
+8,validation,A,imagery,ventral,0.05714285714285713,independent imagery runs
+8,validation,B,vision,ventral,-0.06785714285714284,balanced random repeat halves
+8,validation,B,imagery,ventral,-0.15,independent imagery runs
+8,validation,A,vision,lateral,-0.008928571428571426,balanced random repeat halves
+8,validation,A,imagery,lateral,-0.03214285714285714,independent imagery runs
+8,validation,B,vision,lateral,0.0053571428571428555,balanced random repeat halves
+8,validation,B,imagery,lateral,-0.4142857142857142,independent imagery runs
+8,validation,A,vision,midparietal,0.08035714285714285,balanced random repeat halves
+8,validation,A,imagery,midparietal,0.21428571428571427,independent imagery runs
+8,validation,B,vision,midparietal,0.21964285714285708,balanced random repeat halves
+8,validation,B,imagery,midparietal,-0.3142857142857143,independent imagery runs
+8,validation,A,vision,parietal,0.07142857142857142,balanced random repeat halves
+8,validation,A,imagery,parietal,0.1357142857142857,independent imagery runs
+8,validation,B,vision,parietal,0.06785714285714284,balanced random repeat halves
+8,validation,B,imagery,parietal,-0.11785714285714284,independent imagery runs
+8,validation,A,vision,visual_streams,-0.03749999999999999,balanced random repeat halves
+8,validation,A,imagery,visual_streams,-0.07142857142857141,independent imagery runs
+8,validation,B,vision,visual_streams,-0.04642857142857142,balanced random repeat halves
+8,validation,B,imagery,visual_streams,-0.3285714285714285,independent imagery runs
+8,validation,A,vision,dorsal_parietal,0.008928571428571426,balanced random repeat halves
+8,validation,A,imagery,dorsal_parietal,0.1928571428571428,independent imagery runs
+8,validation,B,vision,dorsal_parietal,0.0035714285714285704,balanced random repeat halves
+8,validation,B,imagery,dorsal_parietal,-0.32499999999999996,independent imagery runs

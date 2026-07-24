@@ -1,0 +1,73 @@
+subject,phase,stimulus_set,contrast,standard_difference,crossvalidated_difference
+1,pilot,A,cross_minus_same_visual,0.13214285714285715,0.021428571428571422
+1,pilot,A,cross_minus_within_parietal,-0.31785714285714284,-0.23571428571428568
+1,pilot,A,within_parietal_minus_same_visual,0.45,0.2571428571428571
+1,pilot,B,cross_minus_same_visual,-0.04999999999999993,-0.08928571428571427
+1,pilot,B,cross_minus_within_parietal,0.010714285714285787,-0.14999999999999997
+1,pilot,B,within_parietal_minus_same_visual,-0.06071428571428572,0.06071428571428569
+2,validation,A,cross_minus_same_visual,-0.16428571428571426,-0.07857142857142857
+2,validation,A,cross_minus_within_parietal,0.14642857142857144,0.06071428571428571
+2,validation,A,within_parietal_minus_same_visual,-0.3107142857142857,-0.1392857142857143
+2,validation,B,cross_minus_same_visual,-0.08571428571428574,0.36428571428571416
+2,validation,B,cross_minus_within_parietal,0.22857142857142854,0.3892857142857141
+2,validation,B,within_parietal_minus_same_visual,-0.3142857142857143,-0.024999999999999967
+3,validation,A,cross_minus_same_visual,0.010714285714285787,0.1428571428571428
+3,validation,A,cross_minus_within_parietal,0.06428571428571433,0.04999999999999999
+3,validation,A,within_parietal_minus_same_visual,-0.05357142857142855,0.0928571428571428
+3,validation,B,cross_minus_same_visual,0.0642857142857143,0.19999999999999996
+3,validation,B,cross_minus_within_parietal,-0.06428571428571428,0.41071428571428564
+3,validation,B,within_parietal_minus_same_visual,0.12857142857142856,-0.2107142857142857
+4,validation,A,cross_minus_same_visual,0.1571428571428572,0.36428571428571427
+4,validation,A,cross_minus_within_parietal,0.13928571428571435,-0.028571428571428553
+4,validation,A,within_parietal_minus_same_visual,0.01785714285714285,0.3928571428571428
+4,validation,B,cross_minus_same_visual,-0.11428571428571427,-0.3392857142857142
+4,validation,B,cross_minus_within_parietal,0.01428571428571429,-0.5857142857142856
+4,validation,B,within_parietal_minus_same_visual,-0.12857142857142856,0.24642857142857139
+5,validation,A,cross_minus_same_visual,0.0892857142857143,0.10357142857142856
+5,validation,A,cross_minus_within_parietal,0.24285714285714283,0.5678571428571428
+5,validation,A,within_parietal_minus_same_visual,-0.15357142857142853,-0.4642857142857143
+5,validation,B,cross_minus_same_visual,-0.37857142857142856,-0.3928571428571428
+5,validation,B,cross_minus_within_parietal,0.375,0.11071428571428571
+5,validation,B,within_parietal_minus_same_visual,-0.7535714285714286,-0.5035714285714286
+6,validation,A,cross_minus_same_visual,0.11071428571428571,-0.19642857142857142
+6,validation,A,cross_minus_within_parietal,-0.06428571428571428,-0.17142857142857143
+6,validation,A,within_parietal_minus_same_visual,0.175,-0.025
+6,validation,B,cross_minus_same_visual,0.021428571428571463,-0.2107142857142857
+6,validation,B,cross_minus_within_parietal,0.04999999999999993,-0.20357142857142851
+6,validation,B,within_parietal_minus_same_visual,-0.02857142857142847,-0.007142857142857173
+7,validation,A,cross_minus_same_visual,-0.5214285714285714,0.3214285714285714
+7,validation,A,cross_minus_within_parietal,-0.3107142857142857,-0.0071428571428571175
+7,validation,A,within_parietal_minus_same_visual,-0.21071428571428572,0.3285714285714285
+7,validation,B,cross_minus_same_visual,0.07500000000000001,0.1607142857142857
+7,validation,B,cross_minus_within_parietal,0.0,-0.21785714285714286
+7,validation,B,within_parietal_minus_same_visual,0.07500000000000001,0.37857142857142856
+8,validation,A,cross_minus_same_visual,-0.25,0.0035714285714285587
+8,validation,A,cross_minus_within_parietal,0.07142857142857145,0.021428571428571463
+8,validation,A,within_parietal_minus_same_visual,-0.32142857142857145,-0.017857142857142905
+8,validation,B,cross_minus_same_visual,-0.3678571428571428,-0.11071428571428565
+8,validation,B,cross_minus_within_parietal,0.05000000000000002,-0.03214285714285714
+8,validation,B,within_parietal_minus_same_visual,-0.4178571428571428,-0.07857142857142851
+1,pilot,A+B average,cross_minus_same_visual,0.041071428571428606,-0.033928571428571426
+1,pilot,A+B average,cross_minus_within_parietal,-0.15357142857142853,-0.19285714285714284
+1,pilot,A+B average,within_parietal_minus_same_visual,0.19464285714285715,0.15892857142857142
+2,validation,A+B average,cross_minus_same_visual,-0.125,0.1428571428571428
+2,validation,A+B average,cross_minus_within_parietal,0.1875,0.22499999999999992
+2,validation,A+B average,within_parietal_minus_same_visual,-0.3125,-0.08214285714285713
+3,validation,A+B average,cross_minus_same_visual,0.03750000000000004,0.17142857142857137
+3,validation,A+B average,cross_minus_within_parietal,2.7755575615628914e-17,0.23035714285714282
+3,validation,A+B average,within_parietal_minus_same_visual,0.037500000000000006,-0.05892857142857144
+4,validation,A+B average,cross_minus_same_visual,0.021428571428571463,0.012500000000000039
+4,validation,A+B average,cross_minus_within_parietal,0.07678571428571432,-0.3071428571428571
+4,validation,A+B average,within_parietal_minus_same_visual,-0.055357142857142855,0.3196428571428571
+5,validation,A+B average,cross_minus_same_visual,-0.14464285714285713,-0.14464285714285713
+5,validation,A+B average,cross_minus_within_parietal,0.30892857142857144,0.3392857142857143
+5,validation,A+B average,within_parietal_minus_same_visual,-0.4535714285714285,-0.48392857142857143
+6,validation,A+B average,cross_minus_same_visual,0.06607142857142859,-0.20357142857142857
+6,validation,A+B average,cross_minus_within_parietal,-0.007142857142857173,-0.18749999999999997
+6,validation,A+B average,within_parietal_minus_same_visual,0.07321428571428576,-0.016071428571428587
+7,validation,A+B average,cross_minus_same_visual,-0.22321428571428567,0.24107142857142855
+7,validation,A+B average,cross_minus_within_parietal,-0.15535714285714286,-0.11249999999999999
+7,validation,A+B average,within_parietal_minus_same_visual,-0.06785714285714285,0.35357142857142854
+8,validation,A+B average,cross_minus_same_visual,-0.30892857142857144,-0.05357142857142855
+8,validation,A+B average,cross_minus_within_parietal,0.060714285714285735,-0.005357142857142838
+8,validation,A+B average,within_parietal_minus_same_visual,-0.36964285714285716,-0.04821428571428571

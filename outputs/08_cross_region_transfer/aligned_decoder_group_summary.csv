@@ -1,0 +1,19 @@
+sample,stimulus_set,decoder,metric,n_subjects,mean,median,p_greater,p_two_sided
+all_subjects,A,same_visual,accuracy_above_chance,8,0.016927083333333343,0.005208333333333343,0.1875,0.375
+all_subjects,A,aligned_parietal_to_visual,accuracy_above_chance,8,0.020833333333333343,0.015625000000000014,0.03125,0.0625
+all_subjects,A,within_parietal,accuracy_above_chance,8,0.04687500000000001,0.05208333333333334,0.015625,0.03125
+all_subjects,B,same_visual,accuracy_above_chance,8,0.019531250000000007,0.020833333333333343,0.03125,0.0625
+all_subjects,B,aligned_parietal_to_visual,accuracy_above_chance,8,0.007812500000000003,0.0,0.28125,0.5625
+all_subjects,B,within_parietal,accuracy_above_chance,8,0.02864583333333334,0.010416666666666671,0.1015625,0.203125
+all_subjects,A+B average,aligned_parietal_to_visual,accuracy_above_chance,8,0.014322916666666671,0.007812500000000014,0.09375,0.1875
+all_subjects,A+B average,same_visual,accuracy_above_chance,8,0.018229166666666668,0.020833333333333343,0.0234375,0.046875
+all_subjects,A+B average,within_parietal,accuracy_above_chance,8,0.03776041666666667,0.031250000000000014,0.00390625,0.0078125
+subjects_02_08,A,same_visual,accuracy_above_chance,7,0.019345238095238106,0.010416666666666685,0.1875,0.375
+subjects_02_08,A,aligned_parietal_to_visual,accuracy_above_chance,7,0.02232142857142858,0.020833333333333343,0.046875,0.09375
+subjects_02_08,A,within_parietal,accuracy_above_chance,7,0.046130952380952384,0.05208333333333334,0.03125,0.0625
+subjects_02_08,B,same_visual,accuracy_above_chance,7,0.019345238095238103,0.020833333333333343,0.0625,0.125
+subjects_02_08,B,aligned_parietal_to_visual,accuracy_above_chance,7,0.01041666666666667,0.0,0.25,0.5
+subjects_02_08,B,within_parietal,accuracy_above_chance,7,0.03422619047619048,0.020833333333333343,0.078125,0.15625
+subjects_02_08,A+B average,aligned_parietal_to_visual,accuracy_above_chance,7,0.01636904761904762,0.015625,0.09375,0.1875
+subjects_02_08,A+B average,same_visual,accuracy_above_chance,7,0.0193452380952381,0.020833333333333343,0.03125,0.0625
+subjects_02_08,A+B average,within_parietal,accuracy_above_chance,7,0.04017857142857143,0.03125000000000003,0.0078125,0.015625
