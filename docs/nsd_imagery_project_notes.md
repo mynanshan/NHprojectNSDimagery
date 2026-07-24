@@ -43,7 +43,7 @@ Three shorter notes now complement this project plan:
 
 - [Experiment recap](experiment_recap.md): what a participant did, and how runs, trials, design matrices, raw fMRI, and beta volumes relate.
 - [Original paper methodology](original_paper_methodology.md): the benchmark's cross-decoding workflow in compact notation.
-- [Notebook 02/03 results review](notebook_02_03_results_review.md): what the current RDM, reliability, held-out transfer, HOG, and CLIP results do and do not support.
+- [RSA studies report](notebook_02_03_results_review.md): methods, figures, held-out regional transfer, the exploratory 18-target RDM, and the mixed HOG/CLIP results.
 - [RSA scope and revised analysis](rsa_scope_and_revised_analysis.md): why RDM correlation is a standard but narrow statistic, and why direct identification is now primary.
 
 The essential counting identity for one participant is
